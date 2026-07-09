@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: "Segoe UI", system-ui, sans-serif;
-  background: radial-gradient(circle at top, #3b0000, #050000);
+  background: radial-gradient(circle at top, #003300, #020202);
   color: #f5f5f5;
 }
 
@@ -11,8 +11,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  background: linear-gradient(90deg, #1a0000, #3b0000);
-  border-bottom: 1px solid #aa8800;
+  background: linear-gradient(90deg, #001a00, #003300);
+  border-bottom: 1px solid #c9a44f;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
 }
 
@@ -32,8 +32,8 @@ body {
 }
 
 .nav-bar button {
-  background: #2b0000;
-  border: 1px solid #aa8800;
+  background: #002200;
+  border: 1px solid #c9a44f;
   color: #f5f5f5;
   padding: 6px 10px;
   border-radius: 999px;
@@ -45,8 +45,8 @@ body {
 }
 
 .nav-bar button:hover {
-  background: #aa8800;
-  color: #1a0000;
+  background: #c9a44f;
+  color: #001a00;
   transform: translateY(-1px);
   box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
 }
@@ -62,13 +62,17 @@ body {
 
 .wallet button {
   margin-left: 8px;
-  background: #aa8800;
+  background: #c9a44f;
   border: none;
-  color: #1a0000;
+  color: #001a00;
   padding: 4px 8px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+}
+
+.start-audio {
+  margin-top: 6px;
 }
 
 /* Main layout */
@@ -84,7 +88,7 @@ body {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 12px;
   padding: 12px;
-  border: 1px solid #553300;
+  border: 1px solid #3b2600;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
 }
 
@@ -106,10 +110,10 @@ body {
 
 /* Game panel */
 .game-panel {
-  background: rgba(0, 0, 0, 0.75);
+  background: radial-gradient(circle at center, #004000, #000000);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #aa8800;
+  border: 1px solid #c9a44f;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.9);
 }
 
@@ -120,7 +124,7 @@ body {
 }
 
 .game-container {
-  min-height: 220px;
+  min-height: 260px;
 }
 
 /* Game log */
@@ -128,7 +132,7 @@ body {
   margin-top: 12px;
   font-size: 0.85rem;
   min-height: 40px;
-  border-top: 1px solid #553300;
+  border-top: 1px solid #3b2600;
   padding-top: 8px;
   color: #f0d8a0;
 }
@@ -139,9 +143,9 @@ body {
 }
 
 .game-controls button {
-  background: #aa8800;
+  background: #c9a44f;
   border: none;
-  color: #1a0000;
+  color: #001a00;
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -155,6 +159,15 @@ body {
   cursor: not-allowed;
 }
 
+/* Table look */
+.table-surface {
+  background: radial-gradient(circle at center, #006600, #003300);
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px solid #c9a44f;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
 /* Cards */
 .cards-row {
   display: flex;
@@ -164,8 +177,8 @@ body {
 }
 
 .card-face {
-  width: 42px;
-  height: 64px;
+  width: 48px;
+  height: 72px;
   border-radius: 6px;
   background: #fff;
   color: #000;
@@ -174,6 +187,7 @@ body {
   justify-content: center;
   font-size: 0.8rem;
   border: 1px solid #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Slots */
@@ -181,18 +195,20 @@ body {
   display: flex;
   gap: 10px;
   margin: 10px 0;
+  justify-content: center;
 }
 
 .slot-reel {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 8px;
   background: #220000;
-  border: 2px solid #aa8800;
+  border: 2px solid #c9a44f;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
 /* Roulette / wheel */
@@ -202,11 +218,44 @@ body {
   font-size: 0.85rem;
 }
 
-/* Footer */
-.site-footer {
-  text-align: center;
-  padding: 10px 0 16px;
-  font-size: 0.8rem;
-  color: #c0a060;
-  border-top: 1px solid #553300;
+.wheel-graphic {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 4px solid #c9a44f;
+  margin: 10px auto;
+  position: relative;
+  background: conic-gradient(
+    #b30000 0deg 60deg,
+    #000000 60deg 120deg,
+    #b30000 120deg 180deg,
+    #000000 180deg 240deg,
+    #b30000 240deg 300deg,
+    #000000 300deg 360deg
+  );
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.9);
+}
+
+.wheel-pointer {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 18px solid #f8e29a;
+  position: absolute;
+  top: -18px;
+  left: calc(50% - 10px);
+}
+
+.spin-anim {
+  animation: spinWheel 1s ease-out;
+}
+
+@keyframes spinWheel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(720deg);
+  }
 }
