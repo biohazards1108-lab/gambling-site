@@ -6,6 +6,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Audio: background music + SFX -->
+  <audio id="bgMusic" src="assets/casino-music.mp3" loop></audio>
+  <audio id="chipSound" src="assets/chip.wav"></audio>
+  <audio id="cardSound" src="assets/card.wav"></audio>
+  <audio id="spinSound" src="assets/spin.wav"></audio>
+
   <header class="site-header">
     <div class="logo">High Roller Lounge</div>
 
@@ -31,36 +37,33 @@
       <div class="player-switch">
         Active player:
         <select id="playerSelect">
-          <option value="player1">Player 1 (You)</option>
-          <option value="player2">Player 2 (Brother)</option>
+          <option value="player1">Player 1</option>
+          <option value="player2">Player 2</option>
         </select>
       </div>
       <div>
         Tokens: <span id="balance">0</span>
         <button id="resetBalanceBtn">Reset to 200</button>
       </div>
+      <button id="startAudioBtn" class="start-audio">Enter Casino</button>
     </div>
   </header>
 
   <main class="main-layout">
     <aside class="side-panel">
-      <h2>Table Notes</h2>
+      <h2>Dealer Notes</h2>
       <p class="small">
-        All tokens are fake. Each player has their own wallet saved in this browser.
+        Tokens are virtual. Each player has their own wallet saved in this browser.
       </p>
       <div id="gameInfo"></div>
     </aside>
 
     <section class="game-panel">
-      <div id="gameTitle" class="game-title">Select a game from the bar above</div>
+      <div id="gameTitle" class="game-title">Select a table from the bar above</div>
       <div id="gameContainer" class="game-container"></div>
       <div id="gameLog" class="game-log"></div>
     </section>
   </main>
-
-  <footer class="site-footer">
-    High Roller Lounge · Fake Casino · Built for fun only
-  </footer>
 
   <script src="script.js"></script>
 </body>
