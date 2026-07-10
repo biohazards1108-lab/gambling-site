@@ -1005,7 +1005,7 @@ function spinSlot(slotType) {
 document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
 document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
-});
+
 
   document.querySelectorAll(".slot-spin-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
