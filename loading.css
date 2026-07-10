@@ -5,20 +5,21 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #1b1b1b 0%, #050505 60%);
+  background: #000;
   font-family: "Playfair Display", serif;
   overflow: hidden;
 }
 
-/* Root container */
+/* Root */
 #loading-root {
   position: relative;
   width: 100vw;
   height: 100vh;
   background: radial-gradient(circle at center, #222 0%, #000 70%);
+  overflow: hidden;
 }
 
-/* Gold curtains */
+/* Curtains */
 .curtain {
   position: absolute;
   top: 0;
@@ -31,9 +32,9 @@ body {
     #b8860b 60%,
     #ffd700 100%
   );
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-  z-index: 10;
+  z-index: 20;
   animation: curtain-open 3s ease-out forwards;
+  animation-delay: 0.2s; /* FIX: prevents instant disappearance */
 }
 
 .curtain-left {
@@ -47,12 +48,8 @@ body {
 }
 
 @keyframes curtain-open {
-  0% {
-    transform: scaleX(1);
-  }
-  100% {
-    transform: scaleX(0);
-  }
+  0% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
 }
 
 /* Spotlights */
@@ -61,42 +58,30 @@ body {
   top: -20vh;
   width: 40vw;
   height: 60vh;
-  background: radial-gradient(circle at bottom, rgba(255, 255, 255, 0.4), transparent 70%);
+  background: radial-gradient(circle at bottom, rgba(255,255,255,0.4), transparent 70%);
   opacity: 0.6;
   mix-blend-mode: screen;
-  z-index: 1;
+  z-index: 5;
   animation: sweep 3s linear infinite;
 }
 
-.spotlight-left {
-  left: -10vw;
-  transform: rotate(25deg);
-}
-
-.spotlight-right {
-  right: -10vw;
-  transform: rotate(-25deg);
-}
+.spotlight-left { left: -10vw; transform: rotate(25deg); }
+.spotlight-right { right: -10vw; transform: rotate(-25deg); }
 
 @keyframes sweep {
-  0% {
-    transform: translateX(-10vw) rotate(25deg);
-  }
-  50% {
-    transform: translateX(10vw) rotate(25deg);
-  }
-  100% {
-    transform: translateX(-10vw) rotate(25deg);
-  }
+  0% { transform: translateX(-10vw) rotate(25deg); }
+  50% { transform: translateX(10vw) rotate(25deg); }
+  100% { transform: translateX(-10vw) rotate(25deg); }
 }
 
-/* Falling chips */
+/* Chips */
 #chip-container {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 2;
+  z-index: 10;
+  background: transparent; /* FIX: prevents collapse if image missing */
 }
 
 .chip {
@@ -106,37 +91,30 @@ body {
   background-image: url("assets/images/chip-gold.png");
   background-size: cover;
   animation: chip-fall 3s linear infinite;
-  opacity: 0.9;
 }
 
 @keyframes chip-fall {
-  0% {
-    transform: translateY(-10vh) rotate(0deg);
-  }
-  100% {
-    transform: translateY(110vh) rotate(360deg);
-  }
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
 }
 
-/* Center title and button */
+/* Title + Button */
 .loading-center {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  z-index: 5;
+  z-index: 30; /* FIX: always above curtains */
 }
 
 .loading-title {
   font-size: 3rem;
-  letter-spacing: 0.2rem;
   color: #ffd700;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 0 20px rgba(255,215,0,0.8);
   margin-bottom: 2rem;
 }
 
-/* Enter button */
 .enter-button {
   padding: 1rem 3rem;
   font-size: 1.2rem;
@@ -145,40 +123,10 @@ body {
   background: radial-gradient(circle at top, #fff8dc 0%, #b8860b 40%, #8b6508 100%);
   color: #111;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.15rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-.enter-button:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
-}
-
-.enter-button:active {
-  transform: scale(0.98);
-}
-
-/* Hidden state */
-.hidden {
   opacity: 0;
-  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-/* Fade-in animation for button */
 .enter-button.show {
   opacity: 1;
-  pointer-events: auto;
-  animation: button-glow 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes button-glow {
-  0% {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 35px rgba(255, 215, 0, 1);
-  }
 }
