@@ -27,11 +27,17 @@
     </div>
   </div>
 
- <script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Play your curtain animation here if needed
+
+  // Hard fallback so it ALWAYS continues
   setTimeout(() => {
-    window.location.href = "/gambling-site/index.html";
-  }, 1200); // 1.2 seconds
+    window.location.href = "index.html"; 
+  }, 4000);
+});
 </script>
+
 
 </body>
 </html>
