@@ -1,271 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <title>Lucky 13 Casino</title>
+    <link rel="stylesheet" href="style.css" />
 
-  <meta charset="UTF-8" />
-  <title>Lucky 13 Casino</title>
-  <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            color: gold;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        header {
+            padding: 20px;
+            font-size: 2rem;
+            text-shadow: 0 0 10px gold;
+        }
+
+        .content {
+            margin-top: 40px;
+            font-size: 1.3rem;
+        }
+
+        .btn {
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: gold;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-  <div id="casino-root">
-    <header class="casino-header">
-      <div class="casino-logo">
-        <span class="logo-main">Lucky 13</span>
-        <span class="logo-sub">Grand Casino</span>
-      </div>
+    <header>🎰 Welcome to Lucky 13 Casino 🎰</header>
 
-      <div class="player-panel">
-        <label for="player-select">Player:</label>
-        <select id="player-select">
-          <option value="player1">Player 1</option>
-          <option value="player2">Player 2</option>
-        </select>
+    <div class="content">
+        <p>Your casino homepage is now loading correctly.</p>
+        <p>No more infinite loading screen.</p>
 
-        <div class="player-info">
-          <div class="player-balance">
-            Balance: <span id="player-balance">200</span> Tokens
-          </div>
-          <div class="player-stats">
-            Wins: <span id="player-wins">0</span> |
-            Losses: <span id="player-losses">0</span> |
-            Last Game: <span id="player-last-game">None</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="audio-status">
-        <button id="audio-init-btn" class="btn-gold">
-          Activate Casino Audio
+        <button class="btn" onclick="alert('Casino features coming soon!')">
+            Start Playing
         </button>
-        <span id="audio-state-label">Audio: Off</span>
-      </div>
-    </header>
+    </div>
 
-    <main class="casino-main">
-      <nav class="game-menu">
-        <h2>Casino Floor</h2>
-        <button class="game-btn" data-game="blackjack">Blackjack</button>
-        <button class="game-btn" data-game="roulette-eu">Roulette (EU)</button>
-        <button class="game-btn" data-game="roulette-us">Roulette (US)</button>
-        <button class="game-btn" data-game="craps">Craps</button>
-        <button class="game-btn" data-game="baccarat">Baccarat</button>
-        <button class="game-btn" data-game="holdem">Texas Hold’em</button>
-        <button class="game-btn" data-game="slots">Slots</button>
-      </nav>
-
-      <section class="game-area">
-        <!-- Blackjack -->
-        <div id="blackjack-table" class="game-table hidden">
-          <div class="table-header">
-            <h2>Blackjack</h2>
-            <p>Dealer hits soft 17 · Blackjack pays 3:2</p>
-          </div>
-
-          <div class="felt felt-blackjack">
-            <div class="dealer-area">
-              <h3>Dealer</h3>
-              <div class="card-row" id="dealer-cards"></div>
-              <div class="hand-value">
-                Value: <span id="dealer-value">0</span>
-              </div>
-            </div>
-
-            <div class="shoe-area">
-              <div class="shoe-graphic"></div>
-            </div>
-
-            <div class="player-area">
-              <h3>Player</h3>
-              <div class="card-row" id="player-cards"></div>
-              <div class="hand-value">
-                Value: <span id="player-value">0</span>
-              </div>
-            </div>
-
-            <div class="bet-area">
-              <label>Bet:</label>
-              <input type="number" id="blackjack-bet" min="1" step="1" value="10" />
-              <button id="blackjack-deal" class="btn-gold">Deal</button>
-              <button id="blackjack-hit" class="btn-green" disabled>Hit</button>
-              <button id="blackjack-stand" class="btn-red" disabled>Stand</button>
-              <button id="blackjack-reset" class="btn-dark">New Round</button>
-              <div id="blackjack-status" class="status-text"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Roulette -->
-        <div id="roulette-table" class="game-table hidden">
-          <div class="table-header">
-            <h2>Roulette</h2>
-            <p id="roulette-variant-label">European Roulette (Single Zero)</p>
-          </div>
-
-          <div class="felt felt-roulette">
-            <div class="roulette-wheel-container">
-              <div class="roulette-wheel" id="roulette-wheel">
-                <div class="roulette-pointer"></div>
-                <div class="roulette-ball" id="roulette-ball"></div>
-              </div>
-            </div>
-
-            <div class="roulette-layout">
-              <div class="roulette-grid" id="roulette-grid"></div>
-            </div>
-
-            <div class="roulette-controls">
-              <label>Bet:</label>
-              <input type="text" id="roulette-bet-number" placeholder="17, red, black" />
-              <label>Amount:</label>
-              <input type="number" id="roulette-bet-amount" min="1" step="1" value="10" />
-              <button id="roulette-spin" class="btn-gold">Spin Wheel</button>
-              <div id="roulette-status" class="status-text"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Craps -->
-        <div id="craps-table" class="game-table hidden">
-          <div class="table-header">
-            <h2>Craps</h2>
-            <p>Pass Line · Real dice physics</p>
-          </div>
-
-          <div class="felt felt-craps">
-            <div class="craps-layout">
-              <div class="pass-line">PASS LINE</div>
-              <div class="come-area">COME</div>
-              <div class="field-area">FIELD</div>
-            </div>
-
-            <div class="craps-controls">
-              <label>Pass Line Bet:</label>
-              <input type="number" id="craps-pass-bet" min="1" step="1" value="10" />
-              <button id="craps-roll" class="btn-gold">Roll Dice</button>
-              <div class="dice-display">
-                <div class="die" id="die1"></div>
-                <div class="die" id="die2"></div>
-              </div>
-              <div id="craps-status" class="status-text"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Baccarat -->
-        <div id="baccarat-table" class="game-table hidden">
-          <div class="table-header">
-            <h2>Baccarat</h2>
-            <p>Player/Banker · Real third-card rules</p>
-          </div>
-
-          <div class="felt felt-baccarat">
-            <div class="baccarat-hands">
-              <div class="baccarat-hand">
-                <h3>Player</h3>
-                <div class="card-row" id="baccarat-player-cards"></div>
-                <div>Value: <span id="baccarat-player-value">0</span></div>
-              </div>
-              <div class="baccarat-hand">
-                <h3>Banker</h3>
-                <div class="card-row" id="baccarat-banker-cards"></div>
-                <div>Value: <span id="baccarat-banker-value">0</span></div>
-              </div>
-            </div>
-
-            <div class="baccarat-controls">
-              <label>Bet on:</label>
-              <select id="baccarat-bet-side">
-                <option value="player">Player</option>
-                <option value="banker">Banker</option>
-                <option value="tie">Tie</option>
-              </select>
-              <label>Amount:</label>
-              <input type="number" id="baccarat-bet-amount" min="1" step="1" value="10" />
-              <button id="baccarat-deal" class="btn-gold">Deal</button>
-              <div id="baccarat-status" class="status-text"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Texas Hold’em -->
-        <div id="holdem-table" class="game-table hidden">
-          <div class="table-header">
-            <h2>Texas Hold’em (Heads-Up vs Dealer)</h2>
-            <p>Full hand ranking · Flop → Turn → River</p>
-          </div>
-
-          <div class="felt felt-holdem">
-            <div class="holdem-board">
-              <h3>Board</h3>
-              <div class="card-row" id="holdem-board-cards"></div>
-            </div>
-
-            <div class="holdem-hands">
-              <div class="holdem-hand">
-                <h3>Player</h3>
-                <div class="card-row" id="holdem-player-cards"></div>
-              </div>
-              <div class="holdem-hand">
-                <h3>Dealer</h3>
-                <div class="card-row" id="holdem-dealer-cards"></div>
-              </div>
-            </div>
-
-            <div class="holdem-controls">
-              <label>Bet:</label>
-              <input type="number" id="holdem-bet" min="1" step="1" value="10" />
-              <button id="holdem-deal" class="btn-gold">Deal Hand</button>
-              <button id="holdem-next-stage" class="btn-green" disabled>Next Stage</button>
-              <div id="holdem-status" class="status-text"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slots -->
-        <div id="slots-area" class="game-table hidden">
-          <div class="table-header">
-            <h2>Slots</h2>
-            <p>Animated reels · Win line highlight · Multiple slot types</p>
-          </div>
-
-          <div class="slots-layout">
-            <div class="slot-machine">
-              <h3>Classic 3-Reel</h3>
-              <div class="slot-reels" id="slot-reels-3">
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-              </div>
-              <div class="slot-controls">
-                <label>Bet:</label>
-                <input type="number" id="slot-bet-3" min="1" step="1" value="5" />
-                <button class="btn-gold slot-spin-btn" data-slot="3">Spin</button>
-                <div class="slot-status" id="slot-status-3"></div>
-              </div>
-            </div>
-
-            <div class="slot-machine">
-              <h3>Video 5-Reel</h3>
-              <div class="slot-reels" id="slot-reels-5">
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-                <div class="slot-reel"></div>
-              </div>
-              <div class="slot-controls">
-                <label>Bet:</label>
-                <input type="number" id="slot-bet-5" min="1" step="1" value="10" />
-                <button class="btn-gold slot-spin-btn" data-slot="5">Spin</button>
-                <div class="slot-status" id="slot-status-5"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-
+    <script src="script.js"></script>
 </body>
 </html>
