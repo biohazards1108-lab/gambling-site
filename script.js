@@ -849,15 +849,77 @@ function evaluateHoldemHand(hand, board) {
   return { name, score };
 }
 
-// SLOTS
+// SLOTS (RTP + proper PNG display)
 const SLOT_SYMBOLS = [
-  "assets/images/slots/slot-cherry.png",
-  "assets/images/slots/slot-bar.png",
-  "assets/images/slots/slot-seven.png",
-  "assets/images/slots/slot-bell.png",
-  "assets/images/slots/slot-diamond.png",
+  {
+    name: "cherry",
+    img: "assets/images/slots/slot-cherry.png",
+    weight: 40,   // common
+    payout3: 5,
+    payout5: 10,
+  },
+  {
+    name: "bar",
+    img: "assets/images/slots/slot-bar.png",
+    weight: 25,
+    payout3: 8,
+    payout5: 16,
+  },
+  {
+    name: "seven",
+    img: "assets/images/slots/slot-seven.png",
+    weight: 10,   // rare
+    payout3: 20,
+    payout5: 40,
+  },
+  {
+    name: "bell",
+    img: "assets/images/slots/slot-bell.png",
+    weight: 15,
+    payout3: 12,
+    payout5: 24,
+  },
+  {
+    name: "diamond",
+    img: "assets/images/slots/slot-diamond.png",
+    weight: 10,   // rare
+    payout3: 25,
+    payout5: 50,
+  },
 ];
 
+// total weight for RNG
+const SLOT_TOTAL_WEIGHT = SLOT_SYMBOLS.reduce((sum, s) => sum + s.weight, 0);
+
+// helper: weighted random symbol
+function getRandomSlotSymbol() {
+  const roll = Math.random() * SLOT_TOTAL_WEIGHT;
+  let acc = 0;
+  for (const s of SLOT_SYMBOLS) {
+    acc += s.weight;
+    if (roll <= acc) return s;
+  }
+  return SLOT_SYMBOLS[SLOT_SYMBOLS.length - 1];
+}
+
+// optional: quick RTP estimate (for you, not shown in UI)
+function estimateSlotRTP(slotType) {
+  const reels = slotType;
+  const bet = 1;
+  let expectedReturn = 0;
+
+  // very rough: assume chance all reels match is sum of (p(symbol)^reels)
+  for (const s of SLOT_SYMBOLS) {
+    const p = s.weight / SLOT_TOTAL_WEIGHT;
+    const matchProb = Math.pow(p, reels);
+    const payout = slotType === 3 ? s.payout3 : s.payout5;
+    expectedReturn += matchProb * payout;
+  }
+
+  return expectedReturn / bet; // RTP as fraction (e.g. 0.95)
+}
+
+// main spin function
 function spinSlot(slotType) {
   const statusId = slotType === 3 ? "slot-status-3" : "slot-status-5";
   const status = document.getElementById(statusId);
@@ -880,30 +942,42 @@ function spinSlot(slotType) {
   const reelsContainer = document.getElementById(reelsId);
   const reels = Array.from(reelsContainer.querySelectorAll(".slot-reel"));
 
+  // clear and animate reels
   reels.forEach((reel) => {
     reel.innerHTML = "";
-    reel.style.transition = "transform 1s ease-out";
-    reel.style.transform = "translateY(100%)";
+    reel.style.transition = "transform 0.8s ease-out";
+    reel.style.transform = "translateY(-100%)";
   });
 
+  // after spin animation, stop and show symbols
   setTimeout(() => {
+    const results = [];
+
     reels.forEach((reel) => {
-      reel.style.transition = "";
+      reel.style.transition = "transform 0.2s ease-out";
       reel.style.transform = "translateY(0)";
-      const symbol = document.createElement("div");
-      symbol.classList.add("slot-symbol");
-      const img = SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)];
-      symbol.style.backgroundImage = `url("${img}")`;
-      reel.appendChild(symbol);
+
+      const symbolDiv = document.createElement("div");
+      symbolDiv.classList.add("slot-symbol");
+
+      const symbol = getRandomSlotSymbol();
+      results.push(symbol);
+
+      symbolDiv.style.backgroundImage = `url("${symbol.img}")`;
+      reel.appendChild(symbolDiv);
     });
 
-    const symbols = reels.map((reel) => reel.querySelector(".slot-symbol").style.backgroundImage);
-    const allSame = symbols.every((s) => s === symbols[0]);
+    // check win: all reels same symbol
+    const allSame = results.every((s) => s.name === results[0].name);
 
     if (allSame) {
-      const payout = bet * (slotType === 3 ? 10 : 20);
+      const baseSymbol = results[0];
+      const payoutPerBet = slotType === 3 ? baseSymbol.payout3 : baseSymbol.payout5;
+      const payout = bet * payoutPerBet;
+
       adjustBalance(payout, "Slots", true);
-      status.textContent = `Jackpot! All symbols match. You win ${payout} tokens.`;
+      status.textContent = `Jackpot! All ${baseSymbol.name} symbols match. You win ${payout} tokens.`;
+
       const winLine = document.createElement("div");
       winLine.classList.add("slot-win-line");
       reelsContainer.appendChild(winLine);
@@ -914,30 +988,8 @@ function spinSlot(slotType) {
       adjustBalance(-bet, "Slots", false);
       status.textContent = `No win. You lose ${bet} tokens.`;
     }
-  }, 1000);
+  }, 800);
 }
-
-// INIT
-document.addEventListener("DOMContentLoaded", () => {
-  currentPlayerData = loadPlayerData(currentPlayerKey);
-  updatePlayerUI();
-
-  document.getElementById("player-select").addEventListener("change", (e) => {
-    currentPlayerKey = PLAYER_KEYS[e.target.value];
-    currentPlayerData = loadPlayerData(currentPlayerKey);
-    updatePlayerUI();
-  });
-
-  document.getElementById("audio-init-btn").addEventListener("click", () => {
-    initAudio();
-  });
-
-  document.querySelectorAll(".game-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const game = btn.getAttribute("data-game");
-      showGame(game);
-    });
-  });
 
   document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
   document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
