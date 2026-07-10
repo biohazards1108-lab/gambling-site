@@ -1001,9 +1001,9 @@ function spinSlot(slotType) {
   document.getElementById("craps-roll").addEventListener("click", rollCraps);
 
   document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
+document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
+document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
-  document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
-  document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
   document.querySelectorAll(".slot-spin-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
