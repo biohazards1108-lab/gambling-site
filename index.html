@@ -7,7 +7,6 @@
 </head>
 <body>
   <div id="casino-root">
-    <!-- Top bar: logo + player selector + balances -->
     <header class="casino-header">
       <div class="casino-logo">
         <span class="logo-main">Lucky 13</span>
@@ -41,9 +40,7 @@
       </div>
     </header>
 
-    <!-- Main casino floor -->
     <main class="casino-main">
-      <!-- Left: game selection -->
       <nav class="game-menu">
         <h2>Casino Floor</h2>
         <button class="game-btn" data-game="blackjack">Blackjack</button>
@@ -55,9 +52,8 @@
         <button class="game-btn" data-game="slots">Slots</button>
       </nav>
 
-      <!-- Right: game tables / machines -->
       <section class="game-area">
-        <!-- Blackjack table -->
+        <!-- Blackjack -->
         <div id="blackjack-table" class="game-table hidden">
           <div class="table-header">
             <h2>Blackjack</h2>
@@ -74,9 +70,7 @@
             </div>
 
             <div class="shoe-area">
-              <div class="shoe-graphic">
-                <!-- Dealer shoe graphic (image asset) -->
-              </div>
+              <div class="shoe-graphic"></div>
             </div>
 
             <div class="player-area">
@@ -99,7 +93,7 @@
           </div>
         </div>
 
-        <!-- Roulette table (EU/US share layout, wheel type changes) -->
+        <!-- Roulette -->
         <div id="roulette-table" class="game-table hidden">
           <div class="table-header">
             <h2>Roulette</h2>
@@ -109,23 +103,19 @@
           <div class="felt felt-roulette">
             <div class="roulette-wheel-container">
               <div class="roulette-wheel" id="roulette-wheel">
-                <!-- Wheel graphic (image asset) -->
                 <div class="roulette-pointer"></div>
                 <div class="roulette-ball" id="roulette-ball"></div>
               </div>
             </div>
 
             <div class="roulette-layout">
-              <!-- Real number layout (simplified visual, real mapping in JS) -->
-              <div class="roulette-grid" id="roulette-grid">
-                <!-- Numbers 0–36 (and 00 for US) rendered via JS -->
-              </div>
+              <div class="roulette-grid" id="roulette-grid"></div>
             </div>
 
             <div class="roulette-controls">
-              <label>Bet Number:</label>
-              <input type="text" id="roulette-bet-number" placeholder="e.g. 17, red, black" />
-              <label>Bet Amount:</label>
+              <label>Bet:</label>
+              <input type="text" id="roulette-bet-number" placeholder="17, red, black" />
+              <label>Amount:</label>
               <input type="number" id="roulette-bet-amount" min="1" step="1" value="10" />
               <button id="roulette-spin" class="btn-gold">Spin Wheel</button>
               <div id="roulette-status" class="status-text"></div>
@@ -133,24 +123,22 @@
           </div>
         </div>
 
-        <!-- Craps table -->
+        <!-- Craps -->
         <div id="craps-table" class="game-table hidden">
           <div class="table-header">
             <h2>Craps</h2>
-            <p>Pass Line · Come/Don’t Come · Real dice physics (random rotation)</p>
+            <p>Pass Line · Real dice physics</p>
           </div>
 
           <div class="felt felt-craps">
             <div class="craps-layout">
-              <!-- Visual pass line, come, field, etc. -->
               <div class="pass-line">PASS LINE</div>
               <div class="come-area">COME</div>
               <div class="field-area">FIELD</div>
-              <!-- More markings as needed -->
             </div>
 
             <div class="craps-controls">
-              <label>Bet (Pass Line):</label>
+              <label>Pass Line Bet:</label>
               <input type="number" id="craps-pass-bet" min="1" step="1" value="10" />
               <button id="craps-roll" class="btn-gold">Roll Dice</button>
               <div class="dice-display">
@@ -162,11 +150,11 @@
           </div>
         </div>
 
-        <!-- Baccarat table -->
+        <!-- Baccarat -->
         <div id="baccarat-table" class="game-table hidden">
           <div class="table-header">
             <h2>Baccarat</h2>
-            <p>Player/Banker · Real third-card drawing rules</p>
+            <p>Player/Banker · Real third-card rules</p>
           </div>
 
           <div class="felt felt-baccarat">
@@ -190,7 +178,7 @@
                 <option value="banker">Banker</option>
                 <option value="tie">Tie</option>
               </select>
-              <label>Bet Amount:</label>
+              <label>Amount:</label>
               <input type="number" id="baccarat-bet-amount" min="1" step="1" value="10" />
               <button id="baccarat-deal" class="btn-gold">Deal</button>
               <div id="baccarat-status" class="status-text"></div>
@@ -198,11 +186,11 @@
           </div>
         </div>
 
-        <!-- Texas Hold’em table -->
+        <!-- Texas Hold’em -->
         <div id="holdem-table" class="game-table hidden">
           <div class="table-header">
             <h2>Texas Hold’em (Heads-Up vs Dealer)</h2>
-            <p>Real hand ranking · Flop → Turn → River</p>
+            <p>Full hand ranking · Flop → Turn → River</p>
           </div>
 
           <div class="felt felt-holdem">
@@ -232,11 +220,11 @@
           </div>
         </div>
 
-        <!-- Slots machines -->
+        <!-- Slots -->
         <div id="slots-area" class="game-table hidden">
           <div class="table-header">
             <h2>Slots</h2>
-            <p>Animated reels · Multiple slot types · Win line highlight</p>
+            <p>Animated reels · Win line highlight · Multiple slot types</p>
           </div>
 
           <div class="slots-layout">
