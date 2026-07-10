@@ -990,29 +990,22 @@ function spinSlot(slotType) {
     }
   }, 800);
 }
+// EVENT LISTENERS (FINAL SECTION)
 
-  document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
-  document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
-  document.getElementById("blackjack-stand").addEventListener("click", blackjackStand);
-  document.getElementById("blackjack-reset").addEventListener("click", blackjackReset);
+document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
+document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
+document.getElementById("blackjack-stand").addEventListener("click", blackjackStand);
+document.getElementById("blackjack-reset").addEventListener("click", blackjackReset);
 
-  document.getElementById("roulette-spin").addEventListener("click", spinRoulette);
+document.getElementById("roulette-spin").addEventListener("click", spinRoulette);
 
-  document.getElementById("craps-roll").addEventListener("click", rollCraps);
+document.getElementById("craps-roll").addEventListener("click", rollCraps);
 
-  document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
+document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
 
 document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
 document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
+// CLOSE DOMContentLoaded
+});
 
-
-  document.querySelectorAll(".slot-spin-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const type = parseInt(btn.getAttribute("data-slot"), 10);
-      spinSlot(type);
-    });
-  });
-
-  showGame("blackjack");
-  });
