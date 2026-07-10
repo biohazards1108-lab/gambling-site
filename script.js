@@ -1007,5 +1007,5 @@ document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
 document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
 // CLOSE DOMContentLoaded
-});
+
 
