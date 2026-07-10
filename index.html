@@ -9,48 +9,494 @@
         body {
             margin: 0;
             padding: 0;
-            background: #111;
-            color: gold;
+            background: #0b0b0f;
+            color: #f5d76e;
             font-family: Arial, sans-serif;
-            text-align: center;
         }
 
         header {
             padding: 20px;
-            font-size: 2rem;
-            text-shadow: 0 0 10px gold;
+            text-align: center;
+            font-size: 2.2rem;
+            text-shadow: 0 0 12px #f5d76e;
+            border-bottom: 1px solid #333;
         }
 
-        .content {
-            margin-top: 40px;
-            font-size: 1.3rem;
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 0;
+            background: #111;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav a {
+            color: #f5d76e;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav a:hover {
+            text-shadow: 0 0 8px #f5d76e;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px 40px;
+        }
+
+        section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #14141b;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            text-shadow: 0 0 8px #f5d76e;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .game-image {
+            flex: 0 0 260px;
+            text-align: center;
+        }
+
+        .game-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 2px solid #f5d76e;
+        }
+
+        .game-info {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .rules-list {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .rules-list li {
+            margin-bottom: 6px;
         }
 
         .btn {
-            margin-top: 30px;
-            padding: 12px 25px;
-            background: gold;
-            color: black;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #f5d76e;
+            color: #111;
             border: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
+            border-radius: 6px;
+            font-size: 1rem;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 10px #f5d76e;
+        }
+
+        .balance {
+            text-align: right;
+            font-size: 1rem;
+            padding: 5px 15px;
+            background: #111;
+            border-bottom: 1px solid #333;
+        }
+
+        .game-output {
+            margin-top: 10px;
+            min-height: 40px;
+            padding: 8px;
+            background: #1b1b24;
+            border-radius: 6px;
+            border: 1px solid #333;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #333;
+            background: #0b0b0f;
+        }
+
+        @media (max-width: 768px) {
+            .game-layout {
+                flex-direction: column;
+            }
+
+            .balance {
+                text-align: center;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>🎰 Welcome to Lucky 13 Casino 🎰</header>
+    <header>🎰 Lucky 13 Casino 🎰</header>
 
-    <div class="content">
-        <p>Your casino homepage is now loading correctly.</p>
-        <p>No more infinite loading screen.</p>
-
-        <button class="btn" onclick="alert('Casino features coming soon!')">
-            Start Playing
-        </button>
+    <div class="balance">
+        Balance: <span id="balance">$1000</span>
     </div>
 
-    <script src="script.js"></script>
+    <nav class="nav">
+        <a onclick="scrollToSection('slots')">Slots</a>
+        <a onclick="scrollToSection('blackjack')">Blackjack</a>
+        <a onclick="scrollToSection('roulette')">Roulette</a>
+    </nav>
+
+    <main>
+        <!-- SLOTS GAME -->
+        <section id="slots">
+            <h2>🎰 Lucky 13 Slots</h2>
+            <div class="game-layout">
+                <div class="game-image">
+                    <!-- Replace with your actual PNG path -->
+                    <img src="assets/images/slots.png" alt="Slots Machine" />
+                    <p style="margin-top:8px;font-size:0.9rem;">
+                        Image: <code>assets/images/slots.png</code>
+                    </p>
+                </div>
+                <div class="game-info">
+                    <p>
+                        Spin the reels and try to hit winning combinations. Classic 3‑reel slot with themed symbols.
+                    </p>
+
+                    <strong>Rules:</strong>
+                    <ul class="rules-list">
+                        <li>Bet amount is fixed at $50 per spin.</li>
+                        <li>Three matching symbols on the center line wins.</li>
+                        <li>Special symbol (🍀) pays double.</li>
+                        <li>Balance decreases by bet on each spin; winnings are added back.</li>
+                    </ul>
+
+                    <button class="btn" onclick="playSlots()">Spin Slots ($50)</button>
+                    <div id="slots-output" class="game-output"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLACKJACK GAME -->
+        <section id="blackjack">
+            <h2>🃏 Lucky 13 Blackjack</h2>
+            <div class="game-layout">
+                <div class="game-image">
+                    <!-- Replace with your actual PNG path -->
+                    <img src="assets/images/blackjack.png" alt="Blackjack Table" />
+                    <p style="margin-top:8px;font-size:0.9rem;">
+                        Image: <code>assets/images/blackjack.png</code>
+                    </p>
+                </div>
+                <div class="game-info">
+                    <p>
+                        Try to get as close to 21 as possible without going over. Beat the dealer to win.
+                    </p>
+
+                    <strong>Rules:</strong>
+                    <ul class="rules-list">
+                        <li>Bet amount is fixed at $100 per hand.</li>
+                        <li>Player and dealer both start with two cards.</li>
+                        <li>Player can choose to Hit (draw card) or Stand (keep total).</li>
+                        <li>If player busts (&gt; 21), dealer wins automatically.</li>
+                        <li>If dealer busts, player wins automatically.</li>
+                        <li>Closest to 21 without busting wins the hand.</li>
+                    </ul>
+
+                    <button class="btn" onclick="startBlackjack()">Deal Hand ($100)</button>
+                    <button class="btn" onclick="blackjackHit()">Hit</button>
+                    <button class="btn" onclick="blackjackStand()">Stand</button>
+
+                    <div id="blackjack-output" class="game-output"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROULETTE GAME -->
+        <section id="roulette">
+            <h2>🎡 Lucky 13 Roulette</h2>
+            <div class="game-layout">
+                <div class="game-image">
+                    <!-- Replace with your actual PNG path -->
+                    <img src="assets/images/roulette.png" alt="Roulette Wheel" />
+                    <p style="margin-top:8px;font-size:0.9rem;">
+                        Image: <code>assets/images/roulette.png</code>
+                    </p>
+                </div>
+                <div class="game-info">
+                    <p>
+                        Place a bet on Red, Black, or Lucky 13 and spin the wheel.
+                    </p>
+
+                    <strong>Rules:</strong>
+                    <ul class="rules-list">
+                        <li>Bet amount is fixed at $75 per spin.</li>
+                        <li>Available bets: Red, Black, or Lucky 13 (number 13).</li>
+                        <li>Red/Black pays 2x if you win.</li>
+                        <li>Lucky 13 pays 10x if the ball lands on 13.</li>
+                        <li>Balance decreases by bet on each spin; winnings are added back.</li>
+                    </ul>
+
+                    <div style="margin-top:10px;">
+                        <label for="roulette-bet" style="margin-right:8px;">Choose Bet:</label>
+                        <select id="roulette-bet">
+                            <option value="red">Red</option>
+                            <option value="black">Black</option>
+                            <option value="13">Lucky 13</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" onclick="playRoulette()">Spin Roulette ($75)</button>
+                    <div id="roulette-output" class="game-output"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Lucky 13 Casino &copy; 2026 – All games are for entertainment only.
+    </footer>
+
+    <script>
+        // Basic balance system
+        let balance = 1000;
+        const balanceEl = document.getElementById("balance");
+
+        function updateBalanceDisplay() {
+            balanceEl.textContent = "$" + balance;
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Utility: random integer
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // SLOTS GAME LOGIC
+        function playSlots() {
+            const bet = 50;
+            const output = document.getElementById("slots-output");
+
+            if (balance < bet) {
+                output.textContent = "Not enough balance to spin.";
+                return;
+            }
+
+            balance -= bet;
+
+            const symbols = ["🍒", "🍋", "⭐", "🍀", "7️⃣"];
+            const reel1 = symbols[randInt(0, symbols.length - 1)];
+            const reel2 = symbols[randInt(0, symbols.length - 1)];
+            const reel3 = symbols[randInt(0, symbols.length - 1)];
+
+            let resultText = `Reels: ${reel1} | ${reel2} | ${reel3}\n`;
+            let win = 0;
+
+            if (reel1 === reel2 && reel2 === reel3) {
+                if (reel1 === "🍀") {
+                    win = bet * 4; // double of normal 2x
+                    resultText += "Triple 🍀! Huge win!";
+                } else {
+                    win = bet * 2;
+                    resultText += "Triple match! You win!";
+                }
+            } else {
+                resultText += "No match. Better luck next time.";
+            }
+
+            balance += win;
+            updateBalanceDisplay();
+
+            resultText += `\nWin: $${win}\nBalance: $${balance}`;
+            output.textContent = resultText;
+        }
+
+        // BLACKJACK GAME LOGIC
+        let blackjackState = {
+            playerHand: [],
+            dealerHand: [],
+            active: false,
+            bet: 100
+        };
+
+        function drawCard() {
+            // Values 2–11 (11 = Ace counted as 11 for simplicity)
+            return randInt(2, 11);
+        }
+
+        function handTotal(hand) {
+            return hand.reduce((sum, v) => sum + v, 0);
+        }
+
+        function startBlackjack() {
+            const output = document.getElementById("blackjack-output");
+            const bet = blackjackState.bet;
+
+            if (balance < bet) {
+                output.textContent = "Not enough balance to start a hand.";
+                return;
+            }
+
+            balance -= bet;
+            updateBalanceDisplay();
+
+            blackjackState.active = true;
+            blackjackState.playerHand = [drawCard(), drawCard()];
+            blackjackState.dealerHand = [drawCard(), drawCard()];
+
+            const playerTotal = handTotal(blackjackState.playerHand);
+            const dealerTotal = handTotal(blackjackState.dealerHand);
+
+            output.textContent =
+                `New hand started.\n` +
+                `Player: ${blackjackState.playerHand.join(", ")} (Total: ${playerTotal})\n` +
+                `Dealer: ${blackjackState.dealerHand[0]}, ? (Hidden total)\n` +
+                `Choose Hit or Stand.`;
+        }
+
+        function blackjackHit() {
+            const output = document.getElementById("blackjack-output");
+            if (!blackjackState.active) {
+                output.textContent = "Start a hand first.";
+                return;
+            }
+
+            blackjackState.playerHand.push(drawCard());
+            const playerTotal = handTotal(blackjackState.playerHand);
+
+            if (playerTotal > 21) {
+                blackjackState.active = false;
+                output.textContent =
+                    `Player busts with ${playerTotal}. Dealer wins.\n` +
+                    `Balance: $${balance}`;
+                return;
+            }
+
+            output.textContent =
+                `Player hits.\n` +
+                `Player: ${blackjackState.playerHand.join(", ")} (Total: ${playerTotal})\n` +
+                `Choose Hit or Stand.`;
+        }
+
+        function blackjackStand() {
+            const output = document.getElementById("blackjack-output");
+            if (!blackjackState.active) {
+                output.textContent = "Start a hand first.";
+                return;
+            }
+
+            // Dealer draws until 17+
+            let dealerTotal = handTotal(blackjackState.dealerHand);
+            while (dealerTotal < 17) {
+                blackjackState.dealerHand.push(drawCard());
+                dealerTotal = handTotal(blackjackState.dealerHand);
+            }
+
+            const playerTotal = handTotal(blackjackState.playerHand);
+            blackjackState.active = false;
+
+            let resultText =
+                `Player stands with ${playerTotal}.\n` +
+                `Dealer: ${blackjackState.dealerHand.join(", ")} (Total: ${dealerTotal})\n`;
+
+            let win = 0;
+
+            if (dealerTotal > 21) {
+                resultText += "Dealer busts. Player wins!";
+                win = blackjackState.bet * 2;
+            } else if (playerTotal > dealerTotal) {
+                resultText += "Player wins!";
+                win = blackjackState.bet * 2;
+            } else if (playerTotal < dealerTotal) {
+                resultText += "Dealer wins.";
+            } else {
+                resultText += "Push (tie). Bet returned.";
+                win = blackjackState.bet;
+            }
+
+            balance += win;
+            updateBalanceDisplay();
+
+            resultText += `\nWin: $${win}\nBalance: $${balance}`;
+            output.textContent = resultText;
+        }
+
+        // ROULETTE GAME LOGIC
+        function playRoulette() {
+            const betAmount = 75;
+            const output = document.getElementById("roulette-output");
+            const betChoice = document.getElementById("roulette-bet").value;
+
+            if (balance < betAmount) {
+                output.textContent = "Not enough balance to spin.";
+                return;
+            }
+
+            balance -= betAmount;
+
+            // Roulette: numbers 0–36, with simple red/black mapping
+            const number = randInt(0, 36);
+            const isRed = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(number);
+            const color = number === 0 ? "green" : (isRed ? "red" : "black");
+
+            let resultText =
+                `Wheel spins...\n` +
+                `Result: ${number} (${color})\n`;
+
+            let win = 0;
+
+            if (betChoice === "13") {
+                if (number === 13) {
+                    win = betAmount * 10;
+                    resultText += "Lucky 13! Huge win!";
+                } else {
+                    resultText += "Missed Lucky 13.";
+                }
+            } else if (betChoice === "red") {
+                if (color === "red") {
+                    win = betAmount * 2;
+                    resultText += "Red wins!";
+                } else {
+                    resultText += "Red loses.";
+                }
+            } else if (betChoice === "black") {
+                if (color === "black") {
+                    win = betAmount * 2;
+                    resultText += "Black wins!";
+                } else {
+                    resultText += "Black loses.";
+                }
+            }
+
+            balance += win;
+            updateBalanceDisplay();
+
+            resultText += `\nWin: $${win}\nBalance: $${balance}`;
+            output.textContent = resultText;
+        }
+
+        // Initialize balance display
+        updateBalanceDisplay();
+    </script>
 </body>
 </html>
