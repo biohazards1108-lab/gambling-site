@@ -1,4 +1,7 @@
+// =========================
 // PLAYER STORAGE
+// =========================
+
 const PLAYER_KEYS = {
   player1: "lucky13_player1",
   player2: "lucky13_player2",
@@ -14,7 +17,10 @@ const DEFAULT_PLAYER_DATA = {
 let currentPlayerKey = PLAYER_KEYS.player1;
 let currentPlayerData = null;
 
+// =========================
 // AUDIO
+// =========================
+
 let audioInitialized = false;
 let bgMusic = null;
 let sfxChip = null;
@@ -23,62 +29,10 @@ let sfxRoulette = null;
 let sfxSlot = null;
 let sfxDice = null;
 
-// ROULETTE CONFIG
-const ROULETTE_EU_NUMBERS = [
-  0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
-  16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
-];
+// =========================
+// UTILITIES
+// =========================
 
-const ROULETTE_US_NUMBERS = [
-  "0", "00", 1, 13, 36, 24, 3, 15, 34, 22, 5, 17, 32, 20, 7, 11, 30, 26, 9, 28,
-  0, 2, 14, 35, 23, 4, 16, 33, 21, 6, 18, 31, 19, 8, 12, 29, 25, 10, 27,
-];
-
-const ROULETTE_COLORS = {
-  0: "green",
-  32: "red",
-  15: "black",
-  19: "red",
-  4: "black",
-  21: "red",
-  2: "black",
-  25: "red",
-  17: "black",
-  34: "red",
-  6: "black",
-  27: "red",
-  13: "black",
-  36: "red",
-  11: "black",
-  30: "red",
-  8: "black",
-  23: "red",
-  10: "black",
-  5: "red",
-  24: "black",
-  16: "red",
-  33: "black",
-  1: "red",
-  20: "black",
-  14: "red",
-  31: "black",
-  9: "red",
-  22: "black",
-  18: "red",
-  29: "black",
-  7: "red",
-  28: "black",
-  12: "red",
-  35: "black",
-  3: "red",
-  26: "black",
-};
-
-// CARDS
-const SUITS = ["♠", "♥", "♦", "♣"];
-const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-
-// UTIL
 function loadPlayerData(key) {
   const raw = localStorage.getItem(key);
   if (!raw) {
@@ -113,42 +67,10 @@ function adjustBalance(amountChange, gameName, didWin) {
   updatePlayerUI();
 }
 
-function createDeck() {
-  const deck = [];
-  for (const suit of SUITS) {
-    for (const rank of RANKS) {
-      deck.push({ suit, rank });
-    }
-  }
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
-  return deck;
-}
+// =========================
+// AUDIO INIT
+// =========================
 
-function cardValueForBlackjack(card) {
-  if (card.rank === "A") return 11;
-  if (["K", "Q", "J"].includes(card.rank)) return 10;
-  return parseInt(card.rank, 10);
-}
-
-function handValueBlackjack(hand) {
-  let total = 0;
-  let aces = 0;
-  for (const card of hand) {
-    const v = cardValueForBlackjack(card);
-    total += v;
-    if (card.rank === "A") aces++;
-  }
-  while (total > 21 && aces > 0) {
-    total -= 10;
-    aces--;
-  }
-  return total;
-}
-
-// AUDIO
 function initAudio() {
   if (audioInitialized) return;
 
@@ -173,7 +95,10 @@ function playSfx(sound) {
   sound.play();
 }
 
-// GAME SWITCH
+// =========================
+// GAME SWITCHING
+// =========================
+
 function showGame(gameId) {
   const tables = document.querySelectorAll(".game-table");
   tables.forEach((t) => t.classList.add("hidden"));
@@ -201,12 +126,56 @@ function showGame(gameId) {
       break;
   }
 }
+// =========================
+// CARDS / DECK
+// =========================
 
+const SUITS = ["♠", "♥", "♦", "♣"];
+const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+function createDeck() {
+  const deck = [];
+  for (const suit of SUITS) {
+    for (const rank of RANKS) {
+      deck.push({ suit, rank });
+    }
+  }
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+}
+
+// =========================
 // BLACKJACK
+// =========================
+
 let blackjackDeck = [];
 let blackjackPlayerHand = [];
 let blackjackDealerHand = [];
 let blackjackInRound = false;
+
+function cardValueForBlackjack(card) {
+  if (card.rank === "A") return 11;
+  if (["K", "Q", "J"].includes(card.rank)) return 10;
+  return parseInt(card.rank, 10);
+}
+
+function handValueBlackjack(hand) {
+  let total = 0;
+  let aces = 0;
+  for (const card of hand) {
+    const v = cardValueForBlackjack(card);
+    total += v;
+    if (card.rank === "A") aces++;
+  }
+  while (total > 21 && aces > 0) {
+    total -= 10;
+    aces--;
+  }
+  return total;
+}
 
 function renderCard(container, card, faceDown = false) {
   const cardDiv = document.createElement("div");
@@ -383,7 +352,60 @@ function blackjackReset() {
   document.getElementById("blackjack-stand").disabled = true;
 }
 
+// =========================
 // ROULETTE
+// =========================
+
+const ROULETTE_EU_NUMBERS = [
+  0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
+  16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
+];
+
+const ROULETTE_US_NUMBERS = [
+  "0", "00", 1, 13, 36, 24, 3, 15, 34, 22, 5, 17, 32, 20, 7, 11, 30, 26, 9, 28,
+  0, 2, 14, 35, 23, 4, 16, 33, 21, 6, 18, 31, 19, 8, 12, 29, 25, 10, 27,
+];
+
+const ROULETTE_COLORS = {
+  0: "green",
+  32: "red",
+  15: "black",
+  19: "red",
+  4: "black",
+  21: "red",
+  2: "black",
+  25: "red",
+  17: "black",
+  34: "red",
+  6: "black",
+  27: "red",
+  13: "black",
+  36: "red",
+  11: "black",
+  30: "red",
+  8: "black",
+  23: "red",
+  10: "black",
+  5: "red",
+  24: "black",
+  16: "red",
+  33: "black",
+  1: "red",
+  20: "black",
+  14: "red",
+  31: "black",
+  9: "red",
+  22: "black",
+  18: "red",
+  29: "black",
+  7: "red",
+  28: "black",
+  12: "red",
+  35: "black",
+  3: "red",
+  26: "black",
+};
+
 let currentRouletteVariant = "EU";
 let rouletteSpinning = false;
 
@@ -502,7 +524,10 @@ function spinRoulette() {
   }, 3000);
 }
 
+// =========================
 // CRAPS
+// =========================
+
 let crapsPoint = null;
 
 function rollCraps() {
@@ -562,7 +587,10 @@ function rollCraps() {
   }
 }
 
+// =========================
 // BACCARAT
+// =========================
+
 function baccaratCardValue(card) {
   const rank = card.rank;
   if (["10", "J", "Q", "K"].includes(rank)) return 0;
@@ -663,7 +691,10 @@ function dealBaccarat() {
   }
 }
 
+// =========================
 // HOLDEM
+// =========================
+
 let holdemStage = "idle";
 let holdemDeck = [];
 let holdemPlayerHand = [];
@@ -711,44 +742,6 @@ function renderHoldemHands() {
   holdemPlayerHand.forEach((card) => renderCard(playerContainer, card, false));
   holdemDealerHand.forEach((card) => renderCard(dealerContainer, card, false));
   holdemBoard.forEach((card) => renderCard(boardContainer, card, false));
-}
-
-function nextHoldemStage() {
-  const status = document.getElementById("holdem-status");
-
-  if (holdemStage === "preflop") {
-    holdemBoard.push(holdemDeck.pop(), holdemDeck.pop(), holdemDeck.pop());
-    holdemStage = "flop";
-    renderHoldemHands();
-    status.textContent = "Flop revealed. Click Next Stage for Turn.";
-  } else if (holdemStage === "flop") {
-    holdemBoard.push(holdemDeck.pop());
-    holdemStage = "turn";
-    renderHoldemHands();
-    status.textContent = "Turn revealed. Click Next Stage for River.";
-  } else if (holdemStage === "turn") {
-    holdemBoard.push(holdemDeck.pop());
-    holdemStage = "river";
-    renderHoldemHands();
-    status.textContent = "River revealed. Click Next Stage for Showdown.";
-  } else if (holdemStage === "river") {
-    holdemStage = "showdown";
-    renderHoldemHands();
-    const playerRank = evaluateHoldemHand(holdemPlayerHand, holdemBoard);
-    const dealerRank = evaluateHoldemHand(holdemDealerHand, holdemBoard);
-
-    if (playerRank.score > dealerRank.score) {
-      adjustBalance(holdemBetAmount, "Texas Hold’em", true);
-      status.textContent = `Player wins with ${playerRank.name}. Dealer has ${dealerRank.name}.`;
-    } else if (dealerRank.score > playerRank.score) {
-      adjustBalance(-holdemBetAmount, "Texas Hold’em", false);
-      status.textContent = `Dealer wins with ${dealerRank.name}. Player has ${playerRank.name}.`;
-    } else {
-      status.textContent = `Tie: both have ${playerRank.name}. Bet returned.`;
-    }
-
-    document.getElementById("holdem-next-stage").disabled = true;
-  }
 }
 
 function evaluateHoldemHand(hand, board) {
@@ -849,12 +842,53 @@ function evaluateHoldemHand(hand, board) {
   return { name, score };
 }
 
-// SLOTS (RTP + proper PNG display)
+function nextHoldemStage() {
+  const status = document.getElementById("holdem-status");
+
+  if (holdemStage === "preflop") {
+    holdemBoard.push(holdemDeck.pop(), holdemDeck.pop(), holdemDeck.pop());
+    holdemStage = "flop";
+    renderHoldemHands();
+    status.textContent = "Flop revealed. Click Next Stage for Turn.";
+  } else if (holdemStage === "flop") {
+    holdemBoard.push(holdemDeck.pop());
+    holdemStage = "turn";
+    renderHoldemHands();
+    status.textContent = "Turn revealed. Click Next Stage for River.";
+  } else if (holdemStage === "turn") {
+    holdemBoard.push(holdemDeck.pop());
+    holdemStage = "river";
+    renderHoldemHands();
+    status.textContent = "River revealed. Click Next Stage for Showdown.";
+  } else if (holdemStage === "river") {
+    holdemStage = "showdown";
+    renderHoldemHands();
+    const playerRank = evaluateHoldemHand(holdemPlayerHand, holdemBoard);
+    const dealerRank = evaluateHoldemHand(holdemDealerHand, holdemBoard);
+
+    if (playerRank.score > dealerRank.score) {
+      adjustBalance(holdemBetAmount, "Texas Hold’em", true);
+      status.textContent = `Player wins with ${playerRank.name}. Dealer has ${dealerRank.name}.`;
+    } else if (dealerRank.score > playerRank.score) {
+      adjustBalance(-holdemBetAmount, "Texas Hold’em", false);
+      status.textContent = `Dealer wins with ${dealerRank.name}. Player has ${playerRank.name}.`;
+    } else {
+      status.textContent = `Tie: both have ${playerRank.name}. Bet returned.`;
+    }
+
+    document.getElementById("holdem-next-stage").disabled = true;
+  }
+}
+
+// =========================
+// SLOTS (RTP + PNG DISPLAY)
+// =========================
+
 const SLOT_SYMBOLS = [
   {
     name: "cherry",
     img: "assets/images/slots/slot-cherry.png",
-    weight: 40,   // common
+    weight: 40,
     payout3: 5,
     payout5: 10,
   },
@@ -868,7 +902,7 @@ const SLOT_SYMBOLS = [
   {
     name: "seven",
     img: "assets/images/slots/slot-seven.png",
-    weight: 10,   // rare
+    weight: 10,
     payout3: 20,
     payout5: 40,
   },
@@ -882,16 +916,14 @@ const SLOT_SYMBOLS = [
   {
     name: "diamond",
     img: "assets/images/slots/slot-diamond.png",
-    weight: 10,   // rare
+    weight: 10,
     payout3: 25,
     payout5: 50,
   },
 ];
 
-// total weight for RNG
 const SLOT_TOTAL_WEIGHT = SLOT_SYMBOLS.reduce((sum, s) => sum + s.weight, 0);
 
-// helper: weighted random symbol
 function getRandomSlotSymbol() {
   const roll = Math.random() * SLOT_TOTAL_WEIGHT;
   let acc = 0;
@@ -902,24 +934,6 @@ function getRandomSlotSymbol() {
   return SLOT_SYMBOLS[SLOT_SYMBOLS.length - 1];
 }
 
-// optional: quick RTP estimate (for you, not shown in UI)
-function estimateSlotRTP(slotType) {
-  const reels = slotType;
-  const bet = 1;
-  let expectedReturn = 0;
-
-  // very rough: assume chance all reels match is sum of (p(symbol)^reels)
-  for (const s of SLOT_SYMBOLS) {
-    const p = s.weight / SLOT_TOTAL_WEIGHT;
-    const matchProb = Math.pow(p, reels);
-    const payout = slotType === 3 ? s.payout3 : s.payout5;
-    expectedReturn += matchProb * payout;
-  }
-
-  return expectedReturn / bet; // RTP as fraction (e.g. 0.95)
-}
-
-// main spin function
 function spinSlot(slotType) {
   const statusId = slotType === 3 ? "slot-status-3" : "slot-status-5";
   const status = document.getElementById(statusId);
@@ -942,14 +956,12 @@ function spinSlot(slotType) {
   const reelsContainer = document.getElementById(reelsId);
   const reels = Array.from(reelsContainer.querySelectorAll(".slot-reel"));
 
-  // clear and animate reels
   reels.forEach((reel) => {
     reel.innerHTML = "";
     reel.style.transition = "transform 0.8s ease-out";
     reel.style.transform = "translateY(-100%)";
   });
 
-  // after spin animation, stop and show symbols
   setTimeout(() => {
     const results = [];
 
@@ -967,7 +979,6 @@ function spinSlot(slotType) {
       reel.appendChild(symbolDiv);
     });
 
-    // check win: all reels same symbol
     const allSame = results.every((s) => s.name === results[0].name);
 
     if (allSame) {
@@ -990,21 +1001,46 @@ function spinSlot(slotType) {
     }
   }, 800);
 }
-// EVENT LISTENERS (FINAL SECTION)
 
-document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
-document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
-document.getElementById("blackjack-stand").addEventListener("click", blackjackStand);
-document.getElementById("blackjack-reset").addEventListener("click", blackjackReset);
+// =========================
+// INIT / EVENT LISTENERS
+// =========================
 
-document.getElementById("roulette-spin").addEventListener("click", spinRoulette);
+document.addEventListener("DOMContentLoaded", () => {
+  currentPlayerData = loadPlayerData(currentPlayerKey);
+  updatePlayerUI();
 
-document.getElementById("craps-roll").addEventListener("click", rollCraps);
+  document.getElementById("player-select").addEventListener("change", (e) => {
+    currentPlayerKey = PLAYER_KEYS[e.target.value];
+    currentPlayerData = loadPlayerData(currentPlayerKey);
+    updatePlayerUI();
+  });
 
-document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
+  document.getElementById("audio-init-btn").addEventListener("click", () => {
+    initAudio();
+  });
 
-document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
-document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
+  document.querySelectorAll(".game-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const game = btn.getAttribute("data-game");
+      showGame(game);
+    });
+  });
 
-// CLOSE DOMContentLoaded
+  document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
+  document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
+  document.getElementById("blackjack-stand").addEventListener("click", blackjackStand);
+  document.getElementById("blackjack-reset").addEventListener("click", blackjackReset);
+
+  document.getElementById("roulette-spin").addEventListener("click", spinRoulette);
+
+  document.getElementById("craps-roll").addEventListener("click", rollCraps);
+
+  document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
+
+  document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
+  document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
+
+  document.getElementById("slot-spin-3").addEventListener("click", () => spinSlot(3));
+  document.getElementById("slot-spin-5").addEventListener("click", () => spinSlot(5));
 });
