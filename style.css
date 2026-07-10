@@ -255,11 +255,11 @@ body {
   font-size: 28px;
   font-weight: bold;
 }
-
 .card-front {
   background: white;
   color: black;
   z-index: 2;
+  transform: rotateY(0deg);
 }
 
 .card-back {
@@ -268,14 +268,14 @@ body {
   transform: rotateY(180deg);
 }
 
+}
+
 .card.flip .card-front {
   transform: rotateY(180deg);
 }
 
 .card.flip .card-back {
   transform: rotateY(0deg);
-}
-
 }
 
 /* Shoe */
