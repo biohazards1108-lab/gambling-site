@@ -15,7 +15,7 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at center, #222 0%, #000 70%);
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
   overflow: hidden;
 }
 
@@ -27,14 +27,14 @@ body {
   height: 100vh;
   background: linear-gradient(
     90deg,
-    #b8860b 0%,
-    #ffd700 30%,
-    #b8860b 60%,
-    #ffd700 100%
+    #3b2a0a 0%,
+    #d4af37 30%,
+    #1f1505 60%,
+    #f5d76e 100%
   );
   z-index: 20;
   animation: curtain-open 3s ease-out forwards;
-  animation-delay: 0.2s; /* FIX: prevents instant disappearance */
+  animation-delay: 0.2s;
 }
 
 .curtain-left {
@@ -81,14 +81,13 @@ body {
   pointer-events: none;
   overflow: hidden;
   z-index: 10;
-  background: transparent; /* FIX: prevents collapse if image missing */
 }
 
 .chip {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background-image: url("assets/images/chip-gold.png");
+  width: 48px;
+  height: 48px;
+  background-image: url("assets/images/chips/gold-chip.png");
   background-size: cover;
   animation: chip-fall 3s linear infinite;
 }
@@ -105,28 +104,35 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  z-index: 30; /* FIX: always above curtains */
+  z-index: 30;
 }
 
 .loading-title {
   font-size: 3rem;
-  color: #ffd700;
-  text-shadow: 0 0 20px rgba(255,215,0,0.8);
-  margin-bottom: 2rem;
+  color: #f5d76e;
+  text-shadow: 0 0 25px rgba(245,215,110,0.9);
+  letter-spacing: 0.25rem;
 }
 
 .enter-button {
+  margin-top: 2rem;
   padding: 1rem 3rem;
   font-size: 1.2rem;
   border-radius: 999px;
-  border: 2px solid #ffd700;
-  background: radial-gradient(circle at top, #fff8dc 0%, #b8860b 40%, #8b6508 100%);
+  border: 2px solid #f5d76e;
+  background: radial-gradient(circle at top, #fff8dc 0%, #b8860b 40%, #3b2a0a 100%);
   color: #111;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 25px rgba(245,215,110,0.8);
 }
 
 .enter-button.show {
   opacity: 1;
+}
+
+.enter-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(245,215,110,1);
 }
