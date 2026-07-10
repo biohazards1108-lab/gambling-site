@@ -1,9 +1,4 @@
-// script.js
-
-// ---------------------------
-// GLOBAL STATE & CONSTANTS
-// ---------------------------
-
+// PLAYER STORAGE
 const PLAYER_KEYS = {
   player1: "lucky13_player1",
   player2: "lucky13_player2",
@@ -19,7 +14,7 @@ const DEFAULT_PLAYER_DATA = {
 let currentPlayerKey = PLAYER_KEYS.player1;
 let currentPlayerData = null;
 
-// Audio elements (created in JS to ensure user gesture)
+// AUDIO
 let audioInitialized = false;
 let bgMusic = null;
 let sfxChip = null;
@@ -28,7 +23,7 @@ let sfxRoulette = null;
 let sfxSlot = null;
 let sfxDice = null;
 
-// Roulette configuration
+// ROULETTE CONFIG
 const ROULETTE_EU_NUMBERS = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
   16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -39,7 +34,6 @@ const ROULETTE_US_NUMBERS = [
   0, 2, 14, 35, 23, 4, 16, 33, 21, 6, 18, 31, 19, 8, 12, 29, 25, 10, 27,
 ];
 
-// Color mapping for roulette (European)
 const ROULETTE_COLORS = {
   0: "green",
   32: "red",
@@ -80,14 +74,11 @@ const ROULETTE_COLORS = {
   26: "black",
 };
 
-// Card deck
+// CARDS
 const SUITS = ["♠", "♥", "♦", "♣"];
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
-// ---------------------------
-// UTILITIES
-// ---------------------------
-
+// UTIL
 function loadPlayerData(key) {
   const raw = localStorage.getItem(key);
   if (!raw) {
@@ -122,7 +113,6 @@ function adjustBalance(amountChange, gameName, didWin) {
   updatePlayerUI();
 }
 
-// Create a shuffled deck
 function createDeck() {
   const deck = [];
   for (const suit of SUITS) {
@@ -130,7 +120,6 @@ function createDeck() {
       deck.push({ suit, rank });
     }
   }
-  // Shuffle
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -159,10 +148,7 @@ function handValueBlackjack(hand) {
   return total;
 }
 
-// ---------------------------
-// AUDIO SYSTEM
-// ---------------------------
-
+// AUDIO
 function initAudio() {
   if (audioInitialized) return;
 
@@ -175,27 +161,19 @@ function initAudio() {
   sfxSlot = new Audio("assets/audio/slot-spin.wav");
   sfxDice = new Audio("assets/audio/dice-roll.wav");
 
-  // Start background music only after user gesture
   bgMusic.play().then(() => {
     audioInitialized = true;
     document.getElementById("audio-state-label").textContent = "Audio: On";
-  }).catch(() => {
-    // If autoplay fails, user can click again
-  });
+  }).catch(() => {});
 }
 
 function playSfx(sound) {
   if (!audioInitialized) return;
-  if (sound && sound.currentTime !== undefined) {
-    sound.currentTime = 0;
-    sound.play();
-  }
+  sound.currentTime = 0;
+  sound.play();
 }
 
-// ---------------------------
-// GAME SWITCHING
-// ---------------------------
-
+// GAME SWITCH
 function showGame(gameId) {
   const tables = document.querySelectorAll(".game-table");
   tables.forEach((t) => t.classList.add("hidden"));
@@ -224,10 +202,7 @@ function showGame(gameId) {
   }
 }
 
-// ---------------------------
-// BLACKJACK IMPLEMENTATION
-// ---------------------------
-
+// BLACKJACK
 let blackjackDeck = [];
 let blackjackPlayerHand = [];
 let blackjackDealerHand = [];
@@ -248,13 +223,11 @@ function renderCard(container, card, faceDown = false) {
   cardDiv.appendChild(back);
 
   if (faceDown) {
-    // Start as back, then flip when needed
     cardDiv.classList.add("flip");
   }
 
   container.appendChild(cardDiv);
 
-  // Card flip animation (deal)
   setTimeout(() => {
     cardDiv.classList.toggle("flip");
   }, 50);
@@ -267,7 +240,6 @@ function updateBlackjackUI() {
   playerContainer.innerHTML = "";
 
   blackjackDealerHand.forEach((card, index) => {
-    // First dealer card face down until stand
     const faceDown = index === 0 && blackjackInRound;
     renderCard(dealerContainer, card, faceDown);
   });
@@ -277,7 +249,7 @@ function updateBlackjackUI() {
   });
 
   const dealerValue = blackjackInRound
-    ? cardValueForBlackjack(blackjackDealerHand[1]) // show partial
+    ? cardValueForBlackjack(blackjackDealerHand[1])
     : handValueBlackjack(blackjackDealerHand);
   const playerValue = handValueBlackjack(blackjackPlayerHand);
 
@@ -306,7 +278,6 @@ function startBlackjackRound() {
   blackjackDealerHand = [];
   blackjackInRound = true;
 
-  // Deal initial cards: player, dealer, player, dealer
   blackjackPlayerHand.push(blackjackDeck.pop());
   blackjackDealerHand.push(blackjackDeck.pop());
   blackjackPlayerHand.push(blackjackDeck.pop());
@@ -331,7 +302,6 @@ function blackjackHit() {
 
   const playerValue = handValueBlackjack(blackjackPlayerHand);
   if (playerValue > 21) {
-    // Bust
     blackjackInRound = false;
     document.getElementById("blackjack-hit").disabled = true;
     document.getElementById("blackjack-stand").disabled = true;
@@ -339,7 +309,6 @@ function blackjackHit() {
     const bet = parseInt(document.getElementById("blackjack-bet").value, 10);
     adjustBalance(-bet, "Blackjack", false);
     status.textContent = "Player busts. Dealer wins.";
-    // Reveal dealer hand
     updateBlackjackUI();
   }
 }
@@ -349,14 +318,12 @@ function blackjackStand() {
   const status = document.getElementById("blackjack-status");
   const bet = parseInt(document.getElementById("blackjack-bet").value, 10);
 
-  // Reveal dealer hand and play out dealer logic
   blackjackInRound = false;
   updateBlackjackUI();
 
   let dealerValue = handValueBlackjack(blackjackDealerHand);
   let playerValue = handValueBlackjack(blackjackPlayerHand);
 
-  // Dealer hits soft 17: if dealer has 17 with an Ace counted as 11, must hit
   function isSoft17(hand) {
     let total = 0;
     let aces = 0;
@@ -365,7 +332,6 @@ function blackjackStand() {
       total += v;
       if (card.rank === "A") aces++;
     }
-    // Soft 17: total == 17 and at least one Ace counted as 11
     return total === 17 && aces > 0;
   }
 
@@ -379,13 +345,10 @@ function blackjackStand() {
   playerValue = handValueBlackjack(blackjackPlayerHand);
   dealerValue = handValueBlackjack(blackjackDealerHand);
 
-  // Determine outcome
   if (dealerValue > 21) {
-    // Dealer busts, player wins
     adjustBalance(bet, "Blackjack", true);
     status.textContent = "Dealer busts. Player wins.";
   } else if (playerValue > dealerValue) {
-    // Check for blackjack (3:2 payout)
     const isPlayerBlackjack = blackjackPlayerHand.length === 2 && playerValue === 21;
     if (isPlayerBlackjack) {
       const payout = Math.floor(bet * 1.5);
@@ -420,11 +383,8 @@ function blackjackReset() {
   document.getElementById("blackjack-stand").disabled = true;
 }
 
-// ---------------------------
-// ROULETTE IMPLEMENTATION
-// ---------------------------
-
-let currentRouletteVariant = "EU"; // or "US"
+// ROULETTE
+let currentRouletteVariant = "EU";
 let rouletteSpinning = false;
 
 function setupRoulette(variant) {
@@ -450,7 +410,6 @@ function setupRoulette(variant) {
       cell.classList.add("roulette-cell");
       let color = "green";
       if (typeof num === "number") {
-        // Basic color mapping: even black, odd red (not exact wheel order, but color mapping real enough)
         color = num === 0 ? "green" : num % 2 === 0 ? "black" : "red";
       }
       cell.classList.add(color);
@@ -488,7 +447,6 @@ function spinRoulette() {
   const wheel = document.getElementById("roulette-wheel");
   const ball = document.getElementById("roulette-ball");
 
-  // Random result
   let resultNumber;
   if (currentRouletteVariant === "EU") {
     resultNumber = ROULETTE_EU_NUMBERS[Math.floor(Math.random() * ROULETTE_EU_NUMBERS.length)];
@@ -496,12 +454,10 @@ function spinRoulette() {
     resultNumber = ROULETTE_US_NUMBERS[Math.floor(Math.random() * ROULETTE_US_NUMBERS.length)];
   }
 
-  // Spin animation (CSS transform)
   const rotations = 5 + Math.random() * 3;
   wheel.style.transition = "transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)";
   wheel.style.transform = `rotate(${rotations * 360}deg)`;
 
-  // Ball animation (simple orbit)
   ball.style.transition = "transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)";
   ball.style.transform = `translate(-50%, -50%) rotate(${rotations * 360}deg)`;
 
@@ -510,7 +466,6 @@ function spinRoulette() {
     wheel.style.transition = "";
     ball.style.transition = "";
 
-    // Determine color
     let color = "green";
     if (currentRouletteVariant === "EU") {
       color = ROULETTE_COLORS[resultNumber];
@@ -518,26 +473,23 @@ function spinRoulette() {
       if (typeof resultNumber === "number") {
         color = resultNumber === 0 ? "green" : resultNumber % 2 === 0 ? "black" : "red";
       } else {
-        color = "green"; // 0/00
+        color = "green";
       }
     }
 
-    // Evaluate bet
     let win = false;
-    if (betTarget === "red" || betTarget === "black" || betTarget === "green") {
+    if (["red", "black", "green"].includes(betTarget)) {
       if (betTarget === color) win = true;
     } else {
-      // Number bet
       if (betTarget === resultNumber.toString().toLowerCase()) {
         win = true;
       }
     }
 
     if (win) {
-      // Simple payout: 1:1 for color, 35:1 for straight number
       let payout = betAmount;
-      if (betTarget === "red" || betTarget === "black" || betTarget === "green") {
-        payout = betAmount; // 1:1
+      if (["red", "black", "green"].includes(betTarget)) {
+        payout = betAmount;
       } else {
         payout = betAmount * 35;
       }
@@ -550,10 +502,7 @@ function spinRoulette() {
   }, 3000);
 }
 
-// ---------------------------
-// CRAPS IMPLEMENTATION (PASS LINE)
-// ---------------------------
-
+// CRAPS
 let crapsPoint = null;
 
 function rollCraps() {
@@ -578,15 +527,16 @@ function rollCraps() {
 
   const die1Div = document.getElementById("die1");
   const die2Div = document.getElementById("die2");
-  die1Div.textContent = die1;
-  die2Div.textContent = die2;
 
-  // Random rotation for dice physics feel
+  die1Div.style.backgroundImage = `url("assets/images/dice/dice-${die1}.png")`;
+  die2Div.style.backgroundImage = `url("assets/images/dice/dice-${die2}.png")`;
+  die1Div.style.backgroundSize = "cover";
+  die2Div.style.backgroundSize = "cover";
+
   die1Div.style.transform = `rotate(${Math.random() * 360}deg)`;
   die2Div.style.transform = `rotate(${Math.random() * 360}deg)`;
 
   if (crapsPoint === null) {
-    // Come-out roll
     if (total === 7 || total === 11) {
       adjustBalance(bet, "Craps", true);
       status.textContent = `Come-out roll ${total}. Pass Line wins.`;
@@ -598,7 +548,6 @@ function rollCraps() {
       status.textContent = `Point established: ${crapsPoint}. Roll again.`;
     }
   } else {
-    // Point phase
     if (total === crapsPoint) {
       adjustBalance(bet, "Craps", true);
       status.textContent = `Rolled the point ${crapsPoint}. Pass Line wins. Point cleared.`;
@@ -613,10 +562,7 @@ function rollCraps() {
   }
 }
 
-// ---------------------------
-// BACCARAT IMPLEMENTATION
-// ---------------------------
-
+// BACCARAT
 function baccaratCardValue(card) {
   const rank = card.rank;
   if (["10", "J", "Q", "K"].includes(rank)) return 0;
@@ -666,11 +612,9 @@ function dealBaccarat() {
   document.getElementById("baccarat-player-value").textContent = playerValue;
   document.getElementById("baccarat-banker-value").textContent = bankerValue;
 
-  // Natural
   if (playerValue >= 8 || bankerValue >= 8) {
-    // No third card
+    // natural
   } else {
-    // Player third card rule
     let playerThird = null;
     if (playerValue <= 5) {
       playerThird = deck.pop();
@@ -680,29 +624,18 @@ function dealBaccarat() {
       document.getElementById("baccarat-player-value").textContent = playerValue;
     }
 
-    // Banker third card rule (complex)
     let bankerThird = null;
     const bankerInitial = bankerValue;
     const playerThirdValue = playerThird ? baccaratCardValue(playerThird) : null;
 
     if (!playerThird) {
-      // Player stood
-      if (bankerInitial <= 5) {
-        bankerThird = deck.pop();
-      }
+      if (bankerInitial <= 5) bankerThird = deck.pop();
     } else {
-      // Banker rules based on bankerInitial and playerThirdValue
-      if (bankerInitial <= 2) {
-        bankerThird = deck.pop();
-      } else if (bankerInitial === 3 && playerThirdValue !== 8) {
-        bankerThird = deck.pop();
-      } else if (bankerInitial === 4 && playerThirdValue >= 2 && playerThirdValue <= 7) {
-        bankerThird = deck.pop();
-      } else if (bankerInitial === 5 && playerThirdValue >= 4 && playerThirdValue <= 7) {
-        bankerThird = deck.pop();
-      } else if (bankerInitial === 6 && playerThirdValue >= 6 && playerThirdValue <= 7) {
-        bankerThird = deck.pop();
-      }
+      if (bankerInitial <= 2) bankerThird = deck.pop();
+      else if (bankerInitial === 3 && playerThirdValue !== 8) bankerThird = deck.pop();
+      else if (bankerInitial === 4 && playerThirdValue >= 2 && playerThirdValue <= 7) bankerThird = deck.pop();
+      else if (bankerInitial === 5 && playerThirdValue >= 4 && playerThirdValue <= 7) bankerThird = deck.pop();
+      else if (bankerInitial === 6 && playerThirdValue >= 6 && playerThirdValue <= 7) bankerThird = deck.pop();
     }
 
     if (bankerThird) {
@@ -714,19 +647,14 @@ function dealBaccarat() {
     document.getElementById("baccarat-banker-value").textContent = bankerValue;
   }
 
-  // Determine winner
   let winner = "tie";
   if (playerValue > bankerValue) winner = "player";
   else if (bankerValue > playerValue) winner = "banker";
 
   if (winner === betSide) {
     let payout = betAmount;
-    if (betSide === "banker") {
-      // Banker usually pays 0.95:1 (commission), but we can keep 1:1 for simplicity or mention commission
-      payout = Math.floor(betAmount * 0.95);
-    } else if (betSide === "tie") {
-      payout = betAmount * 8;
-    }
+    if (betSide === "banker") payout = Math.floor(betAmount * 0.95);
+    else if (betSide === "tie") payout = betAmount * 8;
     adjustBalance(payout, "Baccarat", true);
     status.textContent = `Player: ${playerValue}, Banker: ${bankerValue}. You win ${payout} tokens.`;
   } else {
@@ -735,11 +663,8 @@ function dealBaccarat() {
   }
 }
 
-// ---------------------------
-// TEXAS HOLD’EM IMPLEMENTATION (HEADS-UP)
-// ---------------------------
-
-let holdemStage = "idle"; // idle, preflop, flop, turn, river, showdown
+// HOLDEM
+let holdemStage = "idle";
 let holdemDeck = [];
 let holdemPlayerHand = [];
 let holdemDealerHand = [];
@@ -792,25 +717,21 @@ function nextHoldemStage() {
   const status = document.getElementById("holdem-status");
 
   if (holdemStage === "preflop") {
-    // Flop
     holdemBoard.push(holdemDeck.pop(), holdemDeck.pop(), holdemDeck.pop());
     holdemStage = "flop";
     renderHoldemHands();
     status.textContent = "Flop revealed. Click Next Stage for Turn.";
   } else if (holdemStage === "flop") {
-    // Turn
     holdemBoard.push(holdemDeck.pop());
     holdemStage = "turn";
     renderHoldemHands();
     status.textContent = "Turn revealed. Click Next Stage for River.";
   } else if (holdemStage === "turn") {
-    // River
     holdemBoard.push(holdemDeck.pop());
     holdemStage = "river";
     renderHoldemHands();
     status.textContent = "River revealed. Click Next Stage for Showdown.";
   } else if (holdemStage === "river") {
-    // Showdown
     holdemStage = "showdown";
     renderHoldemHands();
     const playerRank = evaluateHoldemHand(holdemPlayerHand, holdemBoard);
@@ -830,14 +751,8 @@ function nextHoldemStage() {
   }
 }
 
-// Simple hand ranking system (full ranking, but not fully optimized)
-// Score hierarchy: Royal Flush > Straight Flush > Four of a Kind > Full House > Flush > Straight > Three of a Kind > Two Pair > One Pair > High Card
 function evaluateHoldemHand(hand, board) {
   const cards = hand.concat(board);
-  // For brevity, we’ll implement a basic ranking that distinguishes major categories.
-  // You can expand this with full combinatorial evaluation.
-
-  // Convert ranks to numeric values
   const rankMap = {
     A: 14,
     K: 13,
@@ -877,7 +792,6 @@ function evaluateHoldemHand(hand, board) {
         streak = 1;
       }
     }
-    // Wheel straight (A-2-3-4-5)
     if (unique.includes(14) && unique.includes(5) && unique.includes(4) && unique.includes(3) && unique.includes(2)) {
       return true;
     }
@@ -895,7 +809,6 @@ function evaluateHoldemHand(hand, board) {
   const flush = isFlush();
   const straight = isStraight(values);
   const counts = countRanks(values);
-
   const countValues = Object.values(counts).sort((a, b) => b - a);
   const maxCount = countValues[0];
 
@@ -903,7 +816,6 @@ function evaluateHoldemHand(hand, board) {
   let score = 1;
 
   if (flush && straight) {
-    // Check for royal
     if (values.includes(14) && values.includes(13) && values.includes(12) && values.includes(11) && values.includes(10)) {
       name = "Royal Flush";
       score = 10;
@@ -937,16 +849,13 @@ function evaluateHoldemHand(hand, board) {
   return { name, score };
 }
 
-// ---------------------------
-// SLOTS IMPLEMENTATION
-// ---------------------------
-
+// SLOTS
 const SLOT_SYMBOLS = [
-  "assets/images/slot-cherry.png",
-  "assets/images/slot-bar.png",
-  "assets/images/slot-seven.png",
-  "assets/images/slot-bell.png",
-  "assets/images/slot-diamond.png",
+  "assets/images/slots/slot-cherry.png",
+  "assets/images/slots/slot-bar.png",
+  "assets/images/slots/slot-seven.png",
+  "assets/images/slots/slot-bell.png",
+  "assets/images/slots/slot-diamond.png",
 ];
 
 function spinSlot(slotType) {
@@ -971,7 +880,6 @@ function spinSlot(slotType) {
   const reelsContainer = document.getElementById(reelsId);
   const reels = Array.from(reelsContainer.querySelectorAll(".slot-reel"));
 
-  // Clear previous symbols
   reels.forEach((reel) => {
     reel.innerHTML = "";
     reel.style.transition = "transform 1s ease-out";
@@ -989,7 +897,6 @@ function spinSlot(slotType) {
       reel.appendChild(symbol);
     });
 
-    // Simple win: all reels same symbol
     const symbols = reels.map((reel) => reel.querySelector(".slot-symbol").style.backgroundImage);
     const allSame = symbols.every((s) => s === symbols[0]);
 
@@ -997,7 +904,6 @@ function spinSlot(slotType) {
       const payout = bet * (slotType === 3 ? 10 : 20);
       adjustBalance(payout, "Slots", true);
       status.textContent = `Jackpot! All symbols match. You win ${payout} tokens.`;
-      // Win line highlight
       const winLine = document.createElement("div");
       winLine.classList.add("slot-win-line");
       reelsContainer.appendChild(winLine);
@@ -1011,28 +917,21 @@ function spinSlot(slotType) {
   }, 1000);
 }
 
-// ---------------------------
 // INIT
-// ---------------------------
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Load initial player
   currentPlayerData = loadPlayerData(currentPlayerKey);
   updatePlayerUI();
 
-  // Player selector
   document.getElementById("player-select").addEventListener("change", (e) => {
     currentPlayerKey = PLAYER_KEYS[e.target.value];
     currentPlayerData = loadPlayerData(currentPlayerKey);
     updatePlayerUI();
   });
 
-  // Audio init button (must be user gesture)
   document.getElementById("audio-init-btn").addEventListener("click", () => {
     initAudio();
   });
 
-  // Game menu buttons
   document.querySelectorAll(".game-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const game = btn.getAttribute("data-game");
@@ -1040,26 +939,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Blackjack events
   document.getElementById("blackjack-deal").addEventListener("click", startBlackjackRound);
   document.getElementById("blackjack-hit").addEventListener("click", blackjackHit);
   document.getElementById("blackjack-stand").addEventListener("click", blackjackStand);
   document.getElementById("blackjack-reset").addEventListener("click", blackjackReset);
 
-  // Roulette events
   document.getElementById("roulette-spin").addEventListener("click", spinRoulette);
 
-  // Craps events
   document.getElementById("craps-roll").addEventListener("click", rollCraps);
 
-  // Baccarat events
   document.getElementById("baccarat-deal").addEventListener("click", dealBaccarat);
 
-  // Hold’em events
   document.getElementById("holdem-deal").addEventListener("click", dealHoldem);
   document.getElementById("holdem-next-stage").addEventListener("click", nextHoldemStage);
 
-  // Slots events
   document.querySelectorAll(".slot-spin-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const type = parseInt(btn.getAttribute("data-slot"), 10);
@@ -1067,6 +960,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Default game
   showGame("blackjack");
 });
