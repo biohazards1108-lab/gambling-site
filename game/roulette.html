@@ -67,9 +67,10 @@ body {
 
 /* TABLE AREA */
 .table-wrapper {
-    max-width: 1100px;
+    max-width: 900px;
     margin: 24px auto;
     padding: 0 24px 40px;
+    text-align: center;
 }
 
 .table-title {
@@ -83,59 +84,72 @@ body {
     margin-bottom: 16px;
 }
 
-/* Roulette Table */
-.roulette-table {
-    background: radial-gradient(circle at top, #2b1a00 0%, #1a1100 40%, #0a0700 100%);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
-    border: 1px solid #4a3200;
-    overflow: hidden;
-    text-align: center;
-}
-
-/* Wheel Container */
+/* Roulette Wheel */
 .wheel-container {
-    position: relative;
-    width: 360px;
-    height: 360px;
-    margin: 0 auto 20px;
-}
-
-.wheel {
-    width: 100%;
-    height: 100%;
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     border: 6px solid #f5c451;
-    background-image: url("assets/images/roulette-wheel.png");
-    background-size: cover;
-    transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    background: conic-gradient(
+        #d00 0deg 10deg,
+        #000 10deg 20deg,
+        #d00 20deg 30deg,
+        #000 30deg 40deg,
+        #d00 40deg 50deg,
+        #000 50deg 60deg,
+        #d00 60deg 70deg,
+        #000 70deg 80deg,
+        #d00 80deg 90deg,
+        #000 90deg 100deg,
+        #d00 100deg 110deg,
+        #000 110deg 120deg,
+        #d00 120deg 130deg,
+        #000 130deg 140deg,
+        #d00 140deg 150deg,
+        #000 150deg 160deg,
+        #d00 160deg 170deg,
+        #000 170deg 180deg,
+        #d00 180deg 190deg,
+        #000 190deg 200deg,
+        #d00 200deg 210deg,
+        #000 210deg 220deg,
+        #d00 220deg 230deg,
+        #000 230deg 240deg,
+        #d00 240deg 250deg,
+        #000 250deg 260deg,
+        #d00 260deg 270deg,
+        #000 270deg 280deg,
+        #d00 280deg 290deg,
+        #000 290deg 300deg,
+        #d00 300deg 310deg,
+        #000 310deg 320deg,
+        #d00 320deg 330deg,
+        #000 330deg 340deg,
+        #d00 340deg 350deg,
+        #000 350deg 360deg
+    );
+    position: relative;
+    overflow: hidden;
 }
 
 .ball {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    background: #ffffff;
+    width: 20px;
+    height: 20px;
+    background: #fff;
     border-radius: 50%;
-    border: 2px solid #000;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 140px;
+    left: 140px;
+    transition: transform 3s ease-out;
 }
 
-/* Bet Controls */
-.bet-controls {
-    margin-top: 20px;
-}
-
-.bet-controls select {
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid #f5c451;
-    background: #050505;
-    color: #f9f3d7;
-    font-size: 0.9rem;
+/* Controls */
+.controls {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .btn {
@@ -166,27 +180,8 @@ body {
 /* Status */
 .status {
     margin-top: 16px;
-    text-align: center;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #f9f3d7;
-}
-
-/* Rules panel */
-.rules-panel {
-    margin-top: 24px;
-    background: #050608;
-    border-radius: 12px;
-    border: 1px solid #262626;
-    padding: 14px;
-    font-size: 0.85rem;
-    color: #d0c7ff;
-}
-.rules-panel ul {
-    margin: 8px 0 0 18px;
-    padding: 0;
-}
-.rules-panel li {
-    margin-bottom: 4px;
 }
 </style>
 </head>
@@ -201,137 +196,108 @@ body {
     </div>
     <div class="top-right">
         <a href="index.html" class="back-link">← Back to Lobby</a>
-        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
-        <div class="wallet-pill">Bet: <span id="bet" class="value">$75</span></div>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$0</span></div>
+        <div class="wallet-pill">Bet: <span id="bet" class="value">$50</span></div>
     </div>
 </div>
 
-<!-- TABLE -->
 <div class="table-wrapper">
-    <div class="table-title">Roulette – European Wheel</div>
-    <div class="table-subtitle">
-        Real wheel animation, sound effects, and casino‑accurate rules.
+    <div class="table-title">Roulette – Spin the Wheel</div>
+    <div class="table-subtitle">Bet on number, color, or even/odd.</div>
+
+    <div class="wheel-container">
+        <div id="ball" class="ball"></div>
     </div>
 
-    <div class="roulette-table">
-        <!-- Wheel -->
-        <div class="wheel-container">
-            <div id="wheel" class="wheel"></div>
-            <div id="ball" class="ball"></div>
-        </div>
-
-        <!-- Bet Controls -->
-        <div class="bet-controls">
-            <select id="betChoice">
-                <option value="red">Red</option>
-                <option value="black">Black</option>
-                <option value="13">Lucky 13</option>
-            </select>
-            <button class="btn btn-primary" onclick="spinWheel()">Spin Wheel</button>
-        </div>
-
-        <!-- Status -->
-        <div id="status" class="status">Place your bet and spin.</div>
+    <div class="controls">
+        <button class="btn btn-secondary" onclick="setBet('red')">Red</button>
+        <button class="btn btn-secondary" onclick="setBet('black')">Black</button>
+        <button class="btn btn-secondary" onclick="setBet('even')">Even</button>
+        <button class="btn btn-secondary" onclick="setBet('odd')">Odd</button>
+        <button class="btn btn-primary" onclick="spin()">SPIN ($50)</button>
     </div>
 
-    <!-- Rules -->
-    <div class="rules-panel">
-        <strong>Roulette Rules (European Wheel):</strong>
-        <ul>
-            <li>Bet size: $75 per spin (fixed in this demo).</li>
-            <li>Wheel contains numbers 0–36 (single zero).</li>
-            <li>Red/Black bets pay 2x the bet.</li>
-            <li>Lucky 13 pays 10x the bet if the ball lands on 13.</li>
-            <li>Balance is reduced by bet; winnings are added back.</li>
-            <li>Spin animation lasts 4 seconds.</li>
-        </ul>
-    </div>
+    <div id="status" class="status">Choose a bet, then spin.</div>
 </div>
-
-<!-- AUDIO -->
-<audio id="audio-spin" src="assets/audio/roulette-spin.mp3"></audio>
-<audio id="audio-win" src="assets/audio/win.mp3"></audio>
-<audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
 
 <script>
-// WALLET
-let balance = 1000;
-const betAmount = 75;
+/* ---------------- BACKEND CONNECTION ---------------- */
 
-const balanceEl = document.getElementById("balance");
-const betEl = document.getElementById("bet");
-balanceEl.textContent = "$" + balance;
-betEl.textContent = "$" + betAmount;
+const API = "https://gambling-site-production.up.railway.app";
 
-// SPIN LOGIC
-function spinWheel() {
+async function fetchBalance() {
+    const res = await fetch(`${API}/balance`);
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
+
+async function updateBalance(delta) {
+    const res = await fetch(`${API}/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delta })
+    });
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
+
+/* ---------------- GAME LOGIC ---------------- */
+
+let balance = 0;
+const betAmount = 50;
+let currentBet = null;
+
+document.getElementById("bet").textContent = "$" + betAmount;
+
+function setBet(type) {
+    currentBet = type;
+    document.getElementById("status").textContent = `Bet set: ${type.toUpperCase()}. Spin the wheel.`;
+}
+
+function spin() {
     const status = document.getElementById("status");
-    const wheel = document.getElementById("wheel");
-    const ball = document.getElementById("ball");
-    const choice = document.getElementById("betChoice").value;
 
-    if (balance < betAmount) {
-        status.textContent = "Not enough balance to spin.";
+    if (!currentBet) {
+        status.textContent = "Choose a bet first.";
         return;
     }
 
-    balance -= betAmount;
-    balanceEl.textContent = "$" + balance;
+    if (balance < betAmount) {
+        status.textContent = "Not enough balance.";
+        return;
+    }
 
-    // Random spin degrees
-    const spinDeg = 360 * 8 + Math.floor(Math.random() * 360);
-    wheel.style.transform = `rotate(${spinDeg}deg)`;
+    updateBalance(-betAmount);
 
-    // Play sound
-    document.getElementById("audio-spin").play().catch(() => {});
+    const ball = document.getElementById("ball");
+    const angle = Math.floor(Math.random() * 360);
+    ball.style.transform = `rotate(${angle}deg) translate(120px)`;
 
-    status.textContent = "Wheel spinning...";
-
-    // Determine result after animation
-    setTimeout(() => {
-        const number = Math.floor(Math.random() * 37); // 0–36
-        const reds = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-        const isRed = reds.includes(number);
-        const color = number === 0 ? "green" : (isRed ? "red" : "black");
-
-        let resultText = `Result: ${number} (${color}). `;
-        let win = 0;
-
-        if (choice === "13") {
-            if (number === 13) {
-                win = betAmount * 10;
-                resultText += "Lucky 13! Huge win!";
-                document.getElementById("audio-win").play().catch(() => {});
-            } else {
-                resultText += "Missed Lucky 13.";
-                document.getElementById("audio-lose").play().catch(() => {});
-            }
-        } else if (choice === "red") {
-            if (color === "red") {
-                win = betAmount * 2;
-                resultText += "Red wins!";
-                document.getElementById("audio-win").play().catch(() => {});
-            } else {
-                resultText += "Red loses.";
-                document.getElementById("audio-lose").play().catch(() => {});
-            }
-        } else if (choice === "black") {
-            if (color === "black") {
-                win = betAmount * 2;
-                resultText += "Black wins!";
-                document.getElementById("audio-win").play().catch(() => {});
-            } else {
-                resultText += "Black loses.";
-                document.getElementById("audio-lose").play().catch(() => {});
-            }
-        }
-
-        balance += win;
-        balanceEl.textContent = "$" + balance;
-
-        status.textContent = `${resultText} Winnings: $${win}. Balance: $${balance}.`;
-    }, 4000);
+    setTimeout(() => evaluate(angle), 3000);
 }
+
+function evaluate(angle) {
+    const status = document.getElementById("status");
+
+    const number = Math.floor(angle / 10);
+    const isRed = number % 2 === 0;
+    const isEven = number % 2 === 0;
+
+    let win = 0;
+
+    if (currentBet === "red" && isRed) win = betAmount * 2;
+    if (currentBet === "black" && !isRed) win = betAmount * 2;
+    if (currentBet === "even" && isEven) win = betAmount * 2;
+    if (currentBet === "odd" && !isEven) win = betAmount * 2;
+
+    updateBalance(win);
+
+    status.textContent = `Result: ${number} (${isRed ? "Red" : "Black"}). Win: $${win}.`;
+}
+
+fetchBalance();
 </script>
 
 </body>
