@@ -1,252 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Casino War – Lucky 13 Casino</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(135deg, #02131f, #062b3f);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<meta charset="UTF-8" />
+<title>Lucky 13 Casino – War</title>
 
-    header {
-      width: 100%;
-      padding: 14px 24px;
-      background: #0a0a0a;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #0f3b5f;
-      box-sizing: border-box;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    header div {
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #111111 0%, #050505 50%, #000000 100%);
+    color: #f9f3d7;
+}
 
-    .balance {
-      font-size: 18px;
-      font-weight: bold;
-      color: #4dd2ff;
-    }
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #050608;
+    border-bottom: 1px solid #262626;
+}
 
-    main {
-      max-width: 900px;
-      width: 100%;
-      padding: 30px;
-      box-sizing: border-box;
-      text-align: center;
-    }
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    h1 {
-      margin-top: 0;
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px #0af;
-    }
+.top-left img {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
+}
 
-    .action-row {
-      margin: 20px 0;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
+.top-left h1 {
+    font-size: 1.2rem;
+    color: #f5c451;
+}
 
-    .action-row button {
-      padding: 10px 20px;
-      border: none;
-      background: #0f5b8f;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-weight: 600;
-    }
+.top-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.85rem;
+}
 
-    .action-row button:hover {
-      background: #1380c4;
-      transform: translateY(-2px);
-    }
+.wallet-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #101010;
+    border: 1px solid #3a3a3a;
+}
 
-    .cards-area {
-      display: flex;
-      justify-content: space-around;
-      margin: 30px 0;
-    }
+.wallet-pill span.value {
+    color: #f5c451;
+}
 
-    .hand {
-      text-align: center;
-    }
+.back-link {
+    color: #e0d7ff;
+    text-decoration: none;
+    font-weight: 600;
+}
 
-    .hand h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      text-shadow: 0 0 6px #0af;
-    }
+/* TABLE AREA */
+.table-wrapper {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 24px 40px;
+    text-align: center;
+}
 
-    .cards {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
+.table-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
 
-    .card {
-      width: 80px;
-      height: 110px;
-      background: #fff;
-      color: #000;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: bold;
-      box-shadow: 0 0 10px #000;
-    }
+.table-subtitle {
+    font-size: 0.95rem;
+    color: #d0c7ff;
+    margin-bottom: 16px;
+}
 
-    #result {
-      margin-top: 25px;
-      font-size: 20px;
-      min-height: 40px;
-      font-weight: 600;
-      color: #4dd2ff;
-    }
-  </style>
+/* War table */
+.war-table {
+    background: radial-gradient(circle at top, #0b3b2f 0%, #062019 40%, #020b08 100%);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    border: 1px solid #0f2c23;
+}
+
+/* Cards */
+.card-area {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 24px;
+}
+
+.card-box {
+    text-align: center;
+}
+
+.card-label {
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.card {
+    width: 70px;
+    height: 100px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* Controls */
+.controls {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f5c451, #ff6bcb);
+    color: #050505;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #f5c451;
+    color: #f5c451;
+}
+
+.btn-secondary:hover {
+    background: #f5c451;
+    color: #050505;
+}
+
+/* Status */
+.status {
+    margin-top: 16px;
+    font-size: 1rem;
+    color: #f9f3d7;
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <div>Lucky 13 Casino – Casino War</div>
-  <div class="balance">Balance: $<span id="balance">1000</span></div>
-</header>
-
-<main>
-  <h1>Casino War</h1>
-
-  <div class="action-row">
-    <button onclick="dealWar()">Deal Cards ($10)</button>
-    <button onclick="resolveWar('war')">Go to War</button>
-    <button onclick="resolveWar('surrender')">Surrender</button>
-  </div>
-
-  <div class="cards-area">
-    <div class="hand">
-      <h3>Player</h3>
-      <div class="cards" id="player-card"></div>
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo" />
+        <h1>Lucky 13 – War</h1>
     </div>
-
-    <div class="hand">
-      <h3>Dealer</h3>
-      <div class="cards" id="dealer-card"></div>
+    <div class="top-right">
+        <a href="index.html" class="back-link">← Back to Lobby</a>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$0</span></div>
+        <div class="wallet-pill">Bet: <span id="bet" class="value">$50</span></div>
     </div>
-  </div>
+</div>
 
-  <div id="result"></div>
-</main>
+<div class="table-wrapper">
+    <div class="table-title">War – High Card Wins</div>
+    <div class="table-subtitle">Simple, fast, and high‑stakes.</div>
+
+    <div class="war-table">
+        <div class="card-area">
+            <div class="card-box">
+                <div class="card-label">Player</div>
+                <div id="playerCard" class="card"></div>
+            </div>
+            <div class="card-box">
+                <div class="card-label">Dealer</div>
+                <div id="dealerCard" class="card"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="playWar()">Play War ($50)</button>
+        </div>
+
+        <div id="status" class="status">Click Play to begin.</div>
+    </div>
+</div>
 
 <script>
-  let balance = 1000;
-  let lastRound = null;
+/* ---------------- BACKEND CONNECTION ---------------- */
 
-  const suits = ["♠", "♥", "♦", "♣"];
+const API = "https://gambling-site-production.up.railway.app";
 
-  function updateBalance(amount) {
-    balance += amount;
-    document.getElementById("balance").textContent = balance.toFixed(2);
-  }
+async function fetchBalance() {
+    const res = await fetch(`${API}/balance`);
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
 
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+async function updateBalance(delta) {
+    const res = await fetch(`${API}/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delta })
+    });
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
 
-  function drawCard() {
-    const value = randInt(1, 13);
-    const suit = suits[randInt(0, 3)];
-    return { value, suit };
-  }
+/* ---------------- GAME LOGIC ---------------- */
 
-  function cardLabel(card) {
-    const names = {1: "A", 11: "J", 12: "Q", 13: "K"};
-    return (names[card.value] || card.value) + card.suit;
-  }
+let balance = 0;
+const betAmount = 50;
 
-  function renderCard(id, card) {
-    const container = document.getElementById(id);
-    container.innerHTML = "";
-    const div = document.createElement("div");
-    div.className = "card";
-    div.textContent = cardLabel(card);
-    container.appendChild(div);
-  }
+document.getElementById("bet").textContent = "$" + betAmount;
 
-  function dealWar() {
-    updateBalance(-10);
+const ranks = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+const suits = ["♠","♥","♦","♣"];
+
+function drawCard() {
+    const rank = ranks[Math.floor(Math.random() * ranks.length)];
+    const suit = suits[Math.floor(Math.random() * suits.length)];
+    return { rank, suit };
+}
+
+function cardValue(rank) {
+    if (rank === "A") return 14;
+    if (rank === "K") return 13;
+    if (rank === "Q") return 12;
+    if (rank === "J") return 11;
+    return parseInt(rank, 10);
+}
+
+async function playWar() {
+    const status = document.getElementById("status");
+
+    await fetchBalance();
+
+    if (balance < betAmount) {
+        status.textContent = "Not enough balance to play.";
+        return;
+    }
+
+    await updateBalance(-betAmount);
 
     const player = drawCard();
     const dealer = drawCard();
 
-    lastRound = { player, dealer };
+    document.getElementById("playerCard").textContent = `${player.rank}${player.suit}`;
+    document.getElementById("dealerCard").textContent = `${dealer.rank}${dealer.suit}`;
 
-    renderCard("player-card", player);
-    renderCard("dealer-card", dealer);
+    const pVal = cardValue(player.rank);
+    const dVal = cardValue(dealer.rank);
 
-    let msg = "";
+    let win = 0;
+    let msg = `Player: ${player.rank}${player.suit} (${pVal}) — Dealer: ${dealer.rank}${dealer.suit} (${dVal}). `;
 
-    if (player.value > dealer.value) {
-      updateBalance(10);
-      msg = "You win! +$10";
-    } else if (player.value < dealer.value) {
-      updateBalance(-10);
-      msg = "You lose. -$10";
+    if (pVal > dVal) {
+        win = betAmount * 2;
+        msg += "You win!";
+    } else if (pVal < dVal) {
+        msg += "Dealer wins.";
     } else {
-      msg = "Tie! Choose Go to War or Surrender.";
+        win = betAmount;
+        msg += "Tie! Bet returned.";
     }
 
-    document.getElementById("result").textContent = msg;
-  }
+    await updateBalance(win);
 
-  function resolveWar(choice) {
-    if (!lastRound || lastRound.player.value !== lastRound.dealer.value) {
-      document.getElementById("result").textContent =
-        "You can only choose War or Surrender after a tie.";
-      return;
-    }
+    msg += ` Winnings: $${win}.`;
+    status.textContent = msg;
+}
 
-    if (choice === "surrender") {
-      updateBalance(-5);
-      document.getElementById("result").textContent =
-        "You surrendered. -$5";
-      return;
-    }
-
-    const player = drawCard();
-    const dealer = drawCard();
-
-    renderCard("player-card", player);
-    renderCard("dealer-card", dealer);
-
-    let msg = "";
-
-    if (player.value > dealer.value) {
-      updateBalance(20);
-      msg = "You win the war! +$20";
-    } else {
-      updateBalance(-20);
-      msg = "You lost the war. -$20";
-    }
-
-    document.getElementById("result").textContent = msg;
-    lastRound = null;
-  }
+fetchBalance();
 </script>
 
 </body>
