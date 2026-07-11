@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Lucky 13 Casino – Account Dashboard</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #0a0a0a 0%, #000 60%, #000 100%);
+    color: #f9f3d7;
+}
+
+/* NAV */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: #050608;
+    border-bottom: 1px solid #262626;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-left img {
+    height: 42px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
+}
+
+.nav-left h1 {
+    font-size: 1.4rem;
+    color: #f5c451;
+}
+
+.nav-right button {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid #f5c451;
+    background: transparent;
+    color: #f5c451;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nav-right button:hover {
+    background: #f5c451;
+    color: #050505;
+}
+
+/* DASHBOARD */
+.dashboard {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.section {
+    background: #050608;
+    border: 1px solid #262626;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+.section h2 {
+    color: #f5c451;
+    margin-bottom: 12px;
+}
+
+.section p {
+    color: #d0c7ff;
+    font-size: 0.95rem;
+}
+
+/* Daily Reward */
+.reward-btn {
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #f5c451, #ff6bcb);
+    color: #050505;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.reward-btn:hover {
+    box-shadow: 0 0 18px rgba(255,107,203,0.7);
+}
+
+/* Game Links */
+.game-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.game-links a {
+    display: block;
+    background: #101010;
+    border: 1px solid #3a3a3a;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    color: #f5c451;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.game-links a:hover {
+    background: #f5c451;
+    color: #050505;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="navbar">
+    <div class="nav-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo">
+        <h1>Lucky 13 Dashboard</h1>
+    </div>
+    <div class="nav-right">
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="dashboard">
+
+    <!-- ACCOUNT INFO -->
+    <div class="section">
+        <h2>Your Account</h2>
+        <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+        <p><strong>Balance:</strong> <span id="balance">$0</span></p>
+    </div>
+
+    <!-- DAILY REWARD -->
+    <div class="section">
+        <h2>Daily Reward</h2>
+        <p>Claim your free daily bonus!</p>
+        <button class="reward-btn" onclick="claimReward()">Claim +$250</button>
+        <p id="rewardStatus"></p>
+    </div>
+
+    <!-- GAME LINKS -->
+    <div class="section">
+        <h2>Play Games</h2>
+        <div class="game-links">
+            <a href="games/blackjack.html">Blackjack</a>
+            <a href="games/slots.html">Slots</a>
+            <a href="games/roulette.html">Roulette</a>
+            <a href="games/plinko.html">Plinko</a>
+            <a href="games/poker.html">Texas Hold’em</a>
+            <a href="games/threecard.html">Three Card Poker</a>
+            <a href="games/craps.html">Craps</a>
+            <a href="games/mines.html">Mines</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const API = "https://gambling-site-production.up.railway.app";
+
+// Load account info
+async function loadAccount() {
+    const res = await fetch(`${API}/account`);
+    const data = await res.json();
+
+    document.getElementById("username").textContent = data.username;
+    document.getElementById("balance").textContent = "$" + data.balance;
+}
+
+// Claim daily reward
+async function claimReward() {
+    const res = await fetch(`${API}/daily`, { method: "POST" });
+    const data = await res.json();
+
+    document.getElementById("rewardStatus").textContent = data.message;
+    document.getElementById("balance").textContent = "$" + data.balance;
+}
+
+// Logout
+function logout() {
+    fetch(`${API}/logout`, { method: "POST" });
+    location.href = "login.html";
+}
+
+loadAccount();
+</script>
+
+</body>
+</html>
