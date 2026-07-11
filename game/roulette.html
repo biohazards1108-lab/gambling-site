@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Lucky 13 Casino – Roulette</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #111111 0%, #050505 50%, #000000 100%);
+    color: #f9f3d7;
+}
+
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #050608;
+    border-bottom: 1px solid #262626;
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-left img {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
+}
+
+.top-left h1 {
+    font-size: 1.2rem;
+    color: #f5c451;
+}
+
+.top-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.wallet-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #101010;
+    border: 1px solid #3a3a3a;
+}
+
+.wallet-pill span.value {
+    color: #f5c451;
+}
+
+.back-link {
+    color: #e0d7ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* TABLE AREA */
+.table-wrapper {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 24px 40px;
+}
+
+.table-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.table-subtitle {
+    font-size: 0.95rem;
+    color: #d0c7ff;
+    margin-bottom: 16px;
+}
+
+/* Roulette Table */
+.roulette-table {
+    background: radial-gradient(circle at top, #2b1a00 0%, #1a1100 40%, #0a0700 100%);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    border: 1px solid #4a3200;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Wheel Container */
+.wheel-container {
+    position: relative;
+    width: 360px;
+    height: 360px;
+    margin: 0 auto 20px;
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid #f5c451;
+    background-image: url("assets/images/roulette-wheel.png");
+    background-size: cover;
+    transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.ball {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background: #ffffff;
+    border-radius: 50%;
+    border: 2px solid #000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Bet Controls */
+.bet-controls {
+    margin-top: 20px;
+}
+
+.bet-controls select {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #f5c451;
+    background: #050505;
+    color: #f9f3d7;
+    font-size: 0.9rem;
+}
+
+.btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f5c451, #ff6bcb);
+    color: #050505;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #f5c451;
+    color: #f5c451;
+}
+
+.btn-secondary:hover {
+    background: #f5c451;
+    color: #050505;
+}
+
+/* Status */
+.status {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #f9f3d7;
+}
+
+/* Rules panel */
+.rules-panel {
+    margin-top: 24px;
+    background: #050608;
+    border-radius: 12px;
+    border: 1px solid #262626;
+    padding: 14px;
+    font-size: 0.85rem;
+    color: #d0c7ff;
+}
+.rules-panel ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+}
+.rules-panel li {
+    margin-bottom: 4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo" />
+        <h1>Lucky 13 Roulette</h1>
+    </div>
+    <div class="top-right">
+        <a href="index.html" class="back-link">← Back to Lobby</a>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
+        <div class="wallet-pill">Bet: <span id="bet" class="value">$75</span></div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrapper">
+    <div class="table-title">Roulette – European Wheel</div>
+    <div class="table-subtitle">
+        Real wheel animation, sound effects, and casino‑accurate rules.
+    </div>
+
+    <div class="roulette-table">
+        <!-- Wheel -->
+        <div class="wheel-container">
+            <div id="wheel" class="wheel"></div>
+            <div id="ball" class="ball"></div>
+        </div>
+
+        <!-- Bet Controls -->
+        <div class="bet-controls">
+            <select id="betChoice">
+                <option value="red">Red</option>
+                <option value="black">Black</option>
+                <option value="13">Lucky 13</option>
+            </select>
+            <button class="btn btn-primary" onclick="spinWheel()">Spin Wheel</button>
+        </div>
+
+        <!-- Status -->
+        <div id="status" class="status">Place your bet and spin.</div>
+    </div>
+
+    <!-- Rules -->
+    <div class="rules-panel">
+        <strong>Roulette Rules (European Wheel):</strong>
+        <ul>
+            <li>Bet size: $75 per spin (fixed in this demo).</li>
+            <li>Wheel contains numbers 0–36 (single zero).</li>
+            <li>Red/Black bets pay 2x the bet.</li>
+            <li>Lucky 13 pays 10x the bet if the ball lands on 13.</li>
+            <li>Balance is reduced by bet; winnings are added back.</li>
+            <li>Spin animation lasts 4 seconds.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="audio-spin" src="assets/audio/roulette-spin.mp3"></audio>
+<audio id="audio-win" src="assets/audio/win.mp3"></audio>
+<audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
+
+<script>
+// WALLET
+let balance = 1000;
+const betAmount = 75;
+
+const balanceEl = document.getElementById("balance");
+const betEl = document.getElementById("bet");
+balanceEl.textContent = "$" + balance;
+betEl.textContent = "$" + betAmount;
+
+// SPIN LOGIC
+function spinWheel() {
+    const status = document.getElementById("status");
+    const wheel = document.getElementById("wheel");
+    const ball = document.getElementById("ball");
+    const choice = document.getElementById("betChoice").value;
+
+    if (balance < betAmount) {
+        status.textContent = "Not enough balance to spin.";
+        return;
+    }
+
+    balance -= betAmount;
+    balanceEl.textContent = "$" + balance;
+
+    // Random spin degrees
+    const spinDeg = 360 * 8 + Math.floor(Math.random() * 360);
+    wheel.style.transform = `rotate(${spinDeg}deg)`;
+
+    // Play sound
+    document.getElementById("audio-spin").play().catch(() => {});
+
+    status.textContent = "Wheel spinning...";
+
+    // Determine result after animation
+    setTimeout(() => {
+        const number = Math.floor(Math.random() * 37); // 0–36
+        const reds = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+        const isRed = reds.includes(number);
+        const color = number === 0 ? "green" : (isRed ? "red" : "black");
+
+        let resultText = `Result: ${number} (${color}). `;
+        let win = 0;
+
+        if (choice === "13") {
+            if (number === 13) {
+                win = betAmount * 10;
+                resultText += "Lucky 13! Huge win!";
+                document.getElementById("audio-win").play().catch(() => {});
+            } else {
+                resultText += "Missed Lucky 13.";
+                document.getElementById("audio-lose").play().catch(() => {});
+            }
+        } else if (choice === "red") {
+            if (color === "red") {
+                win = betAmount * 2;
+                resultText += "Red wins!";
+                document.getElementById("audio-win").play().catch(() => {});
+            } else {
+                resultText += "Red loses.";
+                document.getElementById("audio-lose").play().catch(() => {});
+            }
+        } else if (choice === "black") {
+            if (color === "black") {
+                win = betAmount * 2;
+                resultText += "Black wins!";
+                document.getElementById("audio-win").play().catch(() => {});
+            } else {
+                resultText += "Black loses.";
+                document.getElementById("audio-lose").play().catch(() => {});
+            }
+        }
+
+        balance += win;
+        balanceEl.textContent = "$" + balance;
+
+        status.textContent = `${resultText} Winnings: $${win}. Balance: $${balance}.`;
+    }, 4000);
+}
+</script>
+
+</body>
+</html>
