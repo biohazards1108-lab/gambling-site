@@ -322,7 +322,6 @@ footer {
 
     <div class="wallet">
         <div class="wallet-item">Balance: <span id="balance" class="value">$1000</span></div>
-        <div class="wallet-item">Tokens: <span id="tokens" class="value">100 L13</span></div>
     </div>
 </header>
 
@@ -469,10 +468,9 @@ footer {
 <script>
 // SIMPLE WALLET DISPLAY
 let balance = 1000;
-
+    
 function updateWallet() {
-    document.getElementById("balance").textContent = "$" + balance;
-    document.getElementById("tokens").textContent = tokens + " L13";
+    document.getElementById("balance").textContent = "$" + balance;1000
 }
 updateWallet();
 
