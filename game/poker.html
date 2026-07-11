@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Lucky 13 Casino – Texas Hold’em Poker</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #111111 0%, #050505 50%, #000000 100%);
+    color: #f9f3d7;
+}
+
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #050608;
+    border-bottom: 1px solid #262626;
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-left img {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
+}
+
+.top-left h1 {
+    font-size: 1.2rem;
+    color: #f5c451;
+}
+
+.top-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.wallet-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #101010;
+    border: 1px solid #3a3a3a;
+}
+
+.wallet-pill span.value {
+    color: #f5c451;
+}
+
+.back-link {
+    color: #e0d7ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* TABLE AREA */
+.table-wrapper {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 24px 40px;
+}
+
+.table-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.table-subtitle {
+    font-size: 0.95rem;
+    color: #d0c7ff;
+    margin-bottom: 16px;
+}
+
+/* Poker Table */
+.poker-table {
+    background: radial-gradient(circle at top, #003b2f 0%, #002019 40%, #000b08 100%);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    border: 1px solid #0f2c23;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Card */
+.card {
+    width: 70px;
+    height: 100px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: deal 0.4s forwards;
+}
+
+.card.back {
+    background: #b00;
+    color: #fff;
+}
+
+/* Deal animation */
+@keyframes deal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Layout */
+.player-area, .dealer-area {
+    margin-bottom: 20px;
+}
+
+.label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    min-height: 100px;
+}
+
+/* Community Cards */
+.community-cards {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    min-height: 100px;
+    margin: 20px 0;
+}
+
+/* Controls */
+.controls {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f5c451, #ff6bcb);
+    color: #050505;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #f5c451;
+    color: #f5c451;
+}
+
+.btn-secondary:hover {
+    background: #f5c451;
+    color: #050505;
+}
+
+/* Status */
+.status {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #f9f3d7;
+}
+
+/* Rules panel */
+.rules-panel {
+    margin-top: 24px;
+    background: #050608;
+    border-radius: 12px;
+    border: 1px solid #262626;
+    padding: 14px;
+    font-size: 0.85rem;
+    color: #d0c7ff;
+}
+.rules-panel ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+}
+.rules-panel li {
+    margin-bottom: 4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo" />
+        <h1>Texas Hold’em Poker</h1>
+    </div>
+    <div class="top-right">
+        <a href="index.html" class="back-link">← Back to Lobby</a>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
+        <div class="wallet-pill">Bet: <span id="bet" class="value">$100</span></div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrapper">
+    <div class="table-title">Texas Hold’em – Dealer Table</div>
+    <div class="table-subtitle">
+        Real card dealing animations, flop/turn/river reveal, and simplified hand evaluation.
+    </div>
+
+    <div class="poker-table">
+        <!-- Dealer -->
+        <div class="dealer-area">
+            <div class="label">Dealer</div>
+            <div id="dealerCards" class="cards"></div>
+        </div>
+
+        <!-- Community Cards -->
+        <div class="community-cards" id="communityCards"></div>
+
+        <!-- Player -->
+        <div class="player-area">
+            <div class="label">Player</div>
+            <div id="playerCards" class="cards"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" onclick="startHand()">Deal Hand</button>
+            <button class="btn btn-secondary" onclick="revealFlop()">Flop</button>
+            <button class="btn btn-secondary" onclick="revealTurn()">Turn</button>
+            <button class="btn btn-secondary" onclick="revealRiver()">River</button>
+            <button class="btn btn-primary" onclick="evaluate()">Showdown</button>
+        </div>
+
+        <!-- Status -->
+        <div id="status" class="status">Click “Deal Hand” to begin.</div>
+    </div>
+
+    <!-- Rules -->
+    <div class="rules-panel">
+        <strong>Texas Hold’em Rules (Simplified):</strong>
+        <ul>
+            <li>Bet size: $100 per hand (fixed).</li>
+            <li>Player and dealer each receive two hole cards.</li>
+            <li>Five community cards are revealed: Flop (3), Turn (1), River (1).</li>
+            <li>Best 5‑card hand wins.</li>
+            <li>Dealer AI is simplified for demo purposes.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="audio-deal" src="assets/audio/card-deal.mp3"></audio>
+<audio id="audio-win" src="assets/audio/win.mp3"></audio>
+<audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
+
+<script>
+// WALLET
+let balance = 1000;
+const betAmount = 100;
+
+document.getElementById("balance").textContent = "$" + balance;
+document.getElementById("bet").textContent = "$" + betAmount;
+
+// GAME STATE
+let deck = [];
+let playerHand = [];
+let dealerHand = [];
+let community = [];
+let stage = 0;
+
+// CARD LOGIC
+const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+const suits = ["♠","♥","♦","♣"];
+
+function createDeck() {
+    deck = [];
+    for (let r of ranks) {
+        for (let s of suits) {
+            deck.push({ rank: r, suit: s });
+        }
+    }
+    deck.sort(() => Math.random() - 0.5);
+}
+
+function drawCard() {
+    return deck.pop();
+}
+
+// RENDERING
+function renderCards(containerId, cards) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    cards.forEach(card => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.textContent = `${card.rank}${card.suit}`;
+        container.appendChild(div);
+    });
+}
+
+function clearTable() {
+    document.getElementById("playerCards").innerHTML = "";
+    document.getElementById("dealerCards").innerHTML = "";
+    document.getElementById("communityCards").innerHTML = "";
+}
+
+// GAME FLOW
+function startHand() {
+    const status = document.getElementById("status");
+
+    if (balance < betAmount) {
+        status.textContent = "Not enough balance.";
+        return;
+    }
+
+    balance -= betAmount;
+    document.getElementById("balance").textContent = "$" + balance;
+
+    stage = 0;
+    createDeck();
+    clearTable();
+
+    playerHand = [drawCard(), drawCard()];
+    dealerHand = [drawCard(), drawCard()];
+    community = [];
+
+    renderCards("playerCards", playerHand);
+    renderCards("dealerCards", [{rank:"?", suit:"?"}, {rank:"?", suit:"?"}]);
+
+    status.textContent = "Hand dealt. Reveal the Flop.";
+    document.getElementById("audio-deal").play().catch(() => {});
+}
+
+function revealFlop() {
+    if (stage !== 0) return;
+    community.push(drawCard(), drawCard(), drawCard());
+    renderCards("communityCards", community);
+    stage = 1;
+    document.getElementById("status").textContent = "Flop revealed. Reveal the Turn.";
+}
+
+function revealTurn() {
+    if (stage !== 1) return;
+    community.push(drawCard());
+    renderCards("communityCards", community);
+    stage = 2;
+    document.getElementById("status").textContent = "Turn revealed. Reveal the River.";
+}
+
+function revealRiver() {
+    if (stage !== 2) return;
+    community.push(drawCard());
+    renderCards("communityCards", community);
+    stage = 3;
+    document.getElementById("status").textContent = "River revealed. Click Showdown.";
+}
+
+function evaluate() {
+    if (stage !== 3) return;
+
+    renderCards("dealerCards", dealerHand);
+
+    const status = document.getElementById("status");
+
+    // Simplified evaluation: highest total wins
+    function score(hand) {
+        return hand.reduce((sum, c) => {
+            if (c.rank === "A") return sum + 14;
+            if (c.rank === "K") return sum + 13;
+            if (c.rank === "Q") return sum + 12;
+            if (c.rank === "J") return sum + 11;
+            return sum + parseInt(c.rank);
+        }, 0);
+    }
+
+    const playerScore = score(playerHand.concat(community));
+    const dealerScore = score(dealerHand.concat(community));
+
+    let result = "";
+    let win = 0;
+
+    if (playerScore > dealerScore) {
+        result = "Player wins!";
+        win = betAmount * 2;
+        document.getElementById("audio-win").play().catch(() => {});
+    } else if (playerScore < dealerScore) {
+        result = "Dealer wins.";
+        document.getElementById("audio-lose").play().catch(() => {});
+    } else {
+        result = "Tie (push). Bet returned.";
+        win = betAmount;
+        document.getElementById("audio-deal").play().catch(() => {});
+    }
+
+    balance += win;
+    document.getElementById("balance").textContent = "$" + balance;
+
+    status.textContent = `${result} (Player: ${playerScore}, Dealer: ${dealerScore}) — Win: $${win}`;
+}
+</script>
+
+</body>
+</html>
