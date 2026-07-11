@@ -1,8 +1,13 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
-// Middleware to parse JSON bodies
+app.use(cors({
+  origin: "https://biohazards1108-lab.github.io"
+}));
+
 app.use(express.json());
+
 
 // Root route
 app.get("/", (req, res) => {
