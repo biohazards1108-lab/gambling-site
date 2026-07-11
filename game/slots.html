@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Lucky 13 Casino – Slots</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #111111 0%, #050505 50%, #000000 100%);
+    color: #f9f3d7;
+}
+
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #050608;
+    border-bottom: 1px solid #262626;
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-left img {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
+}
+
+.top-left h1 {
+    font-size: 1.2rem;
+    color: #f5c451;
+}
+
+.top-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.wallet-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #101010;
+    border: 1px solid #3a3a3a;
+}
+
+.wallet-pill span.value {
+    color: #f5c451;
+}
+
+.back-link {
+    color: #e0d7ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* SLOT MACHINE AREA */
+.slot-wrapper {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 24px 40px;
+    text-align: center;
+}
+
+.slot-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.slot-subtitle {
+    font-size: 0.95rem;
+    color: #d0c7ff;
+    margin-bottom: 20px;
+}
+
+/* Slot Cabinet */
+.slot-machine {
+    background: linear-gradient(135deg, #1a1a1a, #050505);
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px solid #f5c451;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    display: inline-block;
+}
+
+/* Reels */
+.reels {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.reel {
+    width: 120px;
+    height: 120px;
+    background: #000;
+    border: 3px solid #f5c451;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.reel img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: top 0.3s;
+}
+
+/* Spin Button */
+.btn {
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f5c451, #ff6bcb);
+    color: #050505;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 18px rgba(255,107,203,0.7);
+}
+
+/* Status */
+.status {
+    margin-top: 16px;
+    font-size: 1rem;
+    color: #f9f3d7;
+}
+
+/* Rules panel */
+.rules-panel {
+    margin-top: 24px;
+    background: #050608;
+    border-radius: 12px;
+    border: 1px solid #262626;
+    padding: 14px;
+    font-size: 0.85rem;
+    color: #d0c7ff;
+}
+.rules-panel ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+}
+.rules-panel li {
+    margin-bottom: 4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo" />
+        <h1>Lucky 13 Slots</h1>
+    </div>
+    <div class="top-right">
+        <a href="index.html" class="back-link">← Back to Lobby</a>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
+        <div class="wallet-pill">Bet: <span id="bet" class="value">$50</span></div>
+    </div>
+</div>
+
+<!-- SLOT MACHINE -->
+<div class="slot-wrapper">
+    <div class="slot-title">3‑Reel Classic Slot Machine</div>
+    <div class="slot-subtitle">Real spinning reels, sound effects, and casino‑style payouts.</div>
+
+    <div class="slot-machine">
+        <div class="reels">
+            <div class="reel" id="reel1"></div>
+            <div class="reel" id="reel2"></div>
+            <div class="reel" id="reel3"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="spin()">SPIN ($50)</button>
+
+        <div id="status" class="status">Press SPIN to play.</div>
+    </div>
+
+    <!-- Rules -->
+    <div class="rules-panel">
+        <strong>Slot Machine Rules:</strong>
+        <ul>
+            <li>Bet size: $50 per spin (fixed).</li>
+            <li>Three reels, one payline.</li>
+            <li>Symbols: Cherry, Lemon, Star, Clover, Seven.</li>
+            <li>Any triple match pays 2x the bet.</li>
+            <li>Triple Clover pays 4x the bet.</li>
+            <li>Balance is reduced by bet; winnings are added back.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="audio-spin" src="assets/audio/slot-spin.mp3"></audio>
+<audio id="audio-stop" src="assets/audio/slot-stop.mp3"></audio>
+<audio id="audio-win" src="assets/audio/win.mp3"></audio>
+<audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
+
+<script>
+// WALLET
+let balance = 1000;
+const betAmount = 50;
+
+const balanceEl = document.getElementById("balance");
+const betEl = document.getElementById("bet");
+balanceEl.textContent = "$" + balance;
+betEl.textContent = "$" + betAmount;
+
+// SYMBOLS
+const symbols = [
+    "assets/images/slots/cherry.png",
+    "assets/images/slots/lemon.png",
+    "assets/images/slots/star.png",
+    "assets/images/slots/clover.png",
+    "assets/images/slots/seven.png"
+];
+
+// REEL SPIN FUNCTION
+function spin() {
+    const status = document.getElementById("status");
+
+    if (balance < betAmount) {
+        status.textContent = "Not enough balance to spin.";
+        return;
+    }
+
+    balance -= betAmount;
+    balanceEl.textContent = "$" + balance;
+
+    status.textContent = "Spinning...";
+
+    document.getElementById("audio-spin").play().catch(() => {});
+
+    spinReel("reel1", 1);
+    spinReel("reel2", 2);
+    spinReel("reel3", 3);
+
+    setTimeout(() => {
+        evaluate();
+    }, 3000);
+}
+
+function spinReel(reelId, delayMultiplier) {
+    const reel = document.getElementById(reelId);
+    reel.innerHTML = "";
+
+    let pos = 0;
+
+    for (let i = 0; i < 20; i++) {
+        const img = document.createElement("img");
+        img.src = symbols[Math.floor(Math.random() * symbols.length)];
+        img.style.top = `${pos}px`;
+        reel.appendChild(img);
+        pos += 120;
+    }
+
+    let offset = 0;
+    const interval = setInterval(() => {
+        offset -= 40;
+        reel.style.transform = `translateY(${offset}px)`;
+    }, 50);
+
+    setTimeout(() => {
+        clearInterval(interval);
+        document.getElementById("audio-stop").play().catch(() => {});
+        reel.style.transform = `translateY(0px)`;
+
+        const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+        reel.innerHTML = `<img src="${finalSymbol}" />`;
+        reel.dataset.symbol = finalSymbol;
+    }, 1000 * delayMultiplier);
+}
+
+// EVALUATE RESULT
+function evaluate() {
+    const status = document.getElementById("status");
+
+    const r1 = document.getElementById("reel1").dataset.symbol;
+    const r2 = document.getElementById("reel2").dataset.symbol;
+    const r3 = document.getElementById("reel3").dataset.symbol;
+
+    let win = 0;
+
+    if (r1 === r2 && r2 === r3) {
+        if (r1.includes("clover")) {
+            win = betAmount * 4;
+            status.textContent = "Triple Clover! HUGE WIN!";
+        } else {
+            win = betAmount * 2;
+            status.textContent = "Triple match! You win!";
+        }
+        document.getElementById("audio-win").play().catch(() => {});
+    } else {
+        status.textContent = "No match. Better luck next time.";
+        document.getElementById("audio-lose").play().catch(() => {});
+    }
+
+    balance += win;
+    balanceEl.textContent = "$" + balance;
+
+    status.textContent += ` (Win: $${win})`;
+}
+</script>
+
+</body>
+</html>
