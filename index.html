@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Lucky 13 Casino – Online Gaming</title>
-<link rel="stylesheet" href="style.css" />
+<title>Lucky 13 Casino – Welcome</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -11,515 +10,233 @@
 body {
     margin: 0;
     font-family: "Segoe UI", system-ui, sans-serif;
-    background: radial-gradient(circle at top, #111111 0%, #050505 50%, #000000 100%);
+    background: radial-gradient(circle at top, #0a0a0a 0%, #000 60%, #000 100%);
     color: #f9f3d7;
 }
 
-/* HEADER */
-.header {
+/* TOP NAV */
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 32px;
+    padding: 16px 32px;
     background: #050608;
     border-bottom: 1px solid #262626;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
-.logo {
+.nav-left {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.logo img {
-    height: 42px;
-    border-radius: 8px;
-    border: 1px solid #f5c451;
-}
-
-.logo h1 {
-    font-size: 1.4rem;
-    letter-spacing: 1px;
-    color: #f5c451;
-}
-
-.nav {
-    display: flex;
-    gap: 18px;
-    font-size: 0.95rem;
-}
-
-.nav a {
-    color: #e0d7ff;
-    text-decoration: none;
-    position: relative;
-    font-weight: 600;
-}
-
-.nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #f5c451, #ff6bcb);
-    transition: width 0.2s;
-}
-
-.nav a:hover::after {
-    width: 100%;
-}
-
-.wallet {
-    display: flex;
     gap: 12px;
-    align-items: center;
 }
 
-.wallet-item {
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #101010;
-    border: 1px solid #3a3a3a;
-    font-size: 0.85rem;
+.nav-left img {
+    height: 42px;
+    border-radius: 6px;
+    border: 1px solid #f5c451;
 }
 
-.wallet-item span.value {
+.nav-left h1 {
+    font-size: 1.4rem;
     color: #f5c451;
 }
 
-/* HERO */
-.hero {
-    padding: 32px;
-    text-align: center;
-    background: linear-gradient(135deg, #050608, #111111);
-    box-shadow: 0 0 40px rgba(0,0,0,0.7);
-}
-
-.hero-title {
-    font-size: 2.4rem;
-    margin-bottom: 8px;
-    color: #f9f3d7;
-}
-
-.hero-subtitle {
-    font-size: 1.05rem;
-    color: #d0c7ff;
-    margin-bottom: 16px;
-}
-
-.hero-badges {
+.nav-right {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 18px;
+    gap: 16px;
 }
 
-.badge {
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid #f5c451;
-    font-size: 0.8rem;
-    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-}
-
-.hero-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.btn-primary {
-    padding: 9px 20px;
-    border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, #f5c451, #ff6bcb);
-    color: #050505;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.9rem;
-    box-shadow: 0 0 12px rgba(245,196,81,0.6);
-    transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 18px rgba(255,107,203,0.7);
-}
-
-.btn-secondary {
-    padding: 9px 20px;
+.nav-btn {
+    padding: 8px 18px;
     border-radius: 999px;
     border: 1px solid #f5c451;
     background: transparent;
     color: #f5c451;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.15s, color 0.15s;
 }
 
-.btn-secondary:hover {
+.nav-btn:hover {
     background: #f5c451;
     color: #050505;
 }
 
-/* MAIN */
-.main {
-    max-width: 1300px;
-    margin: 24px auto 40px;
-    padding: 0 24px;
+/* HERO SECTION */
+.hero {
+    text-align: center;
+    padding: 80px 24px 40px;
 }
 
-.section-title {
-    font-size: 1.3rem;
-    margin-bottom: 12px;
-    color: #f9f3d7;
-    border-left: 3px solid #f5c451;
-    padding-left: 10px;
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #f5c451;
+    text-shadow: 0 0 20px #ff6bcb;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #d0c7ff;
+    margin-top: 12px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* GAME GRID */
+.game-section {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
 }
 
 .game-card {
-    background: #090909;
-    border-radius: 14px;
+    background: #050608;
     border: 1px solid #262626;
-    padding: 10px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-}
-
-.game-card::before {
-    content: "";
-    position: absolute;
-    inset: -40%;
-    background: radial-gradient(circle at top, rgba(245,196,81,0.15), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.2s;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
 }
 
 .game-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 18px rgba(0,0,0,0.8);
-    border-color: #f5c451;
+    transform: translateY(-6px);
 }
 
-.game-card:hover::before {
-    opacity: 1;
-}
-
-.game-thumb {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #333;
-}
-
-.game-name {
-    margin-top: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #f9f3d7;
-}
-
-.game-meta {
-    font-size: 0.8rem;
-    color: #d0c7ff;
-}
-
-/* CHAT (placeholder UI) */
-.chat-box {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    width: 280px;
-    background: #050608;
-    border-radius: 12px;
-    border: 1px solid #262626;
-    padding: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    font-size: 0.8rem;
-}
-
-.chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
+.game-card h3 {
     color: #f5c451;
+    margin-bottom: 10px;
 }
 
-.chat-messages {
-    height: 170px;
-    overflow-y: auto;
-    background: #090909;
-    border-radius: 8px;
-    padding: 6px;
-    margin-bottom: 6px;
+.game-card p {
+    font-size: 0.9rem;
+    color: #d0c7ff;
+    margin-bottom: 12px;
 }
 
-.chat-input-row {
-    display: flex;
-    gap: 6px;
-}
-
-.chat-input-row input {
-    flex: 1;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #262626;
-    background: #050505;
-    color: #f9f3d7;
-}
-
-.chat-input-row button {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: none;
+.game-card a {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
     background: linear-gradient(135deg, #f5c451, #ff6bcb);
     color: #050505;
-    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.game-card a:hover {
+    box-shadow: 0 0 18px rgba(255,107,203,0.7);
 }
 
 /* FOOTER */
-footer {
+.footer {
+    margin-top: 60px;
+    padding: 20px;
     text-align: center;
-    padding: 12px;
-    font-size: 0.8rem;
-    color: #a0a0a0;
-    border-top: 1px solid #262626;
-    background: #050608;
+    color: #777;
+    font-size: 0.85rem;
 }
 </style>
 </head>
 
 <body>
-<!-- HEADER -->
-<header class="header">
-    <div class="logo">
-        <img src="assets/images/logo.png" alt="Lucky 13 Logo" />
+
+<!-- NAV -->
+<div class="navbar">
+    <div class="nav-left">
+        <img src="assets/images/logo.png" alt="Lucky 13 Logo">
         <h1>Lucky 13 Casino</h1>
     </div>
-
-    <nav class="nav">
-        <a href="#games">Games</a>
-        <a href="#live">Live Tables</a>
-        <a href="#promos">Promotions</a>
-    </nav>
-
-    <div class="wallet">
-        <div class="wallet-item">Balance: <span id="balance" class="value">$1000</span></div>
-    </div>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-title">Premium Online Casino Experience</div>
-    <div class="hero-subtitle">
-        15+ casino games, custom gold/black neon theme, animations, sound effects, and virtual wallets.
-    </div>
-    <div class="hero-badges">
-        <div class="badge">Virtual Wallet</div>
-        <div class="badge">Multiplayer‑Ready</div>
-        <div class="badge">Sound Effects</div>
-        <div class="badge">Custom Animations</div>
-    </div>
-    <div class="hero-actions">
-        <button class="btn-primary" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
-            Browse Games
-        </button>
-        <button class="btn-secondary" onclick="alert('Backend (Railway) will power real chat & multiplayer.')">
-            Learn About Backend
-        </button>
-    </div>
-</section>
-
-<!-- MAIN -->
-<main class="main">
-    <h2 id="games" class="section-title">Games</h2>
-
-    <div class="game-grid">
-        <!-- 15 GAME CARDS -->
-        <div class="game-card" onclick="location.href='game/slots.html'">
-            <img src="assets/images/games/slots-thumb.png" class="game-thumb" alt="Slots" />
-            <div class="game-name">Slots</div>
-            <div class="game-meta">Real spinning reels • Sound effects</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/roulette.html'">
-            <img src="assets/images/games/roulette-thumb.png" class="game-thumb" alt="Roulette" />
-            <div class="game-name">Roulette</div>
-            <div class="game-meta">European wheel • Real spin animation</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/blackjack.html'">
-            <img src="assets/images/games/blackjack-thumb.png" class="game-thumb" alt="Blackjack" />
-            <div class="game-name">Blackjack</div>
-            <div class="game-meta">Dealer table • Card dealing animation</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/craps.html'">
-            <img src="assets/images/games/craps-thumb.png" class="game-thumb" alt="Craps" />
-            <div class="game-name">Craps</div>
-            <div class="game-meta">Dice table • Real rules</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/baccarat.html'">
-            <img src="assets/images/games/baccarat-thumb.png" class="game-thumb" alt="Baccarat" />
-            <div class="game-name">Baccarat</div>
-            <div class="game-meta">Player/Banker • Casino‑style layout</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/mines.html'">
-            <img src="assets/images/games/mines-thumb.png" class="game-thumb" alt="Mines" />
-            <div class="game-name">Mines</div>
-            <div class="game-meta">Grid game • Risk/reward</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/plinko.html'">
-            <img src="assets/images/games/plinko-thumb.png" class="game-thumb" alt="Plinko" />
-            <div class="game-name">Plinko</div>
-            <div class="game-meta">Peg board • Falling chips</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/crash.html'">
-            <img src="assets/images/games/crash-thumb.png" class="game-thumb" alt="Crash" />
-            <div class="game-name">Crash</div>
-            <div class="game-meta">Multiplier curve • Cash out timing</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/megaways.html'">
-            <img src="assets/images/games/megaways-thumb.png" class="game-thumb" alt="Megaways" />
-            <div class="game-name">Megaways Slots</div>
-            <div class="game-meta">Dynamic reels • High volatility</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/video-poker.html'">
-            <img src="assets/images/games/video-poker-thumb.png" class="game-thumb" alt="Video Poker" />
-            <div class="game-name">Video Poker</div>
-            <div class="game-meta">Jacks or Better • Draw/hold</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/keno.html'">
-            <img src="assets/images/games/keno-thumb.png" class="game-thumb" alt="Keno" />
-            <div class="game-name">Keno</div>
-            <div class="game-meta">Number draw • Payout grid</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/dice.html'">
-            <img src="assets/images/games/dice-thumb.png" class="game-thumb" alt="Dice" />
-            <div class="game-name">Dice</div>
-            <div class="game-meta">Roll under/over • Simple controls</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/hilo.html'">
-            <img src="assets/images/games/hilo-thumb.png" class="game-thumb" alt="Hi-Lo" />
-            <div class="game-name">Hi‑Lo</div>
-            <div class="game-meta">Higher or lower • Card guessing</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/wheel.html'">
-            <img src="assets/images/games/wheel-thumb.png" class="game-thumb" alt="Wheel" />
-            <div class="game-name">Wheel</div>
-            <div class="game-meta">Prize wheel • Spin animation</div>
-        </div>
-
-        <div class="game-card" onclick="location.href='game/poker.html'">
-            <img src="assets/images/games/poker-thumb.png" class="game-thumb" alt="Poker" />
-            <div class="game-name">Texas Hold’em</div>
-            <div class="game-meta">Dealer table • Multiplayer‑ready</div>
-        </div>
-    </div>
-</main>
-
-<!-- CHAT UI (Railway‑ready) -->
-<div class="chat-box">
-    <div class="chat-header">
-        <span>Casino Chat</span>
-        <button style="border:none;background:none;color:#f5c451;font-size:0.75rem;cursor:pointer;"
-                onclick="loadChat()">
-            Refresh
-        </button>
-    </div>
-    <div id="chatMessages" class="chat-messages"></div>
-    <div class="chat-input-row">
-        <input id="chatInput" placeholder="Type a message..." />
-        <button onclick="sendChat()">Send</button>
+    <div class="nav-right">
+        <button class="nav-btn" onclick="location.href='login.html'">Sign In</button>
+        <button class="nav-btn" onclick="location.href='register.html'">Register</button>
     </div>
 </div>
 
-<footer>
-    Lucky 13 Casino &copy; 2026 – Demo interface. All credits are virtual only.
-</footer>
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-title">Welcome to Lucky 13 Casino</div>
+    <div class="hero-subtitle">
+        A fully interactive, fake‑money casino experience.  
+        Play Blackjack, Slots, Roulette, Plinko, Poker, and more — all with real animations, real rules, and zero real‑world risk.
+    </div>
+</div>
 
-<script>
-// SIMPLE WALLET DISPLAY
-let balance = 1000;
-    
-function updateWallet() {
-    document.getElementById("balance").textContent = "$" + balance;1000
-}
-updateWallet();
+<!-- GAME SECTION -->
+<div class="game-section">
+    <h2 style="color:#f5c451; text-align:center; margin-bottom:20px;">Game Directory & Rules</h2>
 
-// CHAT – FRONTEND HOOKS FOR RAILWAY BACKEND
-async function loadChat() {
-    const box = document.getElementById("chatMessages");
-    box.innerHTML = "Loading messages...";
-    try {
-        // When you deploy a backend on Railway, replace URL below:
-        // const res = await fetch("https://YOUR-RAILWAY-APP/api/chat");
-        // const messages = await res.json();
-        const messages = [
-            { user: "System", text: "Welcome to Lucky 13 Casino." },
-            { user: "DealerBot", text: "Chat is demo‑only until backend is live." }
-        ];
-        box.innerHTML = "";
-        messages.forEach(m => {
-            const div = document.createElement("div");
-            div.textContent = `${m.user}: ${m.text}`;
-            box.appendChild(div);
-        });
-        box.scrollTop = box.scrollHeight;
-    } catch (e) {
-        box.innerHTML = "Failed to load chat.";
-    }
-}
+    <div class="game-grid">
 
-async function sendChat() {
-    const input = document.getElementById("chatInput");
-    const text = input.value.trim();
-    if (!text) return;
-    const box = document.getElementById("chatMessages");
+        <!-- Blackjack -->
+        <div class="game-card">
+            <h3>Blackjack</h3>
+            <p>Beat the dealer without going over 21. Dealer hits until 17. Blackjack pays 2x.</p>
+            <a href="games/blackjack.html">Play Blackjack</a>
+        </div>
 
-    // Optimistic append
-    const div = document.createElement("div");
-    div.textContent = `You: ${text}`;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
-    input.value = "";
+        <!-- Slots -->
+        <div class="game-card">
+            <h3>Slots</h3>
+            <p>Spin 3 reels. Triple match pays 2x. Triple Clover pays 4x. Real spinning animations.</p>
+            <a href="games/slots.html">Play Slots</a>
+        </div>
 
-    // When backend exists:
-    // await fetch("https://YOUR-RAILWAY-APP/api/chat", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ user: "You", text })
-    // });
-}
+        <!-- Roulette -->
+        <div class="game-card">
+            <h3>Roulette</h3>
+            <p>Bet on Red/Black, Even/Odd. Spin the wheel and watch the ball land in real time.</p>
+            <a href="games/roulette.html">Play Roulette</a>
+        </div>
 
-loadChat();
-</script>
+        <!-- Plinko -->
+        <div class="game-card">
+            <h3>Plinko</h3>
+            <p>Drop the ball through a peg board. Land in multipliers from 0.5x to 10x.</p>
+            <a href="games/plinko.html">Play Plinko</a>
+        </div>
+
+        <!-- Poker -->
+        <div class="game-card">
+            <h3>Texas Hold’em</h3>
+            <p>Two hole cards, five community cards. Highest 5‑card hand wins. Dealer AI included.</p>
+            <a href="games/poker.html">Play Poker</a>
+        </div>
+
+        <!-- Three Card Poker -->
+        <div class="game-card">
+            <h3>Three Card Poker</h3>
+            <p>Pair, Flush, Straight, Straight Flush, or Three‑of‑a‑Kind. Beat the dealer’s hand.</p>
+            <a href="games/threecard.html">Play 3‑Card Poker</a>
+        </div>
+
+        <!-- Craps -->
+        <div class="game-card">
+            <h3>Craps</h3>
+            <p>Pass Line rules. Win on 7 or 11. Lose on 2, 3, 12. Otherwise set the point.</p>
+            <a href="games/craps.html">Play Craps</a>
+        </div>
+
+        <!-- Mines -->
+        <div class="game-card">
+            <h3>Mines</h3>
+            <p>Pick tiles and avoid mines. Each safe tile increases your multiplier.</p>
+            <a href="games/mines.html">Play Mines</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    Lucky 13 Casino © 2026 
+</div>
+
 </body>
 </html>
