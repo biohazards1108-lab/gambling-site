@@ -7,3 +7,6 @@ app.get('/api/test', (req, res) => {
 });
 
 app.listen(PORT, () => console.log('Server running on port ' + PORT));
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend connection successful!" });
+});
