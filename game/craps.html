@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Craps – Lucky 13 Casino</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #02131f, #062b3f);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 14px 24px;
+      background: #0a0a0a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0f3b5f;
+      box-sizing: border-box;
+    }
+
+    header div {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .balance {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4dd2ff;
+    }
+
+    main {
+      max-width: 900px;
+      width: 100%;
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #0af;
+    }
+
+    .dice-area {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .die {
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: bold;
+      box-shadow: 0 0 12px #000;
+    }
+
+    .action-row {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .action-row button {
+      padding: 12px 24px;
+      border: none;
+      background: #0f5b8f;
+      color: #fff;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+
+    .action-row button:hover {
+      background: #1380c4;
+      transform: translateY(-2px);
+    }
+
+    #status {
+      margin-top: 25px;
+      font-size: 22px;
+      min-height: 40px;
+      font-weight: 600;
+      color: #4dd2ff;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>Lucky 13 Casino – Craps</div>
+  <div class="balance">Balance: $<span id="balance">1000</span></div>
+</header>
+
+<main>
+  <h1>Craps</h1>
+
+  <div class="dice-area">
+    <div class="die" id="die1">–</div>
+    <div class="die" id="die2">–</div>
+  </div>
+
+  <div class="action-row">
+    <button onclick="rollCraps()">Roll Dice ($10)</button>
+  </div>
+
+  <div id="status"></div>
+</main>
+
+<script>
+  let balance = 1000;
+  let point = null;
+
+  function updateBalance(amount) {
+    balance += amount;
+    document.getElementById("balance").textContent = balance.toFixed(2);
+  }
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function rollDie() {
+    return randInt(1, 6);
+  }
+
+  function rollCraps() {
+    updateBalance(-10);
+
+    const d1 = rollDie();
+    const d2 = rollDie();
+    const total = d1 + d2;
+
+    document.getElementById("die1").textContent = d1;
+    document.getElementById("die2").textContent = d2;
+
+    let msg = "";
+
+    if (point === null) {
+      // COME-OUT ROLL
+      if (total === 7 || total === 11) {
+        updateBalance(20);
+        msg = `Come-out roll ${total}: You win! +$20`;
+      } else if ([2, 3, 12].includes(total)) {
+        msg = `Come-out roll ${total}: Craps! You lose.`;
+      } else {
+        point = total;
+        msg = `Point is set to ${point}. Roll again until ${point} (win) or 7 (lose).`;
+      }
+    } else {
+      // POINT PHASE
+      if (total === point) {
+        updateBalance(20);
+        msg = `You hit the point ${point}! +$20`;
+        point = null;
+      } else if (total === 7) {
+        msg = `Seven out! You lose.`;
+        point = null;
+      } else {
+        msg = `Rolled ${total}. Point is ${point}.`;
+      }
+    }
+
+    document.getElementById("status").textContent = msg;
+  }
+</script>
+
+</body>
+</html>
