@@ -101,7 +101,7 @@ async function register() {
     }
 
     try {
-        const res = await fetch("https://YOUR_BACKEND_URL/register", {
+        const res = await fetch("https://gambling-site-production.up.railway.app/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
