@@ -236,7 +236,7 @@ body {
     </div>
     <div class="top-right">
         <a href="index.html" class="back-link">← Back to Lobby</a>
-        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$0</span></div>
         <div class="wallet-pill">Bet: <span id="bet" class="value">$100</span></div>
     </div>
 </div>
@@ -276,14 +276,12 @@ body {
     <div class="rules-panel">
         <strong>Blackjack Rules (Simplified Casino Style):</strong>
         <ul>
-            <li>Bet size: $100 per hand (fixed in this demo).</li>
+            <li>Bet size: $100 per hand.</li>
             <li>Player and dealer each receive two cards at the start.</li>
-            <li>Number cards count as their value; face cards count as 10; Aces count as 11 or 1.</li>
-            <li>Player may Hit (take another card) or Stand (keep current total).</li>
-            <li>Dealer must Hit until reaching at least 17.</li>
-            <li>If player exceeds 21, player busts and loses the bet.</li>
-            <li>If dealer exceeds 21, dealer busts and player wins 2x the bet.</li>
-            <li>If neither busts, higher total wins; equal totals result in a push (bet returned).</li>
+            <li>Face cards = 10, Aces = 11 or 1.</li>
+            <li>Dealer hits until 17.</li>
+            <li>Bust = automatic loss.</li>
+            <li>Higher total wins; ties return the bet.</li>
         </ul>
     </div>
 </div>
@@ -295,21 +293,37 @@ body {
 <audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
 
 <script>
-// WALLET
-let balance = 1000;
+/* ---------------- BACKEND CONNECTION ---------------- */
+
+const API = "https://gambling-site-production.up.railway.app";
+
+async function fetchBalance() {
+    const res = await fetch(`${API}/balance`);
+    const data = await res.json();
+    document.getElementById("balance").textContent = "$" + data.balance;
+    balance = data.balance;
+}
+
+async function updateBalance(delta) {
+    const res = await fetch(`${API}/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delta })
+    });
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
+
+/* ---------------- GAME LOGIC ---------------- */
+
+let balance = 0;
 const betAmount = 100;
 
-const balanceEl = document.getElementById("balance");
-const betEl = document.getElementById("bet");
-balanceEl.textContent = "$" + balance;
-betEl.textContent = "$" + betAmount;
-
-// GAME STATE
 let playerHand = [];
 let dealerHand = [];
 let activeHand = false;
 
-// CARD LOGIC
 const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 const suits = ["♠","♥","♦","♣"];
 
@@ -339,7 +353,6 @@ function handTotal(hand) {
     return total;
 }
 
-// RENDERING
 function clearTable() {
     document.getElementById("playerCards").innerHTML = "";
     document.getElementById("dealerCards").innerHTML = "";
@@ -361,22 +374,24 @@ function renderHand(containerId, hand, hideSecondCard = false) {
     });
 }
 
-// AUDIO HELPERS
 function playSound(id) {
     const audio = document.getElementById(id);
     if (audio) audio.play().catch(() => {});
 }
 
-// GAME FLOW
-function startHand() {
+/* ---------------- GAME FLOW ---------------- */
+
+async function startHand() {
     const status = document.getElementById("status");
+
+    await fetchBalance();
+
     if (balance < betAmount) {
         status.textContent = "Not enough balance to start a hand.";
         return;
     }
 
-    balance -= betAmount;
-    balanceEl.textContent = "$" + balance;
+    await updateBalance(-betAmount);
 
     playerHand = [drawCard(), drawCard()];
     dealerHand = [drawCard(), drawCard()];
@@ -409,23 +424,22 @@ function hit() {
     if (total > 21) {
         activeHand = false;
         status.textContent = `Player busts with ${total}. Dealer wins.`;
+        updateBalance(0);
         playSound("audio-lose");
     } else {
         status.textContent = `Player hits. New total: ${total}.`;
     }
 }
 
-function stand() {
+async function stand() {
     const status = document.getElementById("status");
     if (!activeHand) {
         status.textContent = "Start a hand first.";
         return;
     }
 
-    // Reveal dealer hand
     renderHand("dealerCards", dealerHand, false);
 
-    // Dealer draws to 17+
     let dealerTotal = handTotal(dealerHand);
     while (dealerTotal < 17) {
         const newCard = drawCard();
@@ -458,10 +472,13 @@ function stand() {
         playSound("audio-deal");
     }
 
-    balance += win;
-    balanceEl.textContent = "$" + balance;
-    status.textContent = `${resultText} Winnings: $${win}. Balance: $${balance}.`;
+    await updateBalance(win);
+
+    status.textContent = `${resultText} Winnings: $${win}.`;
 }
+
+fetchBalance();
 </script>
+
 </body>
-  </html>
+</html>
