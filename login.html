@@ -101,7 +101,7 @@ async function login() {
     }
 
     try {
-        const res = await fetch("https://YOUR_BACKEND_URL/login", {
+        const res = await fetch("https://gambling-site-production.up.railway.app/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
