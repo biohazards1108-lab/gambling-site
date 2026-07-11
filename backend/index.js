@@ -6,7 +6,6 @@ app.use(express.json());
 
 // test route
 app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend connection successful!" });
 app.post("/api/bet", (req, res) => {
   const { amount } = req.body;
 
@@ -22,6 +21,7 @@ app.post("/api/bet", (req, res) => {
     res.json({ result: "lose", payout: 0 });
   }
 });
+
 
 
 // root route
