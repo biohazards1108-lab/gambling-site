@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Lucky 13 Casino – Play Online</title>
+    <title>Lucky 13 Casino – Online Gaming</title>
     <link rel="stylesheet" href="style.css" />
 
     <style>
-        /* GLOBAL */
         * {
             box-sizing: border-box;
         }
@@ -24,17 +23,17 @@
             text-decoration: none;
         }
 
-        /* TOP BAR / HEADER */
+        /* LAYOUT */
         .top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 40px;
-            background: rgba(5, 5, 9, 0.95);
+            padding: 12px 32px;
+            background: rgba(5, 5, 9, 0.96);
             border-bottom: 1px solid #2c2c3a;
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
         }
 
         .logo-area {
@@ -58,7 +57,7 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 18px;
             font-size: 0.95rem;
         }
 
@@ -85,8 +84,8 @@
         .account-area {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 0.95rem;
+            gap: 14px;
+            font-size: 0.9rem;
         }
 
         .balance-pill {
@@ -94,6 +93,13 @@
             border-radius: 999px;
             background: #14141f;
             border: 1px solid #f5d76e;
+        }
+
+        .token-pill {
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: #14141f;
+            border: 1px solid #2c2c3a;
         }
 
         .login-btn {
@@ -111,38 +117,60 @@
             color: #050509;
         }
 
+        .main-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 1.5fr);
+            gap: 20px;
+            max-width: 1300px;
+            margin: 20px auto 40px;
+            padding: 0 20px;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         /* HERO */
         .hero {
             display: grid;
             grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
-            gap: 40px;
-            max-width: 1200px;
-            margin: 30px auto 10px;
-            padding: 0 20px;
+            gap: 24px;
+            background: rgba(10, 10, 16, 0.95);
+            border-radius: 16px;
+            border: 1px solid #2c2c3a;
+            padding: 18px;
         }
 
         .hero-left {
-            padding: 20px 0;
+            padding-right: 10px;
         }
 
         .hero-title {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .hero-subtitle {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #d7c48a;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .hero-badges {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .badge {
@@ -150,25 +178,25 @@
             border-radius: 999px;
             border: 1px solid #f5d76e;
             font-size: 0.8rem;
-            background: rgba(10, 10, 16, 0.9);
+            background: rgba(5, 5, 9, 0.9);
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .primary-btn {
-            padding: 10px 22px;
+            padding: 9px 20px;
             border-radius: 999px;
             border: none;
             background: linear-gradient(135deg, #f5d76e, #f1c40f);
             color: #050509;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .primary-btn:hover {
@@ -176,14 +204,14 @@
         }
 
         .secondary-btn {
-            padding: 10px 22px;
+            padding: 9px 20px;
             border-radius: 999px;
             border: 1px solid #f5d76e;
             background: transparent;
             color: #f5d76e;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .secondary-btn:hover {
@@ -204,31 +232,31 @@
 
         .hero-card {
             width: 100%;
-            max-width: 420px;
-            background: rgba(10, 10, 16, 0.95);
-            border-radius: 16px;
+            max-width: 380px;
+            background: rgba(5, 5, 9, 0.95);
+            border-radius: 14px;
             border: 1px solid #2c2c3a;
-            padding: 18px;
+            padding: 14px;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
         }
 
         .hero-card img {
             width: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid #f5d76e;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .hero-card-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .hero-card-text {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #c9bc84;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .hero-card-row {
@@ -238,16 +266,10 @@
             color: #a59a6a;
         }
 
-        /* MAIN CONTENT */
-        .main-wrapper {
-            max-width: 1200px;
-            margin: 10px auto 40px;
-            padding: 0 20px;
-        }
-
+        /* GAME GRID */
         .section-title {
-            font-size: 1.4rem;
-            margin: 20px 0 10px;
+            font-size: 1.3rem;
+            margin: 10px 0;
             border-left: 3px solid #f5d76e;
             padding-left: 10px;
         }
@@ -255,17 +277,17 @@
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
+            gap: 16px;
         }
 
         .game-card {
             background: rgba(10, 10, 16, 0.95);
             border-radius: 12px;
             border: 1px solid #2c2c3a;
-            padding: 14px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .game-thumb {
@@ -275,54 +297,161 @@
         }
 
         .game-name {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
         }
 
         .game-desc {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #c9bc84;
         }
 
         .game-rules {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #a59a6a;
             margin-left: 16px;
         }
 
         .game-rules li {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .game-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .game-output {
-            margin-top: 8px;
+            margin-top: 6px;
             min-height: 40px;
             padding: 8px;
             background: #14141f;
             border-radius: 8px;
             border: 1px solid #2c2c3a;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             white-space: pre-line;
+        }
+
+        /* LOBBY & CHAT */
+        .panel {
+            background: rgba(10, 10, 16, 0.95);
+            border-radius: 12px;
+            border: 1px solid #2c2c3a;
+            padding: 12px;
+            font-size: 0.85rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .panel-title {
+            font-weight: 600;
+        }
+
+        .lobby-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .lobby-table th,
+        .lobby-table td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #2c2c3a;
+            text-align: left;
+        }
+
+        .lobby-table th {
+            color: #d7c48a;
+        }
+
+        .join-btn {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid #f5d76e;
+            background: transparent;
+            color: #f5d76e;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .join-btn:hover {
+            background: #f5d76e;
+            color: #050509;
+        }
+
+        .chat-window {
+            height: 260px;
+            background: #14141f;
+            border-radius: 8px;
+            border: 1px solid #2c2c3a;
+            padding: 8px;
+            overflow-y: auto;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+
+        .chat-message {
+            margin-bottom: 6px;
+        }
+
+        .chat-user {
+            font-weight: 600;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 6px 8px;
+            border-radius: 999px;
+            border: 1px solid #2c2c3a;
+            background: #050509;
+            color: #f5d76e;
+            font-size: 0.8rem;
+        }
+
+        .chat-send-btn {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid #f5d76e;
+            background: transparent;
+            color: #f5d76e;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .chat-send-btn:hover {
+            background: #f5d76e;
+            color: #050509;
         }
 
         /* FOOTER */
         footer {
             border-top: 1px solid #2c2c3a;
-            padding: 14px 20px;
+            padding: 12px 20px;
             font-size: 0.8rem;
             color: #8c8260;
             text-align: center;
             background: rgba(5, 5, 9, 0.95);
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
             .hero {
                 grid-template-columns: 1fr;
             }
@@ -331,12 +460,12 @@
                 order: -1;
             }
 
-            .top-bar {
-                padding: 10px 16px;
-            }
-
             .nav-links {
                 display: none;
+            }
+
+            .top-bar {
+                padding: 10px 16px;
             }
         }
     </style>
@@ -346,7 +475,6 @@
     <!-- TOP BAR -->
     <div class="top-bar">
         <div class="logo-area">
-            <!-- Replace with your actual logo PNG -->
             <img src="assets/images/logo.png" alt="Lucky 13 Casino Logo" />
             <div class="logo-text">Lucky 13 Casino</div>
         </div>
@@ -362,145 +490,236 @@
             <div class="balance-pill">
                 Balance: <span id="balance">$1000</span>
             </div>
-            <button class="login-btn" onclick="alert('Login system coming soon.')">Login / Register</button>
+            <div class="token-pill">
+                Tokens: <span id="tokens">100</span> L13
+            </div>
+            <button class="login-btn" onclick="alert('Auth backend to be added (Railway / Supabase / etc).')">
+                Login / Register
+            </button>
         </div>
     </div>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-left">
-            <div class="hero-title">Play Real Casino‑Style Games Online</div>
-            <div class="hero-subtitle">
-                Slots, Blackjack, and Roulette — all in one place. Instant play, clear rules, and a clean interface.
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+        <div class="left-column">
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-left">
+                    <div class="hero-title">Play Casino‑Style Games Online</div>
+                    <div class="hero-subtitle">
+                        Slots, Blackjack, and Roulette with clear rules, virtual wallets, and a modern gambling interface.
+                    </div>
+
+                    <div class="hero-badges">
+                        <div class="badge">Virtual Wallet</div>
+                        <div class="badge">Multiplayer Lobby (UI)</div>
+                        <div class="badge">Chat Panel</div>
+                        <div class="badge">Responsive Layout</div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <button class="primary-btn" onclick="scrollToSection('featured')">Start Playing</button>
+                        <button class="secondary-btn" onclick="scrollToSection('rules')">View Rules</button>
+                    </div>
+
+                    <div class="hero-footnote">
+                        Lucky 13 Casino uses virtual credits only. No real‑money wagering. Multiplayer and chat require a backend (e.g. Railway).
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <div class="hero-card">
+                        <img src="assets/images/hero-table.png" alt="Casino Table" />
+                        <div class="hero-card-title">Live‑Style Online Casino Layout</div>
+                        <div class="hero-card-text">
+                            Dark, modern UI inspired by real gambling platforms. Game tiles, wallet display, lobby, and chat all in one view.
+                        </div>
+                        <div class="hero-card-row">
+                            <span>Games: Slots, Blackjack, Roulette</span>
+                            <span>Wallet: Balance + L13 Tokens</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FEATURED GAMES -->
+            <h2 id="featured" class="section-title">Featured Games</h2>
+            <div class="games-grid">
+                <!-- SLOTS -->
+                <div class="game-card" id="slots">
+                    <img src="assets/images/slots.png" alt="Slots Machine" class="game-thumb" />
+                    <div class="game-name">Lucky 13 Slots</div>
+                    <div class="game-desc">
+                        3‑reel video slot with classic symbols and a simple paytable. Designed to feel like a real online slot.
+                    </div>
+                    <ul class="game-rules">
+                        <li>Bet size: $50 per spin (fixed).</li>
+                        <li>Reels: 3 reels, 1 central payline.</li>
+                        <li>Symbols: 🍒, 🍋, ⭐, 🍀, 7️⃣.</li>
+                        <li>Any triple match pays 2x the bet.</li>
+                        <li>Triple 🍀 pays 4x the bet.</li>
+                        <li>Balance is reduced by bet; winnings are added back.</li>
+                    </ul>
+                    <div class="game-actions">
+                        <button class="primary-btn" onclick="playSlots()">Spin ($50)</button>
+                        <button class="secondary-btn" onclick="playSlotsWithSound()">Spin with Sound</button>
+                    </div>
+                    <div id="slots-output" class="game-output"></div>
+                    <audio id="slots-audio" src="assets/audio/slot-spin.mp3"></audio>
+                </div>
+
+                <!-- BLACKJACK -->
+                <div class="game-card" id="blackjack">
+                    <img src="assets/images/blackjack.png" alt="Blackjack Table" class="game-thumb" />
+                    <div class="game-name">Lucky 13 Blackjack</div>
+                    <div class="game-desc">
+                        Standard blackjack rules: try to beat the dealer by getting closer to 21 without busting.
+                    </div>
+                    <ul class="game-rules">
+                        <li>Bet size: $100 per hand (fixed).</li>
+                        <li>Deck model: infinite deck (cards drawn randomly 2–11, 11 = Ace).</li>
+                        <li>Player and dealer start with two cards.</li>
+                        <li>Player may Hit (draw) or Stand (hold total).</li>
+                        <li>Dealer must hit until total is at least 17.</li>
+                        <li>If player busts (&gt;21), dealer wins automatically.</li>
+                        <li>If dealer busts, player wins automatically.</li>
+                        <li>Otherwise, highest total ≤21 wins; equal totals result in a push (bet returned).</li>
+                    </ul>
+                    <div class="game-actions">
+                        <button class="primary-btn" onclick="startBlackjack()">Deal Hand ($100)</button>
+                        <button class="secondary-btn" onclick="blackjackHit()">Hit</button>
+                        <button class="secondary-btn" onclick="blackjackStand()">Stand</button>
+                    </div>
+                    <div id="blackjack-output" class="game-output"></div>
+                    <audio id="blackjack-audio" src="assets/audio/card-deal.mp3"></audio>
+                </div>
+
+                <!-- ROULETTE -->
+                <div class="game-card" id="roulette">
+                    <img src="assets/images/roulette.png" alt="Roulette Wheel" class="game-thumb" />
+                    <div class="game-name">Lucky 13 Roulette</div>
+                    <div class="game-desc">
+                        European‑style roulette wheel (single zero). Bet on Red, Black, or Lucky 13 for a high‑payout special.
+                    </div>
+                    <ul class="game-rules">
+                        <li>Bet size: $75 per spin (fixed).</li>
+                        <li>Wheel: numbers 0–36, single zero (0).</li>
+                        <li>Bet types: Red, Black, or Lucky 13 (straight number bet).</li>
+                        <li>Red/Black pays 2x the bet on win.</li>
+                        <li>Lucky 13 pays 10x the bet if the ball lands on 13.</li>
+                        <li>Balance is reduced by bet; winnings are added back.</li>
+                    </ul>
+                    <div class="game-actions">
+                        <select id="roulette-bet" class="secondary-btn" style="padding:6px 10px;">
+                            <option value="red">Red</option>
+                            <option value="black">Black</option>
+                            <option value="13">Lucky 13</option>
+                        </select>
+                        <button class="primary-btn" onclick="playRoulette()">Spin ($75)</button>
+                        <button class="secondary-btn" onclick="playRouletteWithSound()">Spin with Sound</button>
+                    </div>
+                    <div id="roulette-output" class="game-output"></div>
+                    <audio id="roulette-audio" src="assets/audio/roulette-spin.mp3"></audio>
+                </div>
             </div>
 
-            <div class="hero-badges">
-                <div class="badge">Instant Play</div>
-                <div class="badge">No Downloads</div>
-                <div class="badge">Transparent Rules</div>
-                <div class="badge">Balance Tracking</div>
-            </div>
-
-            <div class="hero-actions">
-                <button class="primary-btn" onclick="scrollToSection('featured')">Start Playing Now</button>
-                <button class="secondary-btn" onclick="scrollToSection('rules')">View Game Rules</button>
-            </div>
-
-            <div class="hero-footnote">
-                All games on Lucky 13 Casino are for entertainment purposes only. No real money wagering.
-            </div>
+            <!-- GENERAL RULES -->
+            <h2 id="rules" class="section-title">General Rules & Wallet</h2>
+            <section class="panel">
+                <p><strong>Virtual Wallet:</strong> Your balance and L13 tokens are displayed in the top bar. All bets deduct from balance; winnings are added back automatically.</p>
+                <p><strong>No Real Money:</strong> Lucky 13 Casino is a demo environment. No deposits, withdrawals, or real‑money wagering are available.</p>
+                <p><strong>Game Logic:</strong> Outcomes are determined by simple random number generation. Blackjack uses an infinite deck model; roulette uses a 0–36 wheel.</p>
+                <p><strong>Multiplayer & Chat Backend:</strong> To make multiplayer and chat real, you’ll need a backend (e.g. Node/Express on Railway, with a database like PostgreSQL). This page includes UI hooks for those features.</p>
+            </section>
         </div>
 
-        <div class="hero-right">
-            <div class="hero-card">
-                <!-- Replace with your hero PNG -->
-                <img src="assets/images/hero-table.png" alt="Casino Table" />
-                <div class="hero-card-title">Live‑Style Casino Experience</div>
-                <div class="hero-card-text">
-                    A modern, dark‑themed interface inspired by real online gambling platforms. Clear layout, responsive design, and intuitive controls.
+        <!-- RIGHT COLUMN: LOBBY + CHAT -->
+        <div class="right-column">
+            <!-- LOBBY -->
+            <section class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Game Lobby (UI)</div>
+                    <button class="secondary-btn" style="padding:4px 10px;font-size:0.75rem;" onclick="refreshLobby()">
+                        Refresh Lobby
+                    </button>
                 </div>
-                <div class="hero-card-row">
-                    <span>Games: Slots, Blackjack, Roulette</span>
-                    <span>Balance: Virtual Credits</span>
+                <table class="lobby-table">
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Game</th>
+                            <th>Stakes</th>
+                            <th>Players</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lobby-body">
+                        <!-- Example static rows; replace with backend data later -->
+                        <tr>
+                            <td>#101</td>
+                            <td>Blackjack</td>
+                            <td>$100 / hand</td>
+                            <td>1 / 4</td>
+                            <td><button class="join-btn" onclick="joinTable(101)">Join</button></td>
+                        </tr>
+                        <tr>
+                            <td>#202</td>
+                            <td>Roulette</td>
+                            <td>$75 / spin</td>
+                            <td>3 / 8</td>
+                            <td><button class="join-btn" onclick="joinTable(202)">Join</button></td>
+                        </tr>
+                        <tr>
+                            <td>#303</td>
+                            <td>Slots</td>
+                            <td>$50 / spin</td>
+                            <td>Solo</td>
+                            <td><button class="join-btn" onclick="joinTable(303)">Join</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top:8px;font-size:0.78rem;color:#a59a6a;">
+                    To make this lobby live, expose an API like <code>/api/lobby</code> on Railway and fetch table data here.
+                </p>
+            </section>
+
+            <!-- CHAT -->
+            <section class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Casino Chat</div>
+                    <button class="secondary-btn" style="padding:4px 10px;font-size:0.75rem;" onclick="loadChat()">
+                        Load Messages
+                    </button>
                 </div>
-            </div>
+                <div id="chat-window" class="chat-window">
+                    <!-- Messages will be appended here -->
+                </div>
+                <div class="chat-input-row">
+                    <input id="chat-input" type="text" placeholder="Type a message..." />
+                    <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+                </div>
+                <p style="margin-top:6px;font-size:0.78rem;color:#a59a6a;">
+                    For persistent chat, create a backend endpoint (e.g. <code>POST /api/chat</code>, <code>GET /api/chat</code>) and store messages in a database (PostgreSQL on Railway, Supabase, etc.).
+                </p>
+            </section>
         </div>
-    </section>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-wrapper">
-        <!-- FEATURED SECTION -->
-        <h2 id="featured" class="section-title">Featured Games</h2>
-        <div class="games-grid">
-            <!-- Slots -->
-            <div class="game-card">
-                <img src="assets/images/slots.png" alt="Slots Machine" class="game-thumb" />
-                <div class="game-name">Lucky 13 Slots</div>
-                <div class="game-desc">
-                    Classic 3‑reel slot machine with themed symbols and a simple payout structure. Perfect for quick spins.
-                </div>
-                <ul class="game-rules">
-                    <li>Bet: $50 per spin.</li>
-                    <li>Three matching symbols on the center line wins.</li>
-                    <li>🍀 (clover) triple pays 4x the bet.</li>
-                    <li>Balance decreases by bet; winnings are added back.</li>
-                </ul>
-                <div class="game-actions">
-                    <button class="primary-btn" onclick="playSlots()">Spin ($50)</button>
-                </div>
-                <div id="slots-output" class="game-output"></div>
-            </div>
-
-            <!-- Blackjack -->
-            <div class="game-card">
-                <img src="assets/images/blackjack.png" alt="Blackjack Table" class="game-thumb" />
-                <div class="game-name">Lucky 13 Blackjack</div>
-                <div class="game-desc">
-                    Beat the dealer by getting closer to 21 without going over. Simple, fast hands with clear outcomes.
-                </div>
-                <ul class="game-rules">
-                    <li>Bet: $100 per hand.</li>
-                    <li>Player and dealer start with two cards.</li>
-                    <li>Player can Hit or Stand.</li>
-                    <li>Dealer draws until at least 17.</li>
-                    <li>Busts lose automatically; closest to 21 wins.</li>
-                </ul>
-                <div class="game-actions">
-                    <button class="primary-btn" onclick="startBlackjack()">Deal Hand ($100)</button>
-                    <button class="secondary-btn" onclick="blackjackHit()">Hit</button>
-                    <button class="secondary-btn" onclick="blackjackStand()">Stand</button>
-                </div>
-                <div id="blackjack-output" class="game-output"></div>
-            </div>
-
-            <!-- Roulette -->
-            <div class="game-card">
-                <img src="assets/images/roulette.png" alt="Roulette Wheel" class="game-thumb" />
-                <div class="game-name">Lucky 13 Roulette</div>
-                <div class="game-desc">
-                    Bet on Red, Black, or Lucky 13 and spin the wheel. Simple color bets plus a high‑payout special number.
-                </div>
-                <ul class="game-rules">
-                    <li>Bet: $75 per spin.</li>
-                    <li>Bet types: Red, Black, or Lucky 13.</li>
-                    <li>Red/Black pays 2x on win.</li>
-                    <li>Lucky 13 pays 10x if the ball lands on 13.</li>
-                    <li>Balance decreases by bet; winnings are added back.</li>
-                </ul>
-                <div class="game-actions">
-                    <select id="roulette-bet" class="secondary-btn" style="padding:6px 10px;">
-                        <option value="red">Red</option>
-                        <option value="black">Black</option>
-                        <option value="13">Lucky 13</option>
-                    </select>
-                    <button class="primary-btn" onclick="playRoulette()">Spin ($75)</button>
-                </div>
-                <div id="roulette-output" class="game-output"></div>
-            </div>
-        </div>
-
-        <!-- RULES SECTION -->
-        <h2 id="rules" class="section-title">General Rules & Information</h2>
-        <section style="background:rgba(10,10,16,0.95);border-radius:12px;border:1px solid #2c2c3a;padding:14px;font-size:0.85rem;color:#c9bc84;">
-            <p><strong>Virtual Balance:</strong> Your balance is displayed at the top right. All bets deduct from this balance, and winnings are added back automatically.</p>
-            <p><strong>No Real Money:</strong> Lucky 13 Casino is a virtual demo environment. No deposits, withdrawals, or real‑money wagering are available.</p>
-            <p><strongFair Play Logic:</strong> All outcomes are determined by simple random number generation for transparency and predictability.</p>
-            <p><strong>Session Persistence:</strong> Balance resets when the page is refreshed. Persistent accounts and profiles can be added later.</p>
-        </section>
     </div>
 
     <!-- FOOTER -->
     <footer>
-        Lucky 13 Casino &copy; 2026 – Demo online gambling interface. All games are for entertainment only.
+        Lucky 13 Casino &copy; 2026 – Demo online gambling interface. All games use virtual credits only.
     </footer>
 
     <script>
-        // BALANCE SYSTEM
+        // WALLET
         let balance = 1000;
+        let tokens = 100;
         const balanceEl = document.getElementById("balance");
+        const tokensEl = document.getElementById("tokens");
 
-        function updateBalanceDisplay() {
+        function updateWallet() {
             balanceEl.textContent = "$" + balance;
+            tokensEl.textContent = tokens + " L13";
         }
 
         function scrollToSection(id) {
@@ -545,10 +764,16 @@
             }
 
             balance += win;
-            updateBalanceDisplay();
+            updateWallet();
 
             text += `\nWin: $${win}\nBalance: $${balance}`;
             output.textContent = text;
+        }
+
+        function playSlotsWithSound() {
+            playSlots();
+            const audio = document.getElementById("slots-audio");
+            if (audio) audio.play().catch(() => {});
         }
 
         // BLACKJACK
@@ -560,7 +785,7 @@
         };
 
         function drawCard() {
-            return randInt(2, 11); // 2–11 (11 as Ace)
+            return randInt(2, 11); // 2–11, 11 as Ace
         }
 
         function handTotal(hand) {
@@ -577,7 +802,7 @@
             }
 
             balance -= bet;
-            updateBalanceDisplay();
+            updateWallet();
 
             blackjackState.active = true;
             blackjackState.playerHand = [drawCard(), drawCard()];
@@ -590,6 +815,9 @@
                 `Player: ${blackjackState.playerHand.join(", ")} (Total: ${pTotal})\n` +
                 `Dealer: ${blackjackState.dealerHand[0]}, ?\n` +
                 `Choose Hit or Stand.`;
+
+            const audio = document.getElementById("blackjack-audio");
+            if (audio) audio.play().catch(() => {});
         }
 
         function blackjackHit() {
@@ -652,7 +880,7 @@
             }
 
             balance += win;
-            updateBalanceDisplay();
+            updateWallet();
 
             text += `\nWin: $${win}\nBalance: $${balance}`;
             output.textContent = text;
@@ -706,13 +934,61 @@
             }
 
             balance += win;
-            updateBalanceDisplay();
+            updateWallet();
 
             text += `\nWin: $${win}\nBalance: $${balance}`;
             output.textContent = text;
         }
 
-        updateBalanceDisplay();
+        function playRouletteWithSound() {
+            playRoulette();
+            const audio = document.getElementById("roulette-audio");
+            if (audio) audio.play().catch(() => {});
+        }
+
+        // LOBBY (placeholder)
+        function refreshLobby() {
+            alert("Hook this to a backend (e.g. GET /api/lobby on Railway) to load real tables.");
+        }
+
+        function joinTable(id) {
+            alert("Joining table #" + id + " (multiplayer requires backend + websockets).");
+        }
+
+        // CHAT (placeholder)
+        function loadChat() {
+            const chatWindow = document.getElementById("chat-window");
+            chatWindow.innerHTML = "";
+            // Example static messages; replace with GET /api/chat
+            const messages = [
+                { user: "System", text: "Welcome to Lucky 13 Casino chat." },
+                { user: "DealerBot", text: "Remember: all credits here are virtual only." }
+            ];
+            messages.forEach(m => appendChatMessage(m.user, m.text));
+        }
+
+        function appendChatMessage(user, text) {
+            const chatWindow = document.getElementById("chat-window");
+            const div = document.createElement("div");
+            div.className = "chat-message";
+            div.innerHTML = `<span class="chat-user">${user}:</span> ${text}`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById("chat-input");
+            const text = input.value.trim();
+            if (!text) return;
+            appendChatMessage("You", text);
+            input.value = "";
+
+            // TODO: POST to backend (e.g. POST /api/chat) to persist messages
+            // fetch('/api/chat', { method: 'POST', body: JSON.stringify({ user: 'You', text }) })
+        }
+
+        updateWallet();
+        loadChat();
     </script>
 </body>
 </html>
