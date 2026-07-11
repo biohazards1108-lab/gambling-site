@@ -3,110 +3,128 @@
 <head>
 <meta charset="UTF-8" />
 <title>Lucky 13 Casino – Register</title>
-
 <style>
-* { box-sizing: border-box; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: radial-gradient(circle at top, #0a0a0a 0%, #000 60%, #000 100%);
+        color: #f9f3d7;
+    }
 
-body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: radial-gradient(circle at top, #0a0a0a 0%, #000 60%, #000 100%);
-    color: #f9f3d7;
-}
+    .register-wrapper {
+        max-width: 460px;
+        margin: 60px auto;
+        background: #050608;
+        border: 1px solid #262626;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    }
 
-/* Container */
-.register-wrapper {
-    max-width: 460px;
-    margin: 60px auto;
-    background: #050608;
-    border: 1px solid #262626;
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
-}
+    .title {
+        font-size: 1.6rem;
+        color: #f5c451;
+        margin-bottom: 6px;
+    }
 
-.logo {
-    height: 60px;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    border: 1px solid #f5c451;
-}
+    .subtitle {
+        font-size: 0.9rem;
+        color: #d0c7ff;
+        margin-bottom: 24px;
+    }
 
-.title {
-    font-size: 1.6rem;
-    color: #f5c451;
-    margin-bottom: 6px;
-}
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 14px;
+        border-radius: 8px;
+        border: 1px solid #3a3a3a;
+        background: #101010;
+        color: #f9f3d7;
+        font-size: 1rem;
+    }
 
-.subtitle {
-    font-size: 0.9rem;
-    color: #d0c7ff;
-    margin-bottom: 24px;
-}
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(90deg, #f5c451, #d4a63f);
+        color: #000;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 10px;
+    }
 
-/* Form */
-input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 14px;
-    border-radius: 8px;
-    border: 1px solid #3a3a3a;
-    background: #101010;
-    color: #f9f3d7;
-    font-size: 1rem;
-}
+    .msg {
+        margin-top: 16px;
+        font-size: 0.9rem;
+    }
 
-.btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, #f5c451, #ff6bcb);
-    color: #050505;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.btn:hover {
-    box-shadow: 0 0 18px rgba(255,107,203,0.7);
-}
-
-.link {
-    margin-top: 16px;
-    font-size: 0.85rem;
-    color: #d0c7ff;
-}
-
-.link a {
-    color: #f5c451;
-    text-decoration: none;
-    font-weight: 600;
-}
+    a {
+        color: #f5c451;
+        text-decoration: none;
+    }
 </style>
 </head>
-
 <body>
 
 <div class="register-wrapper">
-    <img src="assets/images/logo.png" class="logo" alt="Lucky 13 Logo">
-
     <div class="title">Create Your Account</div>
-    <div class="subtitle">Start playing with your own fake‑money profile.</div>
+    <div class="subtitle">Join Lucky 13 Casino</div>
 
-    <form>
-        <input type="text" placeholder="Username" required />
-        <input type="email" placeholder="Email (for recovery)" required />
-        <input type="password" placeholder="Password" required />
-        <input type="password" placeholder="Confirm Password" required />
-        <button class="btn">Register</button>
-    </form>
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
 
-    <div class="link">
-        Already have an account? <a href="login.html">Sign in</a>
-    </div>
+    <button class="btn" onclick="register()">Register</button>
+
+    <div class="msg" id="msg"></div>
+
+    <p style="margin-top:20px;">
+        Already have an account? <a href="login.html">Login here</a>
+    </p>
 </div>
+
+<script>
+async function register() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const msg = document.getElementById("msg");
+
+    if (!username || !password) {
+        msg.textContent = "Please fill out all fields.";
+        msg.style.color = "red";
+        return;
+    }
+
+    try {
+        const res = await fetch("https://YOUR_BACKEND_URL/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            msg.textContent = "Account created! Redirecting...";
+            msg.style.color = "lime";
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1200);
+        } else {
+            msg.textContent = data.error || "Registration failed.";
+            msg.style.color = "red";
+        }
+    } catch (err) {
+        msg.textContent = "Server error.";
+        msg.style.color = "red";
+    }
+}
+</script>
 
 </body>
 </html>
