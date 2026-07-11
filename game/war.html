@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Casino War – Lucky 13 Casino</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #02131f, #062b3f);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 14px 24px;
+      background: #0a0a0a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0f3b5f;
+      box-sizing: border-box;
+    }
+
+    header div {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .balance {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4dd2ff;
+    }
+
+    main {
+      max-width: 900px;
+      width: 100%;
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #0af;
+    }
+
+    .action-row {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .action-row button {
+      padding: 10px 20px;
+      border: none;
+      background: #0f5b8f;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+
+    .action-row button:hover {
+      background: #1380c4;
+      transform: translateY(-2px);
+    }
+
+    .cards-area {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+    }
+
+    .hand {
+      text-align: center;
+    }
+
+    .hand h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 6px #0af;
+    }
+
+    .cards {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .card {
+      width: 80px;
+      height: 110px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #000;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 20px;
+      min-height: 40px;
+      font-weight: 600;
+      color: #4dd2ff;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>Lucky 13 Casino – Casino War</div>
+  <div class="balance">Balance: $<span id="balance">1000</span></div>
+</header>
+
+<main>
+  <h1>Casino War</h1>
+
+  <div class="action-row">
+    <button onclick="dealWar()">Deal Cards ($10)</button>
+    <button onclick="resolveWar('war')">Go to War</button>
+    <button onclick="resolveWar('surrender')">Surrender</button>
+  </div>
+
+  <div class="cards-area">
+    <div class="hand">
+      <h3>Player</h3>
+      <div class="cards" id="player-card"></div>
+    </div>
+
+    <div class="hand">
+      <h3>Dealer</h3>
+      <div class="cards" id="dealer-card"></div>
+    </div>
+  </div>
+
+  <div id="result"></div>
+</main>
+
+<script>
+  let balance = 1000;
+  let lastRound = null;
+
+  const suits = ["♠", "♥", "♦", "♣"];
+
+  function updateBalance(amount) {
+    balance += amount;
+    document.getElementById("balance").textContent = balance.toFixed(2);
+  }
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function drawCard() {
+    const value = randInt(1, 13);
+    const suit = suits[randInt(0, 3)];
+    return { value, suit };
+  }
+
+  function cardLabel(card) {
+    const names = {1: "A", 11: "J", 12: "Q", 13: "K"};
+    return (names[card.value] || card.value) + card.suit;
+  }
+
+  function renderCard(id, card) {
+    const container = document.getElementById(id);
+    container.innerHTML = "";
+    const div = document.createElement("div");
+    div.className = "card";
+    div.textContent = cardLabel(card);
+    container.appendChild(div);
+  }
+
+  function dealWar() {
+    updateBalance(-10);
+
+    const player = drawCard();
+    const dealer = drawCard();
+
+    lastRound = { player, dealer };
+
+    renderCard("player-card", player);
+    renderCard("dealer-card", dealer);
+
+    let msg = "";
+
+    if (player.value > dealer.value) {
+      updateBalance(10);
+      msg = "You win! +$10";
+    } else if (player.value < dealer.value) {
+      updateBalance(-10);
+      msg = "You lose. -$10";
+    } else {
+      msg = "Tie! Choose Go to War or Surrender.";
+    }
+
+    document.getElementById("result").textContent = msg;
+  }
+
+  function resolveWar(choice) {
+    if (!lastRound || lastRound.player.value !== lastRound.dealer.value) {
+      document.getElementById("result").textContent =
+        "You can only choose War or Surrender after a tie.";
+      return;
+    }
+
+    if (choice === "surrender") {
+      updateBalance(-5);
+      document.getElementById("result").textContent =
+        "You surrendered. -$5";
+      return;
+    }
+
+    const player = drawCard();
+    const dealer = drawCard();
+
+    renderCard("player-card", player);
+    renderCard("dealer-card", dealer);
+
+    let msg = "";
+
+    if (player.value > dealer.value) {
+      updateBalance(20);
+      msg = "You win the war! +$20";
+    } else {
+      updateBalance(-20);
+      msg = "You lost the war. -$20";
+    }
+
+    document.getElementById("result").textContent = msg;
+    lastRound = null;
+  }
+</script>
+
+</body>
+</html>
