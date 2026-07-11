@@ -178,7 +178,7 @@ body {
     </div>
     <div class="top-right">
         <a href="index.html" class="back-link">← Back to Lobby</a>
-        <div class="wallet-pill">Balance: <span id="balance" class="value">$1000</span></div>
+        <div class="wallet-pill">Balance: <span id="balance" class="value">$0</span></div>
         <div class="wallet-pill">Bet: <span id="bet" class="value">$50</span></div>
     </div>
 </div>
@@ -204,12 +204,11 @@ body {
     <div class="rules-panel">
         <strong>Slot Machine Rules:</strong>
         <ul>
-            <li>Bet size: $50 per spin (fixed).</li>
+            <li>Bet size: $50 per spin.</li>
             <li>Three reels, one payline.</li>
             <li>Symbols: Cherry, Lemon, Star, Clover, Seven.</li>
-            <li>Any triple match pays 2x the bet.</li>
-            <li>Triple Clover pays 4x the bet.</li>
-            <li>Balance is reduced by bet; winnings are added back.</li>
+            <li>Triple match pays 2x.</li>
+            <li>Triple Clover pays 4x.</li>
         </ul>
     </div>
 </div>
@@ -221,16 +220,33 @@ body {
 <audio id="audio-lose" src="assets/audio/lose.mp3"></audio>
 
 <script>
-// WALLET
-let balance = 1000;
+/* ---------------- BACKEND CONNECTION ---------------- */
+
+const API = "https://gambling-site-production.up.railway.app";
+
+async function fetchBalance() {
+    const res = await fetch(`${API}/balance`);
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
+
+async function updateBalance(delta) {
+    const res = await fetch(`${API}/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delta })
+    });
+    const data = await res.json();
+    balance = data.balance;
+    document.getElementById("balance").textContent = "$" + balance;
+}
+
+/* ---------------- GAME LOGIC ---------------- */
+
+let balance = 0;
 const betAmount = 50;
 
-const balanceEl = document.getElementById("balance");
-const betEl = document.getElementById("bet");
-balanceEl.textContent = "$" + balance;
-betEl.textContent = "$" + betAmount;
-
-// SYMBOLS
 const symbols = [
     "assets/images/slots/cherry.png",
     "assets/images/slots/lemon.png",
@@ -239,7 +255,6 @@ const symbols = [
     "assets/images/slots/seven.png"
 ];
 
-// REEL SPIN FUNCTION
 function spin() {
     const status = document.getElementById("status");
 
@@ -248,20 +263,16 @@ function spin() {
         return;
     }
 
-    balance -= betAmount;
-    balanceEl.textContent = "$" + balance;
+    updateBalance(-betAmount);
 
     status.textContent = "Spinning...";
-
     document.getElementById("audio-spin").play().catch(() => {});
 
     spinReel("reel1", 1);
     spinReel("reel2", 2);
     spinReel("reel3", 3);
 
-    setTimeout(() => {
-        evaluate();
-    }, 3000);
+    setTimeout(() => evaluate(), 3000);
 }
 
 function spinReel(reelId, delayMultiplier) {
@@ -295,8 +306,7 @@ function spinReel(reelId, delayMultiplier) {
     }, 1000 * delayMultiplier);
 }
 
-// EVALUATE RESULT
-function evaluate() {
+async function evaluate() {
     const status = document.getElementById("status");
 
     const r1 = document.getElementById("reel1").dataset.symbol;
@@ -319,11 +329,12 @@ function evaluate() {
         document.getElementById("audio-lose").play().catch(() => {});
     }
 
-    balance += win;
-    balanceEl.textContent = "$" + balance;
+    await updateBalance(win);
 
     status.textContent += ` (Win: $${win})`;
 }
+
+fetchBalance();
 </script>
 
 </body>
