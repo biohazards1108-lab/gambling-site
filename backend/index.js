@@ -1,7 +1,3 @@
-// ---------------------------------------------
-// Gambling Backend with PostgreSQL (Railway)
-// ---------------------------------------------
-
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
@@ -11,23 +7,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ---------------------------------------------
-// PostgreSQL Connection (Railway)
-// ---------------------------------------------
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-
-// Quick helper
-async function query(sql, params) {
-  const result = await pool.query(sql, params);
-  return result.rows;
+// ------------------------------
+// PostgreSQL (Railway)
+// ------------------------------
+if (!process.env.DATABASE_URL) {
+  console.error("DATABASE_URL is not set");
 }
 
-// ---------------------------------------------
-// Slot Machine Logic
-// ---------------------------------------------
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  // If Railway requires SSL, set to true; if it crashes, try false.
+  ssl: process.env.PGSSL === "true" ? { rejectUnauthorized: false } : false,
+});
+
+pool.on("error", (err) => {
+  console.error("Unexpected PG pool error:", err);
+});
+
+// Helper
+async function query(sql, params) {
+  const res = await pool.query(sql, params);
+  return res.rows;
+}
+
+// ------------------------------
+// Slot machine logic
+// ------------------------------
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -65,27 +70,31 @@ function evaluateSpin(reels, bet) {
   return 0;
 }
 
-// ---------------------------------------------
-// Middleware: Auth via userId header
-// ---------------------------------------------
+// ------------------------------
+// Auth middleware (x-user-id)
+// ------------------------------
 async function auth(req, res, next) {
-  const userId = req.header("x-user-id");
-  if (!userId) return res.status(401).json({ error: "Missing userId" });
+  try {
+    const userId = req.header("x-user-id");
+    if (!userId) return res.status(401).json({ error: "Missing userId" });
 
-  const rows = await query("SELECT * FROM users WHERE id = $1", [userId]);
-  if (rows.length === 0) return res.status(401).json({ error: "Invalid userId" });
+    const rows = await query("SELECT * FROM users WHERE id = $1", [userId]);
+    if (rows.length === 0)
+      return res.status(401).json({ error: "Invalid userId" });
 
-  req.user = rows[0];
-  next();
+    req.user = rows[0];
+    next();
+  } catch (err) {
+    console.error("AUTH ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 }
 
-// ---------------------------------------------
+// ------------------------------
 // Routes
-// ---------------------------------------------
-
-// Health check
+// ------------------------------
 app.get("/", (req, res) => {
-  res.json({ status: "online", message: "Backend running with PostgreSQL" });
+  res.json({ status: "online", message: "Backend running" });
 });
 
 // Register
@@ -114,7 +123,7 @@ app.post("/register", async (req, res) => {
       success: true,
       userId: rows[0].id,
       username: rows[0].username,
-      balance: rows[0].balance
+      balance: rows[0].balance,
     });
   } catch (err) {
     console.error("REGISTER ERROR:", err);
@@ -145,7 +154,7 @@ app.post("/login", async (req, res) => {
       success: true,
       userId: user.id,
       username: user.username,
-      balance: user.balance
+      balance: user.balance,
     });
   } catch (err) {
     console.error("LOGIN ERROR:", err);
@@ -153,17 +162,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Get balance
+// Balance
 app.get("/balance", auth, async (req, res) => {
   res.json({
     success: true,
     userId: req.user.id,
     username: req.user.username,
-    balance: req.user.balance
+    balance: req.user.balance,
   });
 });
 
-// Deposit (for testing)
+// Deposit
 app.post("/deposit", auth, async (req, res) => {
   try {
     const { amount } = req.body;
@@ -174,7 +183,7 @@ app.post("/deposit", auth, async (req, res) => {
 
     await query("UPDATE users SET balance = $1 WHERE id = $2", [
       newBalance,
-      req.user.id
+      req.user.id,
     ]);
 
     res.json({ success: true, balance: newBalance });
@@ -202,14 +211,14 @@ app.post("/spin", auth, async (req, res) => {
 
     await query("UPDATE users SET balance = $1 WHERE id = $2", [
       newBalance,
-      req.user.id
+      req.user.id,
     ]);
 
     res.json({
       success: true,
       reels: reels.map((r) => r.name),
       payout,
-      balance: newBalance
+      balance: newBalance,
     });
   } catch (err) {
     console.error("SPIN ERROR:", err);
@@ -217,10 +226,18 @@ app.post("/spin", auth, async (req, res) => {
   }
 });
 
-// ---------------------------------------------
-// Start Server
-// ---------------------------------------------
+// ------------------------------
+// Start server
+// ------------------------------
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Backend running on port ${PORT}`);
+
+  // Test DB on startup so Railway logs show the real error
+  try {
+    const rows = await query("SELECT NOW() as now", []);
+    console.log("DB OK, time:", rows[0].now);
+  } catch (err) {
+    console.error("DB CONNECTION ERROR ON STARTUP:", err);
+  }
 });
