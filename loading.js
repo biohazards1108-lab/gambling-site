@@ -1,11 +1,11 @@
-// FIXED LOADING LOGIC
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
 
-const token = localStorage.getItem("token");
-
-// If no token → user is not logged in → send to login
-if (!token) {
-    window.location.href = "login.html";
-} else {
-    // Token exists → send to games
-    window.location.href = "game/index.html"; // or your actual games page
-}
+    setTimeout(() => {
+        if (!token) {
+            window.location.href = "login.html";
+        } else {
+            window.location.href = "game/index.html";
+        }
+    }, 2000); // 2-second loading animation
+});
