@@ -11,7 +11,7 @@ app.use(cors());
 // -------------------------------
 // CONFIG
 // -------------------------------
-const JWT_SECRET = "CHANGE_THIS_SECRET_KEY";
+const JWT_SECRET = "Xanderkai0721$$";
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -137,6 +137,12 @@ app.get("/admin/users", auth, async (req, res) => {
 // -------------------------------
 // SERVER START
 // -------------------------------
-app.listen(3000, () => {
-    console.log("Backend running on port 3000");
+const express = require("express");
+const app = express();
+
+const PORT = process.env.PORT || 3000;  // IMPORTANT
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
+
+
