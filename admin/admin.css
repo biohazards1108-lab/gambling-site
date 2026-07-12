@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: white;
+    display: flex;
+}
+
+#sidebar {
+    width: 250px;
+    background: #111;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+#sidebar h2 {
+    margin-bottom: 20px;
+}
+
+#sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+#sidebar ul li {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+}
+
+#sidebar ul li:hover {
+    background: #333;
+}
+
+#content {
+    margin-left: 270px;
+    padding: 20px;
+    width: calc(100% - 270px);
+}
+
+.page.hidden {
+    display: none;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+}
+
+table {
+    width: 100%;
+    background: #222;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.game-list {
+    margin-top: 20px;
+}
+
+.game-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #222;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #888;
+    border-radius: 24px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
