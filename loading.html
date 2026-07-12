@@ -7,7 +7,7 @@
     body {
         margin: 0;
         overflow: hidden;
-        background: #000;
+        background: url('assets/images/casino-13.png') center center / cover no-repeat;
         font-family: "Segoe UI", sans-serif;
     }
 
@@ -33,6 +33,15 @@
         text-align: center;
         opacity: 0;
         transition: opacity 2s ease-in-out 1.5s;
+    }
+
+    .logo {
+        width: 220px;
+        height: 220px;
+        margin: 0 auto 20px;
+        background: url('assets/images/casino-13.png') center center / contain no-repeat;
+        border-radius: 50%;
+        box-shadow: 0 0 25px #f5c451;
     }
 
     .logo-title {
@@ -67,17 +76,6 @@
         background: #f5c451;
         color: #000;
     }
-
-    /* Skull logo placeholder */
-    .skull {
-        width: 180px;
-        height: 180px;
-        margin: 0 auto 20px;
-        border-radius: 50%;
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 0 25px #f00;
-    }
 </style>
 </head>
 <body>
@@ -88,7 +86,7 @@
 
 <!-- Logo Reveal -->
 <div class="logo-container" id="logoReveal">
-    <div class="skull" style="background-image:url('skull.png');"></div>
+    <div class="logo"></div>
     <div class="logo-title">Lucky 13 Casino</div>
     <div class="subtext">Shadow Gambler Edition</div>
 
