@@ -2,182 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 – Admin Dashboard</title>
-<style>
-    :root {
-        --bg: #050506;
-        --panel: #0b0b0d;
-        --border: #2b2b2f;
-        --gold: #f5c451;
-        --gold-soft: #d4a63f;
-        --text: #f9f3d7;
-        --danger: #ff4b4b;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-        margin: 0;
-        font-family: "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #111 0%, #000 55%, #000 100%);
-        color: var(--text);
-    }
-
-    .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 24px;
-        background: #000;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-        font-size: 1.3rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--gold);
-    }
-
-    .tagline {
-        font-size: 0.8rem;
-        color: #c0b8ff;
-    }
-
-    .top-actions button {
-        margin-left: 10px;
-        padding: 8px 14px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: #111;
-        color: var(--text);
-        cursor: pointer;
-        font-size: 0.85rem;
-    }
-
-    .top-actions button.logout {
-        border-color: var(--danger);
-        color: var(--danger);
-    }
-
-    .layout {
-        display: grid;
-        grid-template-columns: 260px 1fr;
-        gap: 18px;
-        padding: 18px 24px;
-    }
-
-    .panel {
-        background: var(--panel);
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        padding: 16px;
-        box-shadow: 0 0 24px rgba(0,0,0,0.7);
-    }
-
-    .panel h2 {
-        margin: 0 0 10px;
-        font-size: 1rem;
-        color: var(--gold);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    .metric {
-        margin-top: 8px;
-        font-size: 0.9rem;
-    }
-
-    .metric span {
-        color: var(--gold-soft);
-        font-weight: 600;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 0.9rem;
-    }
-
-    th, td {
-        padding: 8px 6px;
-        border-bottom: 1px solid #1f1f23;
-        text-align: left;
-    }
-
-    th {
-        background: #111218;
-        color: var(--gold);
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.06em;
-    }
-
-    tr:hover {
-        background: #111317;
-    }
-
-    .actions button {
-        padding: 4px 10px;
-        margin-right: 4px;
-        border-radius: 999px;
-        border: none;
-        cursor: pointer;
-        font-size: 0.75rem;
-    }
-
-    .btn-ban {
-        background: var(--danger);
-        color: #000;
-    }
-
-    .btn-plus {
-        background: var(--gold);
-        color: #000;
-    }
-
-    .btn-minus {
-        background: #333;
-        color: var(--text);
-    }
-
-    .note {
-        font-size: 0.8rem;
-        color: #b0a8ff;
-        margin-top: 8px;
-    }
-</style>
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
-<div class="topbar">
-    <div>
-        <div class="logo">Lucky 13 Casino</div>
-        <div class="tagline">Admin Control – House Always Watches</div>
-    </div>
-    <div class="top-actions">
-        <button onclick="reloadData()">Refresh</button>
-        <button class="logout" onclick="logout()">Logout</button>
-    </div>
+<div id="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+        <li onclick="showPage('overview')">📊 Overview</li>
+        <li onclick="showPage('users')">👤 Users</li>
+        <li onclick="showPage('games')">🎮 Games</li>
+        <li onclick="showPage('security')">🔐 Security</li>
+        <li onclick="showPage('logs')">📜 Logs</li>
+        <li onclick="showPage('settings')">⚙️ Settings</li>
+    </ul>
 </div>
 
-<div class="layout">
-    <!-- LEFT: STATS -->
-    <div class="panel">
-        <h2>House Stats</h2>
-        <div class="metric">Total Users: <span id="statUsers">0</span></div>
-        <div class="metric">Total Balance (All Players): <span id="statBalance">0</span></div>
-        <div class="metric">Average Balance: <span id="statAvgBalance">0</span></div>
-        <div class="note">
-            Suspicious activity: watch for very high balances, rapid changes, or repeated bans.
-        </div>
-    </div>
+<div id="content">
 
-    <!-- RIGHT: USERS TABLE -->
-    <div class="panel">
-        <h2>Players</h2>
-        <table>
+    <!-- Overview -->
+    <section id="overview" class="page">
+        <h1>📊 Site Overview</h1>
+        <div class="cards">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p id="totalUsers">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Total Balance</h3>
+                <p id="totalBalance">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Active Games</h3>
+                <p id="activeGames">Loading...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Users -->
+    <section id="users" class="page hidden">
+        <h1>👤 User Management</h1>
+        <input type="text" id="searchUser" placeholder="Search users..." oninput="searchUsers()">
+        <table id="userTable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -186,108 +54,71 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="userTable"></tbody>
+            <tbody id="userList"></tbody>
         </table>
-    </div>
+    </section>
+
+    <!-- Games -->
+    <section id="games" class="page hidden">
+        <h1>🎮 Game Controls</h1>
+        <div class="game-list">
+            <div class="game-item">
+                <span>Slots</span>
+                <label class="switch">
+                    <input type="checkbox" id="slotsToggle" onchange="toggleGame('slots')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="game-item">
+                <span>Blackjack</span>
+                <label class="switch">
+                    <input type="checkbox" id="blackjackToggle" onchange="toggleGame('blackjack')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="game-item">
+                <span>Roulette</span>
+                <label class="switch">
+                    <input type="checkbox" id="rouletteToggle" onchange="toggleGame('roulette')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="game-item">
+                <span>Mines</span>
+                <label class="switch">
+                    <input type="checkbox" id="minesToggle" onchange="toggleGame('mines')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security -->
+    <section id="security" class="page hidden">
+        <h1>🔐 Security Panel</h1>
+        <button onclick="banUserPrompt()">Ban User</button>
+        <button onclick="unbanUserPrompt()">Unban User</button>
+        <button onclick="toggleMaintenance()">Toggle Maintenance Mode</button>
+    </section>
+
+    <!-- Logs -->
+    <section id="logs" class="page hidden">
+        <h1>📜 System Logs</h1>
+        <pre id="logOutput">Loading logs...</pre>
+    </section>
+
+    <!-- Settings -->
+    <section id="settings" class="page hidden">
+        <h1>⚙️ Settings</h1>
+        <button onclick="clearCache()">Clear Cache</button>
+        <button onclick="restartBackend()">Restart Backend</button>
+    </section>
+
 </div>
 
-<script>
-const API = "https://gambling-site-production.up.railway.app";
-
-function getToken() {
-    return localStorage.getItem("token");
-}
-
-function ensureAdmin() {
-    const token = getToken();
-    if (!token) {
-        window.location.href = "login.html";
-        return false;
-    }
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (!payload.admin) {
-            window.location.href = "index.html";
-            return false;
-        }
-    } catch {
-        window.location.href = "login.html";
-        return false;
-    }
-    return true;
-}
-
-async function reloadData() {
-    if (!ensureAdmin()) return;
-
-    const token = getToken();
-    const res = await fetch(API + "/admin/users", {
-        headers: { Authorization: "Bearer " + token }
-    });
-    const users = await res.json();
-
-    const tbody = document.getElementById("userTable");
-    tbody.innerHTML = "";
-
-    let totalBalance = 0;
-
-    users.forEach(u => {
-        totalBalance += Number(u.balance) || 0;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${u.id}</td>
-            <td>${u.username}</td>
-            <td>${u.balance}</td>
-            <td class="actions">
-                <button class="btn-ban" onclick="banUser('${u.username}')">Ban</button>
-                <button class="btn-plus" onclick="adjustBalance('${u.username}', 100)">+100</button>
-                <button class="btn-minus" onclick="adjustBalance('${u.username}', -100)">-100</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    document.getElementById("statUsers").textContent = users.length;
-    document.getElementById("statBalance").textContent = totalBalance;
-    document.getElementById("statAvgBalance").textContent =
-        users.length ? Math.round(totalBalance / users.length) : 0;
-}
-
-async function banUser(username) {
-    if (!confirm(`Ban user "${username}"? This deletes their account.`)) return;
-    const token = getToken();
-    await fetch(API + "/admin/ban", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({ username })
-    });
-    reloadData();
-}
-
-async function adjustBalance(username, amount) {
-    const token = getToken();
-    await fetch(API + "/admin/adjust", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({ username, amount })
-    });
-    reloadData();
-}
-
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-}
-
-reloadData();
-</script>
-
+<script src="admin.js"></script>
 </body>
 </html>
