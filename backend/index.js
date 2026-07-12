@@ -75,7 +75,21 @@ app.post("/register", async (req, res) => {
       [username, hashed]
     );
 
-    res.json({ message: "Account created", user: result.rows[0] });
+    const user = result.rows[0];
+
+    // CREATE TOKEN
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      message: "Account created",
+      token,
+      user
+    });
+
   } catch (err) {
     if (err.code === "23505") {
       return res.status(400).json({ error: "Username already exists" });
@@ -165,7 +179,143 @@ app.post("/api/bet", auth, async (req, res) => {
 
     return res.json({ result: "lose", payout: 0, balance });
   }
+// ---------------------------------------------
+// ADMIN AUTH (simple key-based auth)
+// ---------------------------------------------
+function adminAuth(req, res, next) {
+  const key = req.header("x-admin-key");
+  if (!key || key !== process.env.ADMIN_KEY) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  next();
+}
+
+// ---------------------------------------------
+// ADMIN: SITE STATS
+// ---------------------------------------------
+app.get("/admin/stats", adminAuth, async (req, res) => {
+  try {
+    const totalUsers = await pool.query("SELECT COUNT(*) FROM users");
+    const totalBalance = await pool.query("SELECT SUM(balance) FROM users");
+    const activeGames = await pool.query("SELECT COUNT(*) FROM games WHERE enabled = true");
+
+    res.json({
+      totalUsers: totalUsers.rows[0].count,
+      totalBalance: totalBalance.rows[0].sum,
+      activeGames: activeGames.rows[0].count
+    });
+  } catch (err) {
+    console.error("ADMIN /stats ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
+
+// ---------------------------------------------
+// ADMIN: USER LIST
+// ---------------------------------------------
+app.get("/admin/users", adminAuth, async (req, res) => {
+  try {
+    const users = await pool.query(
+      "SELECT id, username, balance, banned FROM users ORDER BY id ASC"
+    );
+    res.json(users.rows);
+  } catch (err) {
+    console.error("ADMIN /users ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: TOGGLE GAME
+// ---------------------------------------------
+app.post("/admin/toggle-game/:game", adminAuth, async (req, res) => {
+  try {
+    await pool.query(
+      "UPDATE games SET enabled = NOT enabled WHERE name = $1",
+      [req.params.game]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("ADMIN /toggle-game ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: BAN USER
+// ---------------------------------------------
+app.post("/admin/ban/:id", adminAuth, async (req, res) => {
+  try {
+    await pool.query("UPDATE users SET banned = true WHERE id = $1", [
+      req.params.id
+    ]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("ADMIN /ban ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: UNBAN USER
+// ---------------------------------------------
+app.post("/admin/unban/:id", adminAuth, async (req, res) => {
+  try {
+    await pool.query("UPDATE users SET banned = false WHERE id = $1", [
+      req.params.id
+    ]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("ADMIN /unban ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: LOGS
+// ---------------------------------------------
+app.get("/admin/logs", adminAuth, async (req, res) => {
+  try {
+    const logs = await pool.query(
+      "SELECT * FROM logs ORDER BY timestamp DESC LIMIT 200"
+    );
+    res.send(
+      logs.rows.map(l => `[${l.timestamp}] ${l.message}`).join("\n")
+    );
+  } catch (err) {
+    console.error("ADMIN /logs ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: MAINTENANCE MODE
+// ---------------------------------------------
+app.post("/admin/maintenance", adminAuth, async (req, res) => {
+  try {
+    await pool.query("UPDATE settings SET maintenance = NOT maintenance");
+    res.json({ success: true });
+  } catch (err) {
+    console.error("ADMIN /maintenance ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------------------------------------
+// ADMIN: CLEAR CACHE (placeholder)
+// ---------------------------------------------
+app.post("/admin/clear-cache", adminAuth, async (req, res) => {
+  res.json({ success: true, message: "Cache cleared" });
+});
+
+// ---------------------------------------------
+// ADMIN: RESTART BACKEND (Railway auto-restarts)
+// ---------------------------------------------
+app.post("/admin/restart", adminAuth, async (req, res) => {
+  res.json({ success: true, message: "Restarting..." });
+  setTimeout(() => process.exit(1), 1000);
+});
+
 
 // ---------------------------------------------
 // START SERVER
