@@ -1,22 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const chipContainer = document.getElementById("chip-container");
-  const enterBtn = document.getElementById("enter-btn");
+// FIXED LOADING LOGIC
 
-  const CHIP_COUNT = 24;
-  for (let i = 0; i < CHIP_COUNT; i++) {
-    const chip = document.createElement("div");
-    chip.classList.add("chip");
-    chip.style.left = Math.random() * 100 + "vw";
-    chip.style.animationDelay = Math.random() * 3 + "s";
-    chipContainer.appendChild(chip);
-  }
+const token = localStorage.getItem("token");
 
-  setTimeout(() => {
-    enterBtn.classList.remove("hidden");
-    enterBtn.classList.add("show");
-  }, 3000);
-
-  enterBtn.addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-});
+// If no token → user is not logged in → send to login
+if (!token) {
+    window.location.href = "login.html";
+} else {
+    // Token exists → send to games
+    window.location.href = "game/index.html"; // or your actual games page
+}
