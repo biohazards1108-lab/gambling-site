@@ -2,109 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 Casino – Loading</title>
+<title>Loading...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
-        margin: 0;
-        overflow: hidden;
-        background: url('assets/images/casino-13.png') center center / cover no-repeat;
-        font-family: "Segoe UI", sans-serif;
-    }
-
-    /* Curtains */
-    .curtain {
-        position: fixed;
-        top: 0;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(to bottom, #2b0000, #000);
-        z-index: 10;
-        transition: transform 2.5s ease-in-out;
-    }
-    .left { left: 0; transform: translateX(0); }
-    .right { right: 0; transform: translateX(0); }
-
-    /* Center logo reveal */
-    .logo-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        opacity: 0;
-        transition: opacity 2s ease-in-out 1.5s;
-    }
-
-    .logo {
-        width: 220px;
-        height: 220px;
-        margin: 0 auto 20px;
-        background: url('assets/images/casino-13.png') center center / contain no-repeat;
-        border-radius: 50%;
-        box-shadow: 0 0 25px #f5c451;
-    }
-
-    .logo-title {
-        font-size: 3rem;
-        color: #f5c451;
-        text-shadow: 0 0 20px #f5c451;
-        letter-spacing: 0.1em;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-    }
-
-    .subtext {
-        font-size: 1rem;
-        color: #d4a63f;
-        margin-bottom: 30px;
-    }
-
-    /* Buttons */
-    .btn {
-        display: inline-block;
-        padding: 12px 28px;
-        margin: 10px;
-        font-size: 1rem;
-        border-radius: 999px;
-        border: 2px solid #f5c451;
         background: #000;
-        color: #f5c451;
-        cursor: pointer;
-        transition: 0.3s;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
     }
-    .btn:hover {
-        background: #f5c451;
-        color: #000;
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 6px solid #333;
+        border-top-color: #f00;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 </style>
 </head>
 <body>
 
-<!-- Curtains -->
-<div class="curtain left"></div>
-<div class="curtain right"></div>
-
-<!-- Logo Reveal -->
-<div class="logo-container" id="logoReveal">
-    <div class="logo"></div>
-    <div class="logo-title">Lucky 13 Casino</div>
-    <div class="subtext">Shadow Gambler Edition</div>
-
-    <button class="btn" onclick="location.href='login.html'">Login</button>
-    <button class="btn" onclick="location.href='register.html'">Create Account</button>
-</div>
+<div class="spinner"></div>
+<h2>Loading Lucky 13 Casino...</h2>
 
 <script>
-    // Open curtains
-    setTimeout(() => {
-        document.querySelector('.left').style.transform = "translateX(-100%)";
-        document.querySelector('.right').style.transform = "translateX(100%)";
-    }, 500);
+// ------------------------------
+// FIXED LOADING LOGIC
+// ------------------------------
 
-    // Fade in logo
-    setTimeout(() => {
-        document.getElementById("logoReveal").style.opacity = 1;
-    }, 1500);
+const token = localStorage.getItem("token");
+
+// If no token → user is not logged in → send to login/register
+if (!token) {
+    window.location.href = "login.html";   // or register.html
+} else {
+    // Token exists → send to games
+    window.location.href = "games.html";   // change to your actual games page
+}
 </script>
 
 </body>
