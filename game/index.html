@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lucky 13 Casino – Games</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+    body {
+        background: #0d0d0d;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background: #111;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        border-bottom: 2px solid #f00;
+    }
+
+    #userInfo {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .games-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 20px;
+    }
+
+    .game-card {
+        background: #1a1a1a;
+        width: 250px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid #333;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .game-card:hover {
+        border-color: #f00;
+        transform: scale(1.05);
+    }
+
+    .game-card img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .logout-btn {
+        display: block;
+        margin: 30px auto;
+        padding: 10px 20px;
+        background: #f00;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .logout-btn:hover {
+        background: #c00;
+    }
+</style>
+</head>
+<body>
+
+<header>Lucky 13 Casino</header>
+
+<div id="userInfo">Loading user info...</div>
+
+<div class="games-container">
+
+    <div class="game-card" onclick="openGame('slots')">
+        <img src="../assets/images/slots.png" alt="Slots">
+        <h3>Slots</h3>
+    </div>
+
+    <div class="game-card" onclick="openGame('blackjack')">
+        <img src="../assets/images/blackjack.png" alt="Blackjack">
+        <h3>Blackjack</h3>
+    </div>
+
+    <div class="game-card" onclick="openGame('roulette')">
+        <img src="../assets/images/roulette.png" alt="Roulette">
+        <h3>Roulette</h3>
+    </div>
+
+    <div class="game-card" onclick="openGame('mines')">
+        <img src="../assets/images/mines.png" alt="Mines">
+        <h3>Mines</h3>
+    </div>
+
+</div>
+
+<button class="logout-btn" onclick="logout()">Logout</button>
+
+<script>
+// ---------------------------------------------
+// AUTH CHECK
+// ---------------------------------------------
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "../login.html";
+}
+
+// ---------------------------------------------
+// LOAD USER INFO
+// ---------------------------------------------
+async function loadUser() {
+    try {
+        const res = await fetch("https://YOUR_BACKEND_URL/balance", {
+            method: "GET",
+            headers: {
+                "Authorization": token
+            }
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+            localStorage.removeItem("token");
+            window.location.href = "../login.html";
+            return;
+        }
+
+        document.getElementById("userInfo").innerText =
+            `Welcome back! Balance: $${data.balance}`;
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("userInfo").innerText =
+            "Error loading user info.";
+    }
+}
+
+loadUser();
+
+// ---------------------------------------------
+// OPEN GAME
+// ---------------------------------------------
+function openGame(gameName) {
+    window.location.href = `${gameName}.html`;
+}
+
+// ---------------------------------------------
+// LOGOUT
+// ---------------------------------------------
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "../login.html";
+}
+</script>
+
+</body>
+</html>
