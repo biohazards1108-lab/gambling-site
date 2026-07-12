@@ -1,130 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Lucky 13 Casino – Loading</title>
-    <link rel="stylesheet" href="loading.css" />
+<meta charset="UTF-8">
+<title>Lucky 13 Casino – Loading</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+        font-family: "Segoe UI", sans-serif;
+    }
 
-    <style>
-        /* --- BASIC RESET --- */
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: #000;
-            font-family: Arial, sans-serif;
-        }
+    /* Curtains */
+    .curtain {
+        position: fixed;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to bottom, #2b0000, #000);
+        z-index: 10;
+        transition: transform 2.5s ease-in-out;
+    }
+    .left { left: 0; transform: translateX(0); }
+    .right { right: 0; transform: translateX(0); }
 
-        #loading-root {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+    /* Center logo reveal */
+    .logo-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 0;
+        transition: opacity 2s ease-in-out 1.5s;
+    }
 
-        /* --- CURTAINS --- */
-        .curtain {
-            position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(#d4af37, #b8860b);
-            z-index: 10;
-            transition: transform 2s ease-in-out;
-        }
+    .logo-title {
+        font-size: 3rem;
+        color: #f5c451;
+        text-shadow: 0 0 20px #f5c451;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
 
-        .curtain-left {
-            left: 0;
-            transform: translateX(0);
-        }
+    .subtext {
+        font-size: 1rem;
+        color: #d4a63f;
+        margin-bottom: 30px;
+    }
 
-        .curtain-right {
-            right: 0;
-            transform: translateX(0);
-        }
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        padding: 12px 28px;
+        margin: 10px;
+        font-size: 1rem;
+        border-radius: 999px;
+        border: 2px solid #f5c451;
+        background: #000;
+        color: #f5c451;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn:hover {
+        background: #f5c451;
+        color: #000;
+    }
 
-        .curtain-open-left {
-            transform: translateX(-100%);
-        }
-
-        .curtain-open-right {
-            transform: translateX(100%);
-        }
-
-        /* --- CENTER TITLE --- */
-        .loading-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: gold;
-            z-index: 5;
-        }
-
-        .loading-title {
-            font-size: 2rem;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px gold;
-        }
-
-        .enter-button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            background: gold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        .enter-button.show {
-            opacity: 1;
-        }
-    </style>
+    /* Skull logo placeholder */
+    .skull {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 0 25px #f00;
+    }
+</style>
 </head>
-
 <body>
-    <div id="loading-root">
 
-        <!-- Curtains -->
-        <div class="curtain curtain-left"></div>
-        <div class="curtain curtain-right"></div>
+<!-- Curtains -->
+<div class="curtain left"></div>
+<div class="curtain right"></div>
 
-        <!-- Center Title -->
-        <div class="loading-center">
-            <h1 class="loading-title">WELCOME TO THE LUCKY 13 CASINO</h1>
-            <button id="enter-btn" class="enter-button">Enter Casino</button>
-        </div>
+<!-- Logo Reveal -->
+<div class="logo-container" id="logoReveal">
+    <div class="skull" style="background-image:url('skull.png');"></div>
+    <div class="logo-title">Lucky 13 Casino</div>
+    <div class="subtext">Shadow Gambler Edition</div>
 
-    </div>
+    <button class="btn" onclick="location.href='login.html'">Login</button>
+    <button class="btn" onclick="location.href='register.html'">Create Account</button>
+</div>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const leftCurtain = document.querySelector(".curtain-left");
-    const rightCurtain = document.querySelector(".curtain-right");
-    const enterBtn = document.getElementById("enter-btn");
-
+    // Open curtains
     setTimeout(() => {
-        leftCurtain.classList.add("curtain-open-left");
-        rightCurtain.classList.add("curtain-open-right");
+        document.querySelector('.left').style.transform = "translateX(-100%)";
+        document.querySelector('.right').style.transform = "translateX(100%)";
     }, 500);
 
+    // Fade in logo
     setTimeout(() => {
-        enterBtn.classList.add("show");
-    }, 2000);
-
-    // Auto redirect
-    setTimeout(() => {
-        window.location.href = "/gambling-site/index.html";
-    }, 3500);
-
-    // Manual button click
-    enterBtn.addEventListener("click", () => {
-        window.location.href = "/gambling-site/index.html";
-    });
-});
+        document.getElementById("logoReveal").style.opacity = 1;
+    }, 1500);
 </script>
 
 </body>
