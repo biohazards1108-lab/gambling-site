@@ -1,242 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Lucky 13 Casino – Welcome</title>
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0; url=loading.html">
+<title>Lucky 13 Casino</title>
+<script>
+  // Fallback redirect if meta refresh fails
+  window.location.href = "loading.html";
+<script>
+const API = "https://gambling-site-production.up.railway.app";
+const token = localStorage.getItem("token");
 
-<style>
-* { box-sizing: border-box; }
+async function verifyToken() {
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
 
-body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: radial-gradient(circle at top, #0a0a0a 0%, #000 60%, #000 100%);
-    color: #f9f3d7;
+  const res = await fetch(API + "/verify", {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  if (!res.ok) {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  }
 }
 
-/* TOP NAV */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 32px;
-    background: #050608;
-    border-bottom: 1px solid #262626;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nav-left img {
-    height: 42px;
-    border-radius: 6px;
-    border: 1px solid #f5c451;
-}
-
-.nav-left h1 {
-    font-size: 1.4rem;
-    color: #f5c451;
-}
-
-.nav-right {
-    display: flex;
-    gap: 16px;
-}
-
-.nav-btn {
-    padding: 8px 18px;
-    border-radius: 999px;
-    border: 1px solid #f5c451;
-    background: transparent;
-    color: #f5c451;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.nav-btn:hover {
-    background: #f5c451;
-    color: #050505;
-}
-
-/* HERO SECTION */
-.hero {
-    text-align: center;
-    padding: 80px 24px 40px;
-}
-
-.hero-title {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #f5c451;
-    text-shadow: 0 0 20px #ff6bcb;
-}
-
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: #d0c7ff;
-    margin-top: 12px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* GAME GRID */
-.game-section {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 24px;
-}
-
-.game-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-}
-
-.game-card {
-    background: #050608;
-    border: 1px solid #262626;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.game-card:hover {
-    transform: translateY(-6px);
-}
-
-.game-card h3 {
-    color: #f5c451;
-    margin-bottom: 10px;
-}
-
-.game-card p {
-    font-size: 0.9rem;
-    color: #d0c7ff;
-    margin-bottom: 12px;
-}
-
-.game-card a {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #f5c451, #ff6bcb);
-    color: #050505;
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.game-card a:hover {
-    box-shadow: 0 0 18px rgba(255,107,203,0.7);
-}
-
-/* FOOTER */
-.footer {
-    margin-top: 60px;
-    padding: 20px;
-    text-align: center;
-    color: #777;
-    font-size: 0.85rem;
-}
-</style>
+verifyToken();
+</script>
+   
 </head>
-
 <body>
-
-<!-- NAV -->
-<div class="navbar">
-    <div class="nav-left">
-        <img src="assets/images/logo.png" alt="Lucky 13 Logo">
-        <h1>Lucky 13 Casino</h1>
-    </div>
-    <div class="nav-right">
-        <button class="nav-btn" onclick="location.href='login.html'">Sign In</button>
-        <button class="nav-btn" onclick="location.href='register.html'">Register</button>
-    </div>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-    <div class="hero-title">Welcome to Lucky 13 Casino</div>
-    <div class="hero-subtitle">
-        A fully interactive, casino experience.  
-        Play Blackjack, Slots, Roulette, Plinko, Poker, and more — all with real animations, real rules.
-    </div>
-</div>
-
-<!-- GAME SECTION -->
-<div class="game-section">
-    <h2 style="color:#f5c451; text-align:center; margin-bottom:20px;">Game Directory & Rules</h2>
-
-    <div class="game-grid">
-
-        <!-- Blackjack -->
-        <div class="game-card">
-            <h3>Blackjack</h3>
-            <p>Beat the dealer without going over 21. Dealer hits until 17. Blackjack pays 2x.</p>
-            <a href="game/blackjack.html">Play Blackjack</a>
-        </div>
-
-        <!-- Slots -->
-        <div class="game-card">
-            <h3>Slots</h3>
-            <p>Spin 3 reels. Triple match pays 2x. Triple Clover pays 4x. Real spinning animations.</p>
-            <a href="game/slots.html">Play Slots</a>
-        </div>
-
-        <!-- Roulette -->
-        <div class="game-card">
-            <h3>Roulette</h3>
-            <p>Bet on Red/Black, Even/Odd. Spin the wheel and watch the ball land in real time.</p>
-            <a href="game/roulette.html">Play Roulette</a>
-        </div>
-
-        <!-- Plinko -->
-        <div class="game-card">
-            <h3>Plinko</h3>
-            <p>Drop the ball through a peg board. Land in multipliers from 0.5x to 10x.</p>
-            <a href="game/plinko.html">Play Plinko</a>
-        </div>
-
-        <!-- Poker -->
-        <div class="game-card">
-            <h3>Texas Hold’em</h3>
-            <p>Two hole cards, five community cards. Highest 5‑card hand wins. Dealer AI included.</p>
-            <a href="game/poker.html">Play Poker</a>
-        </div>
-
-        <!-- Three Card Poker -->
-        <div class="game-card">
-            <h3>Three Card Poker</h3>
-            <p>Pair, Flush, Straight, Straight Flush, or Three‑of‑a‑Kind. Beat the dealer’s hand.</p>
-            <a href="game/threecard.html">Play 3‑Card Poker</a>
-        </div>
-
-        <!-- Craps -->
-        <div class="game-card">
-            <h3>Craps</h3>
-            <p>Pass Line rules. Win on 7 or 11. Lose on 2, 3, 12. Otherwise set the point.</p>
-            <a href="game/craps.html">Play Craps</a>
-        </div>
-
-        <!-- Mines -->
-        <div class="game-card">
-            <h3>Mines</h3>
-            <p>Pick tiles and avoid mines. Each safe tile increases your multiplier.</p>
-            <a href="game/mines.html">Play Mines</a>
-        </div>
-
-    </div>
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-    Lucky 13 Casino © 2026 
-</div>
-
 </body>
 </html>
