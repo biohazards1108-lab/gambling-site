@@ -46,7 +46,6 @@
         to { transform: rotate(360deg); }
     }
 
-    /* Falling coins */
     .coin {
         position: fixed;
         top: -50px;
@@ -67,13 +66,10 @@
 </head>
 <body>
 
-<!-- REAL LOGO -->
-<img src="../assets/images/casino-13.png" class="logo-img">
-
+<img src="../assets/casino-13.png" class="logo-img" alt="Lucky 13 Logo">
 <div class="spinner"></div>
 
 <script>
-// Falling coins
 for (let i = 0; i < 20; i++) {
     const coin = document.createElement("div");
     coin.classList.add("coin");
@@ -82,9 +78,9 @@ for (let i = 0; i < 20; i++) {
     document.body.appendChild(coin);
 }
 
-// Redirect after loading
+// after logo + spinner, go to login
 setTimeout(() => {
-    window.location.href = "index.html";
+    window.location.href = "../login.html";
 }, 2500);
 </script>
 
