@@ -20,13 +20,62 @@
         text-shadow: 0 0 10px #f2d57c, 0 0 20px #f2d57c, 0 0 30px #f2d57c;
     }
 
+    /* Header */
+    .header {
+        text-align: center;
+        padding: 30px 0;
+        font-size: 42px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        color: #f2d57c;
+        text-shadow: 0 0 15px #f2d57c;
+    }
+
+    /* Game grid */
+    .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .game-tile {
+        background: rgba(20, 20, 20, 0.9);
+        border: 2px solid #f2d57c;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 0 15px #f2d57c;
+    }
+
+    .game-tile:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 25px #f2d57c;
+    }
+
+    .game-tile img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 15px;
+    }
+
+    .game-tile h3 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+
     /* Falling coins */
     .coin {
         position: fixed;
         top: -50px;
         width: 40px;
         height: 40px;
-        background-image: url("../assets/images/coin.png");
+        background-image: url("../assets/image/png/coin.png");
         background-size: cover;
         animation: fall linear infinite;
         opacity: 0.8;
@@ -34,173 +83,62 @@
     }
 
     @keyframes fall {
-        0% { transform: translateY(-100px) rotate(0deg); }
+        0% { transform: translateY(0) rotate(0deg); }
         100% { transform: translateY(110vh) rotate(360deg); }
-    }
-
-    /* Sidebar */
-    .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 260px;
-        height: 100vh;
-        background: rgba(10, 10, 10, 0.95);
-        border-right: 2px solid #f2d57c;
-        padding: 20px;
-        z-index: 2;
-    }
-
-    .sidebar h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 26px;
-        color: #f2d57c;
-        letter-spacing: 2px;
-    }
-
-    .game-link {
-        display: block;
-        padding: 12px;
-        margin: 10px 0;
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #f2d57c;
-        text-align: center;
-        transition: 0.3s;
-    }
-
-    .game-link:hover {
-        background: #f2d57c;
-        color: #000;
-        border-color: #f2d57c;
-        transform: scale(1.05);
-    }
-
-    /* Main content */
-    .main {
-        margin-left: 280px;
-        padding: 40px;
-        z-index: 2;
-        position: relative;
-    }
-
-    .main h1 {
-        font-size: 42px;
-        margin-bottom: 20px;
-        color: #f2d57c;
-    }
-
-    .balance-box {
-        background: rgba(242, 213, 124, 0.15);
-        padding: 20px;
-        border-radius: 10px;
-        width: 300px;
-        font-size: 20px;
-        border: 2px solid #f2d57c;
-        margin-bottom: 20px;
-    }
-
-    .logout-btn {
-        padding: 12px 20px;
-        background: #f2d57c;
-        border: none;
-        border-radius: 6px;
-        color: #000;
-        cursor: pointer;
-        font-size: 18px;
-        transition: 0.3s;
-    }
-
-    .logout-btn:hover {
-        background: #c9b15f;
     }
 </style>
 </head>
 <body>
 
-<!-- Falling coins -->
-<script>
-for (let i = 0; i < 25; i++) {
-    const coin = document.createElement("div");
-    coin.classList.add("coin");
-    coin.style.left = Math.random() * 100 + "vw";
-    coin.style.animationDuration = (Math.random() * 3 + 3) + "s";
-    document.body.appendChild(coin);
-}
-</script>
+<div class="header glow">Lucky 13 Casino</div>
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <h2 class="glow">🎰 Lucky 13</h2>
+<div class="game-grid">
 
-    <a class="game-link" href="blackjack.html">Blackjack</a>
-    <a class="game-link" href="craps.html">Craps</a>
-    <a class="game-link" href="plinko.html">Plinko</a>
-    <a class="game-link" href="poker.html">Poker</a>
-    <a class="game-link" href="roulette.html">Roulette</a>
-    <a class="game-link" href="slots.html">Slots</a>
-    <a class="game-link" href="threecard.html">Three Card Poker</a>
-    <a class="game-link" href="war.html">War</a>
-</div>
-
-<!-- Main content -->
-<div class="main">
-    <h1 class="glow">Welcome to Lucky 13 Casino</h1>
-
-    <div class="balance-box" id="balanceBox">
-        Loading balance...
+    <div class="game-tile" onclick="location.href='blackjack.html'">
+        <img src="../assets/ui/blackjack.png">
+        <h3>Blackjack</h3>
     </div>
 
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="game-tile" onclick="location.href='slots.html'">
+        <img src="../assets/ui/slots.png">
+        <h3>Slots</h3>
+    </div>
+
+    <div class="game-tile" onclick="location.href='roulette.html'">
+        <img src="../assets/ui/roulette.png">
+        <h3>Roulette</h3>
+    </div>
+
+    <div class="game-tile" onclick="location.href='plinko.html'">
+        <img src="../assets/ui/plinko.png">
+        <h3>Plinko</h3>
+    </div>
+
+    <div class="game-tile" onclick="location.href='poker.html'">
+        <img src="../assets/ui/poker.png">
+        <h3>Poker</h3>
+    </div>
+
+    <div class="game-tile" onclick="location.href='war.html'">
+        <img src="../assets/ui/war.png">
+        <h3>War</h3>
+    </div>
+
 </div>
 
 <script>
-const API = "gambling-site-production.up.railway.app"; // IMPORTANT — replace this
+// Falling coins generator
+function spawnCoin() {
+    const coin = document.createElement("div");
+    coin.classList.add("coin");
+    coin.style.left = Math.random() * window.innerWidth + "px";
+    coin.style.animationDuration = (3 + Math.random() * 3) + "s";
+    document.body.appendChild(coin);
 
-// ---------------------------------------------
-// AUTH CHECK
-// ---------------------------------------------
-const token = localStorage.getItem("token");
-if (!token) {
-    window.location.href = "../login.html";
+    setTimeout(() => coin.remove(), 6000);
 }
 
-// ---------------------------------------------
-// LOAD BALANCE
-// ---------------------------------------------
-async function loadBalance() {
-    try {
-        const res = await fetch(API + "/balance", {
-            method: "GET",
-            headers: { "Authorization": token }
-        });
-
-        const data = await res.json();
-
-        if (data.error) {
-            document.getElementById("balanceBox").innerText = "Error loading balance.";
-            return;
-        }
-
-        document.getElementById("balanceBox").innerText = "Balance: $" + data.balance;
-
-    } catch (err) {
-        document.getElementById("balanceBox").innerText = "Error loading balance.";
-    }
-}
-
-loadBalance();
-
-// ---------------------------------------------
-// LOGOUT
-// ---------------------------------------------
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "../login.html";
-}
+setInterval(spawnCoin, 300);
 </script>
 
 </body>
