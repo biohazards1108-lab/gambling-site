@@ -160,7 +160,7 @@ if (!token) {
 // ---------------------------------------------
 async function loadBalance() {
     try {
-        const res = await fetch("https://YOUR_BACKEND_URL/balance", {
+        const res = await fetch("gambling-site-production.up.railway.app/balance", {
             method: "GET",
             headers: { "Authorization": token }
         });
