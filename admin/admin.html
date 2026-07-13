@@ -138,7 +138,7 @@
 
 <script>
 let ADMIN_KEY = "";
-const API = "gambling-site-production.up.railway.app; // CHANGE THIS
+const API = "https://gambling-site-production.up.railway.app"; // FIXED
 
 // ---------------------------------------------
 // ADMIN LOGIN
@@ -151,7 +151,6 @@ function adminLogin() {
         return;
     }
 
-    // Try loading stats to verify key
     fetch(API + "/admin/stats", {
         headers: { "x-admin-key": ADMIN_KEY }
     })
