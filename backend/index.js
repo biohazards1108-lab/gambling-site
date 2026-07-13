@@ -1,5 +1,5 @@
 // ---------------------------------------------
-// Lucky 13 Casino Backend (Stable Edition)
+// Lucky 13 Casino Backend (Unified API Edition)
 // ---------------------------------------------
 
 const express = require("express");
@@ -50,9 +50,16 @@ app.get("/", (req, res) => {
 });
 
 // ---------------------------------------------
+// API TEST ROUTE
+// ---------------------------------------------
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working" });
+});
+
+// ---------------------------------------------
 // REGISTER
 // ---------------------------------------------
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -88,7 +95,7 @@ app.post("/register", async (req, res) => {
 // ---------------------------------------------
 // LOGIN
 // ---------------------------------------------
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -135,7 +142,7 @@ function auth(req, res, next) {
 // ---------------------------------------------
 // GET BALANCE
 // ---------------------------------------------
-app.get("/balance", auth, async (req, res) => {
+app.get("/api/balance", auth, async (req, res) => {
   try {
     const rows = await db("SELECT balance FROM users WHERE id = $1", [req.user.id]);
     res.json({ balance: rows[0].balance });
