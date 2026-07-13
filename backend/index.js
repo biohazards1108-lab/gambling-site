@@ -189,6 +189,69 @@ app.post("/api/bet", auth, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// ------------------------------
+// ADMIN SYSTEM
+// ------------------------------
+
+const ADMIN_KEY = process.env.ADMIN_KEY || "lucky13kai07";
+
+// Admin auth middleware
+function adminAuth(req, res, next) {
+    const key = req.headers["x-admin-key"];
+    if (!key || key !== ADMIN_KEY) {
+        return res.status(403).json({ error: "Invalid admin key" });
+    }
+    next();
+}
+
+// Admin login
+app.get("/api/admin/login", adminAuth, (req, res) => {
+    res.json({ message: "Admin authenticated" });
+});
+
+// Admin stats
+app.get("/api/admin/stats", adminAuth, async (req, res) => {
+    const users = await db("SELECT COUNT(*) FROM users");
+    const totalBalance = await db("SELECT SUM(balance) FROM users");
+
+    res.json({
+        users: users[0].count,
+        totalBalance: totalBalance[0].sum
+    });
+});
+
+// Get all users
+app.get("/api/admin/users", adminAuth, async (req, res) => {
+    const rows = await db("SELECT id, username, balance FROM users ORDER BY id ASC");
+    res.json(rows);
+});
+
+// Update balance
+app.post("/api/admin/balance/:id", adminAuth, async (req, res) => {
+    const { id } = req.params;
+    const { balance } = req.body;
+
+    await db("UPDATE users SET balance = $1 WHERE id = $2", [balance, id]);
+    res.json({ message: "Balance updated" });
+});
+
+// Unban user
+app.post("/api/admin/unban/:id", adminAuth, async (req, res) => {
+    await db("UPDATE users SET banned = false WHERE id = $1", [req.params.id]);
+    res.json({ message: "User unbanned" });
+});
+
+// Game toggles
+app.get("/api/admin/games", adminAuth, async (req, res) => {
+    const games = await db("SELECT name, enabled FROM games");
+    res.json(games);
+});
+
+app.post("/api/admin/games", adminAuth, async (req, res) => {
+    const { name, enabled } = req.body;
+    await db("UPDATE games SET enabled = $1 WHERE name = $2", [enabled, name]);
+    res.json({ message: "Game updated" });
+});
 
 // ---------------------------------------------
 // START SERVER
