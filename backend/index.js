@@ -14,9 +14,10 @@ import cors from "cors";
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());   // <-- REQUIRED
-app.use(express.urlencoded({ extended: true })); // optional but helpful
+app.use(cors(corsOptions));
+app.use(express.json());                     // <-- REQUIRED
+app.use(express.urlencoded({ extended: true })); // <-- OPTIONAL but helpful
+
 
 // ---------------------------------------------
 // CORS — GitHub Pages + local testing
