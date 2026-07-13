@@ -5,19 +5,22 @@
 <title>Lucky 13 Casino – Game Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="../style.css">
-
 <style>
     body {
         margin: 0;
         padding: 0;
         background: #000;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-        color: white;
+        font-family: 'Arial', sans-serif;
+        color: #f2d57c;
+        overflow-x: hidden;
     }
 
-    /* Falling coins animation */
+    /* Gold neon glow */
+    .glow {
+        text-shadow: 0 0 10px #f2d57c, 0 0 20px #f2d57c, 0 0 30px #f2d57c;
+    }
+
+    /* Falling coins */
     .coin {
         position: fixed;
         top: -50px;
@@ -27,6 +30,7 @@
         background-size: cover;
         animation: fall linear infinite;
         opacity: 0.8;
+        z-index: 1;
     }
 
     @keyframes fall {
@@ -41,14 +45,17 @@
         top: 0;
         width: 260px;
         height: 100vh;
-        background: rgba(20, 20, 20, 0.9);
-        border-right: 2px solid #f00;
+        background: rgba(10, 10, 10, 0.95);
+        border-right: 2px solid #f2d57c;
         padding: 20px;
+        z-index: 2;
     }
 
     .sidebar h2 {
         text-align: center;
         margin-bottom: 20px;
+        font-size: 26px;
+        color: #f2d57c;
         letter-spacing: 2px;
     }
 
@@ -60,14 +67,15 @@
         border: 1px solid #333;
         border-radius: 6px;
         text-decoration: none;
-        color: white;
+        color: #f2d57c;
         text-align: center;
         transition: 0.3s;
     }
 
     .game-link:hover {
-        background: #f00;
-        border-color: #f00;
+        background: #f2d57c;
+        color: #000;
+        border-color: #f2d57c;
         transform: scale(1.05);
     }
 
@@ -75,36 +83,39 @@
     .main {
         margin-left: 280px;
         padding: 40px;
+        z-index: 2;
+        position: relative;
     }
 
     .main h1 {
-        font-size: 40px;
+        font-size: 42px;
         margin-bottom: 20px;
-        text-shadow: 0px 0px 10px red;
+        color: #f2d57c;
     }
 
     .balance-box {
-        background: rgba(255, 0, 0, 0.2);
+        background: rgba(242, 213, 124, 0.15);
         padding: 20px;
         border-radius: 10px;
         width: 300px;
         font-size: 20px;
-        border: 2px solid #f00;
+        border: 2px solid #f2d57c;
+        margin-bottom: 20px;
     }
 
     .logout-btn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: #f00;
+        padding: 12px 20px;
+        background: #f2d57c;
         border: none;
         border-radius: 6px;
-        color: white;
+        color: #000;
         cursor: pointer;
         font-size: 18px;
+        transition: 0.3s;
     }
 
     .logout-btn:hover {
-        background: #c00;
+        background: #c9b15f;
     }
 </style>
 </head>
@@ -112,7 +123,7 @@
 
 <!-- Falling coins -->
 <script>
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 25; i++) {
     const coin = document.createElement("div");
     coin.classList.add("coin");
     coin.style.left = Math.random() * 100 + "vw";
@@ -123,7 +134,7 @@ for (let i = 0; i < 20; i++) {
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h2>🎰 Lucky 13 Games</h2>
+    <h2 class="glow">🎰 Lucky 13</h2>
 
     <a class="game-link" href="blackjack.html">Blackjack</a>
     <a class="game-link" href="craps.html">Craps</a>
@@ -137,7 +148,7 @@ for (let i = 0; i < 20; i++) {
 
 <!-- Main content -->
 <div class="main">
-    <h1>Welcome to Lucky 13 Casino</h1>
+    <h1 class="glow">Welcome to Lucky 13 Casino</h1>
 
     <div class="balance-box" id="balanceBox">
         Loading balance...
@@ -147,6 +158,8 @@ for (let i = 0; i < 20; i++) {
 </div>
 
 <script>
+const API = "gambling-site-production.up.railway.app"; // IMPORTANT — replace this
+
 // ---------------------------------------------
 // AUTH CHECK
 // ---------------------------------------------
@@ -160,7 +173,7 @@ if (!token) {
 // ---------------------------------------------
 async function loadBalance() {
     try {
-        const res = await fetch("gambling-site-production.up.railway.app/balance", {
+        const res = await fetch(API + "/balance", {
             method: "GET",
             headers: { "Authorization": token }
         });
@@ -168,17 +181,14 @@ async function loadBalance() {
         const data = await res.json();
 
         if (data.error) {
-            localStorage.removeItem("token");
-            window.location.href = "../login.html";
+            document.getElementById("balanceBox").innerText = "Error loading balance.";
             return;
         }
 
-        document.getElementById("balanceBox").innerText =
-            "Balance: $" + data.balance;
+        document.getElementById("balanceBox").innerText = "Balance: $" + data.balance;
 
     } catch (err) {
-        document.getElementById("balanceBox").innerText =
-            "Error loading balance.";
+        document.getElementById("balanceBox").innerText = "Error loading balance.";
     }
 }
 
