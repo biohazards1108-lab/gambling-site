@@ -2,36 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
-    <style>
-        body { font-family: Arial; background: #f5f5f5; margin: 0; }
-        .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 8px; }
-        h1 { margin-top: 0; }
-        .logout { float: right; cursor: pointer; color: red; }
-    </style>
+    <title>Lucky 13 Admin Login</title>
 </head>
 <body>
+    <h1>Admin Login</h1>
 
-<script>
-    // Redirect if not logged in
-    if (!localStorage.getItem("adminToken")) {
-        window.location.href = "admin.html"; // login page
-    }
-</script>
+    <input id="adminUser" type="text" placeholder="Admin Username">
+    <input id="adminPass" type="password" placeholder="Admin Password">
+    <button onclick="adminLogin()">Login</button>
 
-<div class="container">
-    <span class="logout" onclick="logout()">Logout</span>
-    <h1>Admin Dashboard</h1>
-
-    <p>Welcome to your admin panel.</p>
-
-    <script>
-        function logout() {
-            localStorage.removeItem("adminToken");
-            window.location.href = "admin.html";
-        }
-    </script>
-</div>
-
+    <script src="admin.js"></script>
 </body>
 </html>
