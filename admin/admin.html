@@ -135,14 +135,10 @@
     </div>
 
 </div>
-
 <script>
 let ADMIN_KEY = "";
 const API = "https://gambling-site-production.up.railway.app"; // FIXED
 
-// ---------------------------------------------
-// ADMIN LOGIN
-// ---------------------------------------------
 function adminLogin() {
     ADMIN_KEY = document.getElementById("adminKey").value.trim();
 
@@ -166,6 +162,7 @@ function adminLogin() {
         document.getElementById("loginStatus").innerText = "Invalid admin key.";
     });
 }
+</script>
 
 function showAdminSections() {
     document.getElementById("statsSection").style.display = "block";
