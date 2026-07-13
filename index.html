@@ -1,36 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=loading.html">
-<title>Lucky 13 Casino</title>
-<script>
-  // Fallback redirect if meta refresh fails
-  window.location.href = "loading.html";
-<script>
-const API = "https://gambling-site-production.up.railway.app";
-const token = localStorage.getItem("token");
+    <meta charset="UTF-8">
+    <title>Lucky 13 Casino</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-async function verifyToken() {
-  if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #d4af37;
+            --text: #ffffff;
+            --muted: #bbbbbb;
+        }
 
-  const res = await fetch(API + "/verify", {
-    headers: { Authorization: "Bearer " + token }
-  });
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  if (!res.ok) {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
-  }
-}
+        body {
+            background: radial-gradient(circle at top, #1a1a1a 0%, #000000 70%);
+            color: var(--text);
+            font-family: system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-verifyToken();
-</script>
-   
+        /* HERO SECTION */
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .hero-logo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.15);
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 35px;
+            animation: fadeIn 1.6s ease-out forwards;
+        }
+
+        .hero-logo img {
+            width: 160px;
+            height: auto;
+        }
+
+        /* BUTTONS */
+        .btn-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 2px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
+
 <body>
+
+    <div class="hero-title">Welcome to the Lucky 13 Casino</div>
+
+    <div class="hero-logo">
+        <img src="assets/images/casino-13.png" alt="Lucky 13 Casino Logo">
+    </div>
+
+    <div class="btn-container">
+        <button class="btn" onclick="window.location.href='login.html'">Login</button>
+        <button class="btn" onclick="window.location.href='register.html'">Create Account</button>
+    </div>
+
 </body>
 </html>
