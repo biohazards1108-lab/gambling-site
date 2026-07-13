@@ -9,6 +9,14 @@ const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 
 const app = express();
+import express from "express";
+import cors from "cors";
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());   // <-- REQUIRED
+app.use(express.urlencoded({ extended: true })); // optional but helpful
 
 // ---------------------------------------------
 // CORS — GitHub Pages + local testing
