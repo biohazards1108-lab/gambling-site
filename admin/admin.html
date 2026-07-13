@@ -121,7 +121,7 @@ for (let i = 0; i < 40; i++) {
 <script>
 const API = "https://gambling-site-production.up.railway.app";
 
-// Validate admin key using /api/admin/login
+// Correct admin login function
 function adminLogin() {
     const key = document.getElementById("adminKey").value.trim();
     const status = document.getElementById("loginStatus");
@@ -132,13 +132,16 @@ function adminLogin() {
     }
 
     fetch(API + "/api/admin/login", {
-        headers: { "x-admin-key": key }
+        method: "GET",
+        headers: {
+            "x-admin-key": key
+        }
     })
     .then(res => {
         if (!res.ok) throw new Error("Invalid key");
 
-        // Redirect to dashboard with key in URL
-        window.location.href = "dashboard.html?key=" + key;
+        // Redirect to dashboard with key
+        window.location.href = "dashboard.html?key=" + encodeURIComponent(key);
     })
     .catch(() => {
         status.innerText = "Invalid admin key.";
