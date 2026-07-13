@@ -96,9 +96,8 @@
 
     <a href="login.html">Already have an account?</a>
 </div>
-
 <script>
-const API = "gambling-site-production.up.railway.app"; // IMPORTANT — replace this
+const API = "https://gambling-site-production.up.railway.app";
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -107,7 +106,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const password = document.getElementById("password").value.trim();
 
     try {
-        const response = await fetch(API + "/register", {
+        const response = await fetch(API + "/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
@@ -120,10 +119,10 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
             return;
         }
 
-        // Store token instantly
+        // Store token
         localStorage.setItem("token", data.token);
 
-        // Redirect instantly
+        // Redirect to game
         window.location.href = "game/index.html";
 
     } catch (err) {
@@ -132,6 +131,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     }
 });
 </script>
+
 
 </body>
 </html>
