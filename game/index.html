@@ -2,74 +2,103 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 Casino – Games</title>
+<title>Lucky 13 Casino – Game Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="../style.css">
 
 <style>
     body {
-        background: #0d0d0d;
-        color: #fff;
-        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background: #000;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        color: white;
     }
 
-    header {
-        background: #111;
+    /* Falling coins animation */
+    .coin {
+        position: fixed;
+        top: -50px;
+        width: 40px;
+        height: 40px;
+        background-image: url("../assets/images/coin.png");
+        background-size: cover;
+        animation: fall linear infinite;
+        opacity: 0.8;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(-100px) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        background: rgba(20, 20, 20, 0.9);
+        border-right: 2px solid #f00;
         padding: 20px;
+    }
+
+    .sidebar h2 {
         text-align: center;
-        font-size: 24px;
-        font-weight: bold;
+        margin-bottom: 20px;
         letter-spacing: 2px;
-        border-bottom: 2px solid #f00;
     }
 
-    #userInfo {
+    .game-link {
+        display: block;
+        padding: 12px;
+        margin: 10px 0;
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 6px;
+        text-decoration: none;
+        color: white;
         text-align: center;
-        margin-top: 10px;
-        font-size: 18px;
-    }
-
-    .games-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 30px;
-        gap: 20px;
-    }
-
-    .game-card {
-        background: #1a1a1a;
-        width: 250px;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        border: 2px solid #333;
         transition: 0.3s;
-        cursor: pointer;
     }
 
-    .game-card:hover {
+    .game-link:hover {
+        background: #f00;
         border-color: #f00;
         transform: scale(1.05);
     }
 
-    .game-card img {
-        width: 100%;
+    /* Main content */
+    .main {
+        margin-left: 280px;
+        padding: 40px;
+    }
+
+    .main h1 {
+        font-size: 40px;
+        margin-bottom: 20px;
+        text-shadow: 0px 0px 10px red;
+    }
+
+    .balance-box {
+        background: rgba(255, 0, 0, 0.2);
+        padding: 20px;
         border-radius: 10px;
-        margin-bottom: 15px;
+        width: 300px;
+        font-size: 20px;
+        border: 2px solid #f00;
     }
 
     .logout-btn {
-        display: block;
-        margin: 30px auto;
+        margin-top: 20px;
         padding: 10px 20px;
         background: #f00;
-        color: #fff;
         border: none;
         border-radius: 6px;
+        color: white;
         cursor: pointer;
         font-size: 18px;
     }
@@ -81,56 +110,59 @@
 </head>
 <body>
 
-<header>Lucky 13 Casino</header>
+<!-- Falling coins -->
+<script>
+for (let i = 0; i < 20; i++) {
+    const coin = document.createElement("div");
+    coin.classList.add("coin");
+    coin.style.left = Math.random() * 100 + "vw";
+    coin.style.animationDuration = (Math.random() * 3 + 3) + "s";
+    document.body.appendChild(coin);
+}
+</script>
 
-<div id="userInfo">Loading user info...</div>
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>🎰 Lucky 13 Games</h2>
 
-<div class="games-container">
-
-    <div class="game-card" onclick="openGame('slots')">
-        <img src="../assets/images/slots.png" alt="Slots">
-        <h3>Slots</h3>
-    </div>
-
-    <div class="game-card" onclick="openGame('blackjack')">
-        <img src="../assets/images/blackjack.png" alt="Blackjack">
-        <h3>Blackjack</h3>
-    </div>
-
-    <div class="game-card" onclick="openGame('roulette')">
-        <img src="../assets/images/roulette.png" alt="Roulette">
-        <h3>Roulette</h3>
-    </div>
-
-    <div class="game-card" onclick="openGame('mines')">
-        <img src="../assets/images/mines.png" alt="Mines">
-        <h3>Mines</h3>
-    </div>
-
+    <a class="game-link" href="blackjack.html">Blackjack</a>
+    <a class="game-link" href="craps.html">Craps</a>
+    <a class="game-link" href="plinko.html">Plinko</a>
+    <a class="game-link" href="poker.html">Poker</a>
+    <a class="game-link" href="roulette.html">Roulette</a>
+    <a class="game-link" href="slots.html">Slots</a>
+    <a class="game-link" href="threecard.html">Three Card Poker</a>
+    <a class="game-link" href="war.html">War</a>
 </div>
 
-<button class="logout-btn" onclick="logout()">Logout</button>
+<!-- Main content -->
+<div class="main">
+    <h1>Welcome to Lucky 13 Casino</h1>
+
+    <div class="balance-box" id="balanceBox">
+        Loading balance...
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
 
 <script>
 // ---------------------------------------------
 // AUTH CHECK
 // ---------------------------------------------
 const token = localStorage.getItem("token");
-
 if (!token) {
     window.location.href = "../login.html";
 }
 
 // ---------------------------------------------
-// LOAD USER INFO
+// LOAD BALANCE
 // ---------------------------------------------
-async function loadUser() {
+async function loadBalance() {
     try {
         const res = await fetch("https://YOUR_BACKEND_URL/balance", {
             method: "GET",
-            headers: {
-                "Authorization": token
-            }
+            headers: { "Authorization": token }
         });
 
         const data = await res.json();
@@ -141,24 +173,16 @@ async function loadUser() {
             return;
         }
 
-        document.getElementById("userInfo").innerText =
-            `Welcome back! Balance: $${data.balance}`;
+        document.getElementById("balanceBox").innerText =
+            "Balance: $" + data.balance;
 
     } catch (err) {
-        console.error(err);
-        document.getElementById("userInfo").innerText =
-            "Error loading user info.";
+        document.getElementById("balanceBox").innerText =
+            "Error loading balance.";
     }
 }
 
-loadUser();
-
-// ---------------------------------------------
-// OPEN GAME
-// ---------------------------------------------
-function openGame(gameName) {
-    window.location.href = `${gameName}.html`;
-}
+loadBalance();
 
 // ---------------------------------------------
 // LOGOUT
