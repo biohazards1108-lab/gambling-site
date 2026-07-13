@@ -13,13 +13,16 @@ const app = express();
 // ---------------------------------------------
 // CORS — GitHub Pages + local testing
 // ---------------------------------------------
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+const corsOptions = {
+    origin: "*",
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
+};
 
-app.use(express.json());
+app.use(cors(corsOptions));
+
+
+
 
 // ---------------------------------------------
 // PostgreSQL Connection
