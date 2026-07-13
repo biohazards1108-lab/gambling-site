@@ -1,125 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lucky 13 Casino – Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="style.css">
-
-<style>
-    body {
-        background: #0d0d0d;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .login-box {
-        background: #1a1a1a;
-        padding: 30px;
-        border-radius: 10px;
-        width: 320px;
-        text-align: center;
-        border: 2px solid #f00;
-    }
-
-    .login-box h2 {
-        margin-bottom: 20px;
-        letter-spacing: 2px;
-    }
-
-    .login-box input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border-radius: 6px;
-        border: none;
-        background: #333;
-        color: #fff;
-        font-size: 16px;
-    }
-
-    .login-box button {
-        width: 100%;
-        padding: 12px;
-        background: #f00;
-        border: none;
-        border-radius: 6px;
-        color: #fff;
-        font-size: 18px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    .login-box button:hover {
-        background: #c00;
-    }
-
-    .login-box a {
-        color: #f00;
-        text-decoration: none;
-        display: block;
-        margin-top: 15px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>Lucky 13 Login</title>
 </head>
 <body>
+    <h1>Login to Lucky 13 Casino</h1>
 
-<div class="login-box">
-    <h2>Login</h2>
+    <input id="user" type="text" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
 
-    <form id="loginForm">
-        <input id="username" type="text" placeholder="Username" required>
-        <input id="password" type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-
-    <a href="register.html">Create an account</a>
-</div>
-
-<script>
-// ---------------------------------------------
-// LOGIN SCRIPT (WORKING VERSION)
-// ---------------------------------------------
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    try {
-        const response = await fetch("https://gambling-site-production.up.railway.app/login
-", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
-
-        // Store JWT token
-        localStorage.setItem("token", data.token);
-
-        // Redirect to games
-        window.location.href = "game/index.html";
-
-    } catch (err) {
-        console.error("Login error:", err);
-        alert("Server error. Check backend logs.");
-    }
-});
-</script>
-
+    <script src="login.js"></script>
 </body>
 </html>
