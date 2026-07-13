@@ -2,148 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 Admin Dashboard</title>
+<title>Lucky 13 Admin Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
     body {
-        background: #0d0d0d;
-        color: #fff;
-        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background: #000;
+        font-family: 'Arial', sans-serif;
+        color: #f2d57c;
+        overflow: hidden;
     }
 
-    header {
-        background: #111;
-        padding: 20px;
+    /* Gold glow */
+    .glow {
+        text-shadow: 0 0 10px #f2d57c, 0 0 20px #f2d57c, 0 0 30px #f2d57c;
+    }
+
+    /* Center container */
+    .login-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(20, 20, 20, 0.9);
+        padding: 40px;
+        border-radius: 12px;
+        border: 2px solid #f2d57c;
+        width: 350px;
         text-align: center;
-        font-size: 28px;
-        font-weight: bold;
-        border-bottom: 2px solid #f00;
+        box-shadow: 0 0 25px rgba(242, 213, 124, 0.4);
     }
 
-    .container {
-        padding: 20px;
-    }
-
-    .section {
-        background: #1a1a1a;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        border: 2px solid #333;
-    }
-
-    .section h2 {
-        margin-top: 0;
-        color: #f00;
-    }
-
-    button {
-        background: #f00;
-        border: none;
-        padding: 10px 20px;
-        color: #fff;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background: #c00;
+    .login-container h1 {
+        margin-bottom: 25px;
+        font-size: 32px;
     }
 
     input {
-        padding: 10px;
-        width: 250px;
-        border-radius: 6px;
-        border: none;
-        margin-right: 10px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
+        width: 90%;
+        padding: 12px;
         margin-top: 15px;
-    }
-
-    table th, table td {
-        padding: 10px;
-        border-bottom: 1px solid #333;
-        text-align: left;
-    }
-
-    .log-box {
-        background: #000;
-        padding: 10px;
-        height: 200px;
-        overflow-y: scroll;
+        border-radius: 8px;
+        border: none;
+        background: #111;
+        color: #f2d57c;
+        font-size: 16px;
+        outline: none;
         border: 1px solid #333;
-        white-space: pre-wrap;
+    }
+
+    input:focus {
+        border-color: #f2d57c;
+        box-shadow: 0 0 10px #f2d57c;
+    }
+
+    button {
+        margin-top: 20px;
+        width: 95%;
+        padding: 12px;
+        background: #f2d57c;
+        border: none;
+        border-radius: 8px;
+        color: #000;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #c9b15f;
+    }
+
+    #loginStatus {
+        margin-top: 15px;
+        font-size: 16px;
+        color: #ff4444;
+    }
+
+    /* Floating gold particles */
+    .particle {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #f2d57c;
+        border-radius: 50%;
+        opacity: 0.7;
+        animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0) scale(1); opacity: 0.8; }
+        100% { transform: translateY(-120vh) scale(0.2); opacity: 0; }
     }
 </style>
 </head>
 <body>
 
-<header>Lucky 13 Admin Dashboard</header>
+<!-- Gold particles -->
+<script>
+for (let i = 0; i < 40; i++) {
+    const p = document.createElement("div");
+    p.classList.add("particle");
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.top = Math.random() * 100 + "vh";
+    p.style.animationDuration = (Math.random() * 4 + 3) + "s";
+    document.body.appendChild(p);
+}
+</script>
 
-<div class="container">
+<div class="login-container">
+    <h1 class="glow">Lucky 13 Admin</h1>
 
-    <!-- ADMIN LOGIN -->
-    <div class="section">
-        <h2>Admin Login</h2>
-        <input id="adminKey" type="password" placeholder="Enter Admin Key">
-        <button onclick="adminLogin()">Login</button>
-        <p id="loginStatus"></p>
-    </div>
+    <input id="adminKey" type="password" placeholder="Admin Key">
 
-    <!-- SITE STATS -->
-    <div class="section" id="statsSection" style="display:none;">
-        <h2>Site Stats</h2>
-        <p id="statsOutput">Loading...</p>
-        <button onclick="loadStats()">Refresh Stats</button>
-    </div>
+    <button onclick="adminLogin()">Login</button>
 
-    <!-- USERS -->
-    <div class="section" id="usersSection" style="display:none;">
-        <h2>User List</h2>
-        <table id="usersTable"></table>
-        <button onclick="loadUsers()">Refresh Users</button>
-    </div>
-
-    <!-- GAME TOGGLE -->
-    <div class="section" id="gamesSection" style="display:none;">
-        <h2>Game Controls</h2>
-        <input id="gameName" placeholder="Game name (slots, blackjack, etc)">
-        <button onclick="toggleGame()">Toggle Game</button>
-        <p id="gameStatus"></p>
-    </div>
-
-    <!-- LOGS -->
-    <div class="section" id="logsSection" style="display:none;">
-        <h2>Server Logs</h2>
-        <div class="log-box" id="logBox">Loading...</div>
-        <button onclick="loadLogs()">Refresh Logs</button>
-    </div>
-
-    <!-- MAINTENANCE -->
-    <div class="section" id="maintenanceSection" style="display:none;">
-        <h2>Maintenance Mode</h2>
-        <button onclick="toggleMaintenance()">Toggle Maintenance</button>
-        <p id="maintenanceStatus"></p>
-    </div>
-
+    <p id="loginStatus"></p>
 </div>
+
 <script>
 let ADMIN_KEY = "";
-const API = "https://gambling-site-production.up.railway.app"; // FIXED
+const API = "https://gambling-site-production.up.railway.app"; // your backend
 
 function adminLogin() {
     ADMIN_KEY = document.getElementById("adminKey").value.trim();
 
     if (!ADMIN_KEY) {
-        document.getElementById("loginStatus").innerText = "Enter a valid admin key.";
+        document.getElementById("loginStatus").innerText = "Enter admin key.";
         return;
     }
 
@@ -152,133 +139,12 @@ function adminLogin() {
     })
     .then(res => {
         if (!res.ok) throw new Error("Invalid key");
-        document.getElementById("loginStatus").innerText = "Login successful!";
-        showAdminSections();
-        loadStats();
-        loadUsers();
-        loadLogs();
+
+        // SUCCESS → redirect to full dashboard
+        window.location.href = "dashboard.html?key=" + ADMIN_KEY;
     })
     .catch(() => {
         document.getElementById("loginStatus").innerText = "Invalid admin key.";
-    });
-}
-</script>
-
-function showAdminSections() {
-    document.getElementById("statsSection").style.display = "block";
-    document.getElementById("usersSection").style.display = "block";
-    document.getElementById("gamesSection").style.display = "block";
-    document.getElementById("logsSection").style.display = "block";
-    document.getElementById("maintenanceSection").style.display = "block";
-}
-
-// ---------------------------------------------
-// LOAD STATS
-// ---------------------------------------------
-function loadStats() {
-    fetch(API + "/admin/stats", {
-        headers: { "x-admin-key": ADMIN_KEY }
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("statsOutput").innerText =
-            `Total Users: ${data.totalUsers}
-Total Balance: $${data.totalBalance}
-Active Games: ${data.activeGames}`;
-    });
-}
-
-// ---------------------------------------------
-// LOAD USERS
-// ---------------------------------------------
-function loadUsers() {
-    fetch(API + "/admin/users", {
-        headers: { "x-admin-key": ADMIN_KEY }
-    })
-    .then(res => res.json())
-    .then(users => {
-        let html = `
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Balance</th>
-                <th>Banned</th>
-                <th>Actions</th>
-            </tr>
-        `;
-
-        users.forEach(u => {
-            html += `
-                <tr>
-                    <td>${u.id}</td>
-                    <td>${u.username}</td>
-                    <td>$${u.balance}</td>
-                    <td>${u.banned}</td>
-                    <td>
-                        <button onclick="banUser(${u.id})">Ban</button>
-                        <button onclick="unbanUser(${u.id})">Unban</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        document.getElementById("usersTable").innerHTML = html;
-    });
-}
-
-function banUser(id) {
-    fetch(API + "/admin/ban/" + id, {
-        method: "POST",
-        headers: { "x-admin-key": ADMIN_KEY }
-    }).then(() => loadUsers());
-}
-
-function unbanUser(id) {
-    fetch(API + "/admin/unban/" + id, {
-        method: "POST",
-        headers: { "x-admin-key": ADMIN_KEY }
-    }).then(() => loadUsers());
-}
-
-// ---------------------------------------------
-// TOGGLE GAME
-// ---------------------------------------------
-function toggleGame() {
-    const game = document.getElementById("gameName").value.trim();
-
-    fetch(API + "/admin/toggle-game/" + game, {
-        method: "POST",
-        headers: { "x-admin-key": ADMIN_KEY }
-    })
-    .then(() => {
-        document.getElementById("gameStatus").innerText = game + " toggled!";
-    });
-}
-
-// ---------------------------------------------
-// LOAD LOGS
-// ---------------------------------------------
-function loadLogs() {
-    fetch(API + "/admin/logs", {
-        headers: { "x-admin-key": ADMIN_KEY }
-    })
-    .then(res => res.text())
-    .then(text => {
-        document.getElementById("logBox").innerText = text;
-    });
-}
-
-// ---------------------------------------------
-// MAINTENANCE MODE
-// ---------------------------------------------
-function toggleMaintenance() {
-    fetch(API + "/admin/maintenance", {
-        method: "POST",
-        headers: { "x-admin-key": ADMIN_KEY }
-    })
-    .then(() => {
-        document.getElementById("maintenanceStatus").innerText =
-            "Maintenance mode toggled!";
     });
 }
 </script>
