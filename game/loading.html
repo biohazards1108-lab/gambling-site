@@ -20,12 +20,17 @@
         overflow: hidden;
     }
 
-    .logo {
-        font-size: 48px;
-        font-weight: bold;
-        letter-spacing: 4px;
-        text-shadow: 0 0 10px #f2d57c, 0 0 20px #f2d57c;
-        margin-bottom: 20px;
+    .logo-img {
+        width: 260px;
+        height: auto;
+        margin-bottom: 25px;
+        filter: drop-shadow(0 0 20px #f2d57c);
+        animation: fadeIn 1.5s ease-in-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeIn {
+        to { opacity: 1; }
     }
 
     .spinner {
@@ -47,10 +52,11 @@
         top: -50px;
         width: 40px;
         height: 40px;
-        background-image: url("assets/images/coin.png");
+        background-image: url("../assets/image/png/coin.png");
         background-size: cover;
         animation: fall linear infinite;
         opacity: 0.8;
+        z-index: 10;
     }
 
     @keyframes fall {
@@ -61,7 +67,9 @@
 </head>
 <body>
 
-<div class="logo">Lucky 13 Casino</div>
+<!-- REAL LOGO -->
+<img src="../assets/casino-13.png" class="logo-img">
+
 <div class="spinner"></div>
 
 <script>
@@ -73,8 +81,12 @@ for (let i = 0; i < 20; i++) {
     coin.style.animationDuration = (Math.random() * 3 + 3) + "s";
     document.body.appendChild(coin);
 }
+
+// Redirect after loading
+setTimeout(() => {
+    window.location.href = "index.html";
+}, 2500);
 </script>
 
-<script src="loading.js"></script>
 </body>
 </html>
