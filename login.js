@@ -12,10 +12,10 @@ async function login() {
 
     const data = await res.json();
 
-    if (data.success && data.token) {
+    if (data.token) {
         localStorage.setItem("userToken", data.token);
-        window.location.href = "dashboard.html";
+        window.location.href = "games.html";   // <--- FIXED REDIRECT
     } else {
-        alert(data.message || "Login failed");
+        alert(data.error || "Login failed");
     }
 }
