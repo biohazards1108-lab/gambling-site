@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 – Slots</title>
+<title>Lucky 13 – Slots</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
     body {
         margin: 0;
         padding: 0;
-        background: radial-gradient(circle at top, #222 0%, #000 70%);
-        font-family: Arial, sans-serif;
+        font-family: "Segoe UI", Arial, sans-serif;
         color: #f2d57c;
+        background: radial-gradient(circle at 50% 20%, #5a0000 0%, #1a0000 70%);
         text-align: center;
         overflow-x: hidden;
     }
@@ -19,7 +19,7 @@
     h1 {
         margin-top: 25px;
         font-size: 42px;
-        text-shadow: 0 0 20px #f2d57c;
+        text-shadow: 0 0 25px #f2d57c;
     }
 
     #top-bar {
@@ -28,14 +28,14 @@
         justify-content: center;
         gap: 15px;
         align-items: center;
+        background: rgba(0,0,0,0.4);
+        padding: 10px 20px;
+        border-radius: 12px;
+        border: 1px solid #f2d57c;
     }
 
     #balance {
         font-size: 20px;
-        background: rgba(20,20,20,0.9);
-        padding: 10px 20px;
-        border-radius: 10px;
-        border: 1px solid #f2d57c;
     }
 
     #refill-btn {
@@ -72,14 +72,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 0 20px rgba(242,213,124,0.4);
+        box-shadow: 0 0 25px rgba(242,213,124,0.4);
         position: relative;
     }
 
     .reel-track {
         display: flex;
         flex-direction: column;
-        transition: transform 1s cubic-bezier(.17,.67,.83,.67);
+        transition: transform 1.2s cubic-bezier(.17,.67,.83,.67);
     }
 
     .symbol {
@@ -131,11 +131,11 @@
 </head>
 <body>
 
-<h1>Lucky 13 Slots</h1>
+<h1>Lucky 13 Slots</h1>
 
 <div id="top-bar">
     <div id="balance">Balance: loading...</div>
-    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
+    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
 </div>
 
 <div class="slot-container">
@@ -149,6 +149,9 @@
 <div id="result"></div>
 
 <script>
+const API_BASE = "https://gambling-site-production.up.railway.app";
+const token = localStorage.getItem("token");
+
 // Falling coins
 function spawnCoin() {
     const coin = document.createElement("div");
@@ -162,45 +165,40 @@ setInterval(spawnCoin, 350);
 
 // Symbols (replace with real PNGs later)
 const symbols = [
-    "https://via.placeholder.com/200x60?text=Cherry",
-    "https://via.placeholder.com/200x60?text=Bar",
-    "https://via.placeholder.com/200x60?text=Seven",
-    "https://via.placeholder.com/200x60?text=Diamond",
-    "https://via.placeholder.com/200x60?text=Bell"
+    "../assets/images/slots/slot-cherry.png",
+    "../assets/images/slots/slot-bar.png",
+    "../assets/images/slots/slot-seven.png",
+    "../assets/images/slots/slot-diamond.png",
+    "../assets/images/slots/slot-bell.png"
 ];
 
-// Load balance
+// Load balance immediately
 async function loadBalance() {
-    const token = localStorage.getItem("token");
     const el = document.getElementById("balance");
-
     if (!token) {
         el.textContent = "Balance: login required";
         return;
     }
-
     try {
-        const res = await fetch("https://gambling-site-production.up.railway.app/api/balance", {
+        const res = await fetch(`${API_BASE}/api/balance`, {
             headers: { "Authorization": token }
         });
         const data = await res.json();
-        el.textContent = "Balance: " + data.balance;
+        el.textContent = "Balance: " + (data.balance ?? "error");
     } catch {
         el.textContent = "Balance: error";
     }
 }
-loadBalance();
+document.addEventListener("DOMContentLoaded", loadBalance);
 
-// Refill (max 1000)
+// Refill (max 1000)
 async function refill() {
-    const token = localStorage.getItem("token");
     if (!token) {
         alert("Login required");
         return;
     }
-
     try {
-        const res = await fetch("https://gambling-site-production.up.railway.app/api/refill", {
+        const res = await fetch(`${API_BASE}/api/refill`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -230,7 +228,6 @@ function buildReelTrack() {
 
 // Spin logic
 function spin() {
-    const token = localStorage.getItem("token");
     if (!token) {
         alert("Login required");
         return;
@@ -239,28 +236,22 @@ function spin() {
     document.getElementById("result").textContent = "";
 
     const reelIds = ["reel1", "reel2", "reel3"];
-
     reelIds.forEach(id => {
         const reel = document.getElementById(id);
         const track = buildReelTrack();
         reel.innerHTML = "";
         reel.appendChild(track);
-
-        // animate
         track.style.transform = "translateY(0)";
         setTimeout(() => {
             track.style.transform = "translateY(-600px)";
         }, 50);
-
-        // stop and show final symbol
         setTimeout(() => {
             const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
             reel.innerHTML = `<img src="${finalSymbol}" class="symbol">`;
-        }, 1000);
+        }, 1200);
     });
 
-    // Backend bet
-    fetch("https://gambling-site-production.up.railway.app/api/bet", {
+    fetch(`${API_BASE}/api/bet`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -271,12 +262,8 @@ function spin() {
     .then(res => res.json())
     .then(data => {
         document.getElementById("balance").textContent = "Balance: " + data.balance;
-
-        if (data.result === "win") {
-            document.getElementById("result").textContent = "WIN! +" + data.payout;
-        } else {
-            document.getElementById("result").textContent = "LOSE!";
-        }
+        document.getElementById("result").textContent =
+            data.result === "win" ? `WIN! +${data.payout}` : "LOSE!";
     })
     .catch(() => {
         document.getElementById("result").textContent = "Server error";
