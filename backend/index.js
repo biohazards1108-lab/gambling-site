@@ -16,26 +16,11 @@ const server = http.createServer(app);
 // ---------------------------------------------
 // CORS
 // ---------------------------------------------
-const corsOptions = {
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
-};
-app.use(cors(corsOptions));
+app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"] }));
 app.use(express.json());
 
 // ---------------------------------------------
-// Socket.IO
-// ---------------------------------------------
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
-// ---------------------------------------------
-// PostgreSQL Connection
+// PostgreSQL
 // ---------------------------------------------
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -48,7 +33,7 @@ const pool = new Pool({
 const JWT_SECRET = process.env.JWT_SECRET || "lucky13_secret_key";
 
 // ---------------------------------------------
-// Helper: Query Wrapper
+// Helper DB Wrapper
 // ---------------------------------------------
 async function db(sql, params) {
     const result = await pool.query(sql, params);
@@ -56,14 +41,14 @@ async function db(sql, params) {
 }
 
 // ---------------------------------------------
-// ROOT ROUTE
+// ROOT
 // ---------------------------------------------
 app.get("/", (req, res) => {
     res.send("Lucky 13 Backend + Socket.IO is running.");
 });
 
 // ---------------------------------------------
-// API TEST ROUTE
+// TEST
 // ---------------------------------------------
 app.get("/api/test", (req, res) => {
     res.json({ message: "API is working" });
@@ -78,9 +63,9 @@ app.post("/api/register", async (req, res) => {
     if (!username || !password)
         return res.status(400).json({ error: "Missing username or password" });
 
-    const hashed = await bcrypt.hash(password, 10);
-
     try {
+        const hashed = await bcrypt.hash(password, 10);
+
         const rows = await db(
             "INSERT INTO users (username, password, balance) VALUES ($1, $2, $3) RETURNING id, username, balance",
             [username, hashed, 1000]
@@ -88,19 +73,13 @@ app.post("/api/register", async (req, res) => {
 
         const user = rows[0];
 
-        const token = jwt.sign(
-            { id: user.id, username: user.username },
-            JWT_SECRET,
-            { expiresIn: "7d" }
-        );
+        const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: "7d" });
 
         res.json({ message: "Account created", token, user });
 
     } catch (err) {
         console.error("REGISTER ERROR:", err);
-        if (err.code === "23505") {
-            return res.status(400).json({ error: "Username already exists" });
-        }
+        if (err.code === "23505") return res.status(400).json({ error: "Username already exists" });
         res.status(500).json({ error: "Database error" });
     }
 });
@@ -113,21 +92,13 @@ app.post("/api/login", async (req, res) => {
 
     try {
         const rows = await db("SELECT * FROM users WHERE username = $1", [username]);
-
-        if (rows.length === 0)
-            return res.status(400).json({ error: "User not found" });
+        if (rows.length === 0) return res.status(400).json({ error: "User not found" });
 
         const user = rows[0];
-
         const valid = await bcrypt.compare(password, user.password);
-        if (!valid)
-            return res.status(400).json({ error: "Invalid password" });
+        if (!valid) return res.status(400).json({ error: "Invalid password" });
 
-        const token = jwt.sign(
-            { id: user.id, username: user.username },
-            JWT_SECRET,
-            { expiresIn: "7d" }
-        );
+        const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: "7d" });
 
         res.json({ message: "Login successful", token });
 
@@ -147,13 +118,13 @@ function auth(req, res, next) {
     try {
         req.user = jwt.verify(token, JWT_SECRET);
         next();
-    } catch (err) {
-        return res.status(401).json({ error: "Invalid token" });
+    } catch {
+        res.status(401).json({ error: "Invalid token" });
     }
 }
 
 // ---------------------------------------------
-// GET BALANCE
+// BALANCE
 // ---------------------------------------------
 app.get("/api/balance", auth, async (req, res) => {
     try {
@@ -166,7 +137,7 @@ app.get("/api/balance", auth, async (req, res) => {
 });
 
 // ---------------------------------------------
-// BET ROUTE (generic)
+// BET
 // ---------------------------------------------
 app.post("/api/bet", auth, async (req, res) => {
     const { amount } = req.body;
@@ -201,126 +172,118 @@ app.post("/api/bet", auth, async (req, res) => {
 });
 
 // ---------------------------------------------
-// ADMIN SYSTEM
+// ADMIN
 // ---------------------------------------------
 const ADMIN_KEY = process.env.ADMIN_KEY || "lucky13kai07";
 
 function adminAuth(req, res, next) {
     const key = req.get("x-admin-key");
-    if (!key || key !== ADMIN_KEY) {
-        return res.status(403).json({ error: "Invalid admin key" });
-    }
+    if (!key || key !== ADMIN_KEY) return res.status(403).json({ error: "Invalid admin key" });
     next();
 }
 
-// Admin login
 app.get("/api/admin/login", adminAuth, (req, res) => {
     res.json({ message: "Admin authenticated" });
 });
 
-// Admin stats
 app.get("/api/admin/stats", adminAuth, async (req, res) => {
-    const users = await db("SELECT COUNT(*) FROM users");
-    const totalBalance = await db("SELECT SUM(balance) FROM users");
-
-    res.json({
-        users: users[0].count,
-        totalBalance: totalBalance[0].sum
-    });
+    try {
+        const users = await db("SELECT COUNT(*) FROM users");
+        const totalBalance = await db("SELECT SUM(balance) FROM users");
+        res.json({ users: users[0].count, totalBalance: totalBalance[0].sum });
+    } catch (err) {
+        console.error("ADMIN STATS ERROR:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
-// Get all users
 app.get("/api/admin/users", adminAuth, async (req, res) => {
-    const rows = await db("SELECT id, username, balance, banned FROM users ORDER BY id ASC");
-    res.json(rows);
+    try {
+        const rows = await db("SELECT id, username, balance, banned FROM users ORDER BY id ASC");
+        res.json(rows);
+    } catch (err) {
+        console.error("ADMIN USERS ERROR:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
-// Update balance
 app.post("/api/admin/balance/:id", adminAuth, async (req, res) => {
-    const { id } = req.params;
-    const { balance } = req.body;
-
-    await db("UPDATE users SET balance = $1 WHERE id = $2", [balance, id]);
-    res.json({ message: "Balance updated" });
+    try {
+        await db("UPDATE users SET balance = $1 WHERE id = $2", [req.body.balance, req.params.id]);
+        res.json({ message: "Balance updated" });
+    } catch (err) {
+        console.error("ADMIN BALANCE ERROR:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
-// Unban user
 app.post("/api/admin/unban/:id", adminAuth, async (req, res) => {
-    await db("UPDATE users SET banned = false WHERE id = $1", [req.params.id]);
-    res.json({ message: "User unbanned" });
-});
-
-// Games table (optional)
-app.get("/api/admin/games", adminAuth, async (req, res) => {
-    const games = await db("SELECT name, enabled FROM games");
-    res.json(games);
-});
-
-app.post("/api/admin/games", adminAuth, async (req, res) => {
-    const { name, enabled } = req.body;
-    await db("UPDATE games SET enabled = $1 WHERE name = $2", [enabled, name]);
-    res.json({ message: "Game updated" });
+    try {
+        await db("UPDATE users SET banned = false WHERE id = $1", [req.params.id]);
+        res.json({ message: "User unbanned" });
+    } catch (err) {
+        console.error("ADMIN UNBAN ERROR:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 // ---------------------------------------------
-// SOCKET.IO MULTIPLAYER BLACKJACK
+// SOCKET.IO BLACKJACK
 // ---------------------------------------------
-const rooms = {}; // roomId -> { players: [], deck, dealer, state }
+const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
+
+const rooms = {};
 
 function createDeck() {
-    const suits = ["S","H","D","C"];
+    const suits = ["S", "H", "D", "C"];
     const values = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
     const deck = [];
-    for (let s of suits) {
-        for (let v of values) {
-            deck.push({ value: v, suit: s });
-        }
-    }
+    for (let s of suits) for (let v of values) deck.push({ value: v, suit: s });
     return deck.sort(() => Math.random() - 0.5);
 }
 
 function handValue(hand) {
     let total = 0, aces = 0;
-    hand.forEach(card => {
+    for (const card of hand) {
         if (card.value === "A") { aces++; total += 11; }
         else if (["K","Q","J"].includes(card.value)) total += 10;
         else total += parseInt(card.value);
-    });
+    }
     while (total > 21 && aces > 0) { total -= 10; aces--; }
     return total;
 }
 
-socket.on("joinRoom", ({ roomId, username }) => {
-    if (!rooms[roomId]) {
-        rooms[roomId] = {
-            deck: createDeck(),
-            dealer: [],
-            players: [],
-            state: "waiting"
-        };
-    }
+io.on("connection", (socket) => {
+    console.log("Socket connected:", socket.id);
 
-    const room = rooms[roomId];
+    socket.on("joinRoom", ({ roomId, username }) => {
+        if (!rooms[roomId]) {
+            rooms[roomId] = {
+                deck: createDeck(),
+                dealer: [],
+                players: [],
+                state: "waiting"
+            };
+        }
 
-    // find first free seat 0–4
-    const usedSeats = room.players.map(p => p.seat);
-    let seat = 0;
-    while (usedSeats.includes(seat) && seat < 5) seat++;
+        const room = rooms[roomId];
+        const usedSeats = room.players.map(p => p.seat);
+        let seat = 0;
+        while (usedSeats.includes(seat)) seat++;
 
-    room.players.push({
-        id: socket.id,
-        username,
-        hand: [],
-        done: false,
-        seat
+        room.players.push({
+            id: socket.id,
+            username,
+            hand: [],
+            done: false,
+            seat
+        });
+
+        socket.join(roomId);
+        io.to(roomId).emit("roomUpdate", room);
     });
 
-    socket.join(roomId);
-    io.to(roomId).emit("roomUpdate", room);
-});
-
-
-    socket.on("startGame", roomId => {
+    socket.on("startGame", (roomId) => {
         const room = rooms[roomId];
         if (!room) return;
 
@@ -335,24 +298,24 @@ socket.on("joinRoom", ({ roomId, username }) => {
         io.to(roomId).emit("roomUpdate", room);
     });
 
-    socket.on("hit", roomId => {
+    socket.on("hit", (roomId) => {
         const room = rooms[roomId];
         if (!room) return;
+
         const player = room.players.find(p => p.id === socket.id);
         if (!player || player.done) return;
 
         player.hand.push(room.deck.pop());
 
-        if (handValue(player.hand) > 21) {
-            player.done = true;
-        }
+        if (handValue(player.hand) > 21) player.done = true;
 
         io.to(roomId).emit("roomUpdate", room);
     });
 
-    socket.on("stand", roomId => {
+    socket.on("stand", (roomId) => {
         const room = rooms[roomId];
         if (!room) return;
+
         const player = room.players.find(p => p.id === socket.id);
         if (!player) return;
 
