@@ -1,7 +1,7 @@
 const API = "https://gambling-site-production.up.railway.app";
 
 const key = localStorage.getItem("adminKey");
-if (!key) window.location.href = "admin.html";
+if (!key) window.location.href = "admin/admin.html";
 
 async function loadStats() {
     const res = await fetch(`${API}/api/admin/stats`, {
