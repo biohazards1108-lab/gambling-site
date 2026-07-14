@@ -1,21 +1,21 @@
 const API = "https://gambling-site-production.up.railway.app";
 
 async function adminLogin() {
-    const username = document.getElementById("adminUser").value;
-    const password = document.getElementById("adminPass").value;
+    const key = document.getElementById("adminKey").value;
 
-    const res = await fetch(`${API}/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+    const res = await fetch(`${API}/api/admin/login`, {
+        method: "GET",
+        headers: {
+            "x-admin-key": key
+        }
     });
 
     const data = await res.json();
 
-    if (data.success && data.token) {
-        localStorage.setItem("adminToken", data.token);
+    if (data.message === "Admin authenticated") {
+        localStorage.setItem("adminKey", key);
         window.location.href = "dashboard.html";
     } else {
-        alert(data.message || "Admin login failed");
+        alert("Invalid admin key");
     }
 }
