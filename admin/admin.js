@@ -5,16 +5,14 @@ async function adminLogin() {
 
     const res = await fetch(`${API}/api/admin/login`, {
         method: "GET",
-        headers: {
-            "x-admin-key": key
-        }
+        headers: { "x-admin-key": key }
     });
 
     const data = await res.json();
 
     if (data.message === "Admin authenticated") {
         localStorage.setItem("adminKey", key);
-        window.location.href = "admin-dashboard.html";
+        window.location.href = "admin-dashboard.html";   // FIXED
     } else {
         alert("Invalid admin key");
     }
