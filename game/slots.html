@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 – Slots</title>
+<title>Lucky 13 – Slots</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
     body {
         margin: 0;
         padding: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Segoe UI", Arial, sans-serif;
         color: #f2d57c;
         background: radial-gradient(circle at 50% 20%, #5a0000 0%, #1a0000 70%);
         text-align: center;
@@ -18,17 +18,19 @@
 
     h1 {
         margin-top: 25px;
-        font-size: 42px;
+        font-size: 46px;
         text-shadow: 0 0 25px #f2d57c;
+        letter-spacing: 2px;
     }
 
+    /* Top Bar */
     #top-bar {
         margin-top: 10px;
         display: flex;
         justify-content: center;
         gap: 15px;
         align-items: center;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0,0,0,0.45);
         padding: 10px 20px;
         border-radius: 12px;
         border: 1px solid #f2d57c;
@@ -53,10 +55,19 @@
         background: #c9b15f;
     }
 
-    .slot-container {
+    /* Slot Machine Frame */
+    .machine-frame {
         margin: 40px auto;
         width: 90%;
-        max-width: 700px;
+        max-width: 750px;
+        padding: 25px;
+        background: linear-gradient(145deg, #3a0000, #1a0000);
+        border-radius: 20px;
+        border: 3px solid #f2d57c;
+        box-shadow: 0 0 40px rgba(242,213,124,0.4);
+    }
+
+    .slot-container {
         display: flex;
         justify-content: space-between;
         gap: 20px;
@@ -64,7 +75,7 @@
 
     .reel {
         width: 30%;
-        height: 180px;
+        height: 200px;
         background: rgba(15,15,15,0.95);
         border: 2px solid #f2d57c;
         border-radius: 12px;
@@ -72,8 +83,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 0 25px rgba(242,213,124,0.4);
         position: relative;
+        box-shadow: inset 0 0 20px rgba(242,213,124,0.3);
     }
 
     .reel-track {
@@ -84,39 +95,46 @@
 
     .symbol {
         width: 100%;
-        height: 60px;
+        height: 70px;
         object-fit: contain;
+        filter: drop-shadow(0 0 5px #000);
     }
 
+    /* Spin Button */
     .spin-btn {
         margin-top: 25px;
         padding: 15px 40px;
-        font-size: 22px;
+        font-size: 24px;
         background: #f2d57c;
         border: none;
         border-radius: 10px;
         cursor: pointer;
         transition: 0.3s;
         color: #000;
+        font-weight: bold;
+        letter-spacing: 1px;
     }
 
     .spin-btn:hover {
         background: #c9b15f;
+        transform: scale(1.05);
     }
 
+    /* Result Text */
     #result {
         margin-top: 20px;
-        font-size: 24px;
+        font-size: 28px;
         text-shadow: 0 0 10px #f2d57c;
         min-height: 30px;
     }
 
+    /* Falling coins */
     .coin {
         position: fixed;
         top: -50px;
         width: 32px;
         height: 32px;
-        background-image: url("../assets/images/coin.png");
+        background-image: url("/gambling-site/assets/images/coin.png");
         background-size: cover;
         animation: fall linear infinite;
         opacity: 0.7;
@@ -131,17 +149,19 @@
 </head>
 <body>
 
-<h1>Lucky 13 Slots</h1>
+<h1>Lucky 13 Slots</h1>
 
 <div id="top-bar">
     <div id="balance">Balance: loading...</div>
-    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
+    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
 </div>
 
-<div class="slot-container">
-    <div class="reel" id="reel1"></div>
-    <div class="reel" id="reel2"></div>
-    <div class="reel" id="reel3"></div>
+<div class="machine-frame">
+    <div class="slot-container">
+        <div class="reel" id="reel1"></div>
+        <div class="reel" id="reel2"></div>
+        <div class="reel" id="reel3"></div>
+    </div>
 </div>
 
 <button class="spin-btn" onclick="spin()">SPIN</button>
@@ -152,7 +172,7 @@
 const API_BASE = "https://gambling-site-production.up.railway.app";
 const token = localStorage.getItem("token");
 
-// Falling coins
+/* Falling coins */
 function spawnCoin() {
     const coin = document.createElement("div");
     coin.classList.add("coin");
@@ -163,7 +183,7 @@ function spawnCoin() {
 }
 setInterval(spawnCoin, 350);
 
-// Symbols (replace with real PNGs later)
+/* Correct GitHub Pages image paths */
 const symbols = [
     "/gambling-site/assets/images/slots/slot-cherry.png",
     "/gambling-site/assets/images/slots/slot-bar.png",
@@ -172,7 +192,7 @@ const symbols = [
     "/gambling-site/assets/images/slots/slot-bell.png"
 ];
 
-// Load balance immediately
+/* Load balance */
 async function loadBalance() {
     const el = document.getElementById("balance");
     if (!token) {
@@ -191,7 +211,7 @@ async function loadBalance() {
 }
 document.addEventListener("DOMContentLoaded", loadBalance);
 
-// Refill (max 1000)
+/* Refill */
 async function refill() {
     if (!token) {
         alert("Login required");
@@ -213,7 +233,7 @@ async function refill() {
     }
 }
 
-// Build reel track
+/* Build reel track */
 function buildReelTrack() {
     const track = document.createElement("div");
     track.classList.add("reel-track");
@@ -226,7 +246,7 @@ function buildReelTrack() {
     return track;
 }
 
-// Spin logic
+/* Spin logic */
 function spin() {
     if (!token) {
         alert("Login required");
@@ -241,10 +261,12 @@ function spin() {
         const track = buildReelTrack();
         reel.innerHTML = "";
         reel.appendChild(track);
+
         track.style.transform = "translateY(0)";
         setTimeout(() => {
-            track.style.transform = "translateY(-600px)";
+            track.style.transform = "translateY(-650px)";
         }, 50);
+
         setTimeout(() => {
             const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
             reel.innerHTML = `<img src="${finalSymbol}" class="symbol">`;
