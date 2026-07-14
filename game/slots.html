@@ -9,11 +9,11 @@
     body {
         margin: 0;
         padding: 0;
-        background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%);
+        background: radial-gradient(circle at top, #222 0%, #000 70%);
         font-family: Arial, sans-serif;
         color: #f2d57c;
-        overflow-x: hidden;
         text-align: center;
+        overflow-x: hidden;
     }
 
     h1 {
@@ -22,14 +22,35 @@
         text-shadow: 0 0 20px #f2d57c;
     }
 
-    #balance {
+    #top-bar {
         margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        align-items: center;
+    }
+
+    #balance {
         font-size: 20px;
         background: rgba(20,20,20,0.9);
-        display: inline-block;
         padding: 10px 20px;
         border-radius: 10px;
         border: 1px solid #f2d57c;
+    }
+
+    #refill-btn {
+        padding: 8px 18px;
+        font-size: 16px;
+        background: #f2d57c;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #000;
+        transition: 0.3s;
+    }
+
+    #refill-btn:hover {
+        background: #c9b15f;
     }
 
     .slot-container {
@@ -52,13 +73,19 @@
         justify-content: center;
         align-items: center;
         box-shadow: 0 0 20px rgba(242,213,124,0.4);
+        position: relative;
+    }
+
+    .reel-track {
+        display: flex;
+        flex-direction: column;
+        transition: transform 1s cubic-bezier(.17,.67,.83,.67);
     }
 
     .symbol {
         width: 100%;
-        height: 100%;
+        height: 60px;
         object-fit: contain;
-        transition: transform 0.3s ease;
     }
 
     .spin-btn {
@@ -81,9 +108,9 @@
         margin-top: 20px;
         font-size: 24px;
         text-shadow: 0 0 10px #f2d57c;
+        min-height: 30px;
     }
 
-    /* Falling coins */
     .coin {
         position: fixed;
         top: -50px;
@@ -105,7 +132,11 @@
 <body>
 
 <h1>Lucky 13 Slots</h1>
-<div id="balance">Balance: loading...</div>
+
+<div id="top-bar">
+    <div id="balance">Balance: loading...</div>
+    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
+</div>
 
 <div class="slot-container">
     <div class="reel" id="reel1"></div>
@@ -118,7 +149,7 @@
 <div id="result"></div>
 
 <script>
-// Falling coins animation
+// Falling coins
 function spawnCoin() {
     const coin = document.createElement("div");
     coin.classList.add("coin");
@@ -129,17 +160,17 @@ function spawnCoin() {
 }
 setInterval(spawnCoin, 350);
 
-// Placeholder symbols (replace with your PNGs later)
+// Symbols (replace with real PNGs later)
 const symbols = [
-    "https://via.placeholder.com/200x200?text=Cherry",
-    "https://via.placeholder.com/200x200?text=Bar",
-    "https://via.placeholder.com/200x200?text=Seven",
-    "https://via.placeholder.com/200x200?text=Diamond",
-    "https://via.placeholder.com/200x200?text=Bell"
+    "https://via.placeholder.com/200x60?text=Cherry",
+    "https://via.placeholder.com/200x60?text=Bar",
+    "https://via.placeholder.com/200x60?text=Seven",
+    "https://via.placeholder.com/200x60?text=Diamond",
+    "https://via.placeholder.com/200x60?text=Bell"
 ];
 
 // Load balance
-(async () => {
+async function loadBalance() {
     const token = localStorage.getItem("token");
     const el = document.getElementById("balance");
 
@@ -157,7 +188,45 @@ const symbols = [
     } catch {
         el.textContent = "Balance: error";
     }
-})();
+}
+loadBalance();
+
+// Refill (max 1000)
+async function refill() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Login required");
+        return;
+    }
+
+    try {
+        const res = await fetch("https://gambling-site-production.up.railway.app/api/refill", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            }
+        });
+        const data = await res.json();
+        document.getElementById("balance").textContent = "Balance: " + data.balance;
+        document.getElementById("result").textContent = data.message || "";
+    } catch {
+        document.getElementById("result").textContent = "Refill error";
+    }
+}
+
+// Build reel track
+function buildReelTrack() {
+    const track = document.createElement("div");
+    track.classList.add("reel-track");
+    for (let i = 0; i < 10; i++) {
+        const img = document.createElement("img");
+        img.src = symbols[Math.floor(Math.random() * symbols.length)];
+        img.classList.add("symbol");
+        track.appendChild(img);
+    }
+    return track;
+}
 
 // Spin logic
 function spin() {
@@ -167,11 +236,27 @@ function spin() {
         return;
     }
 
-    // Spin animation
-    const reels = ["reel1", "reel2", "reel3"];
-    reels.forEach(id => {
+    document.getElementById("result").textContent = "";
+
+    const reelIds = ["reel1", "reel2", "reel3"];
+
+    reelIds.forEach(id => {
         const reel = document.getElementById(id);
-        reel.innerHTML = `<img src="${symbols[Math.floor(Math.random()*symbols.length)]}" class="symbol" style="transform: rotate(${Math.random()*360}deg)">`;
+        const track = buildReelTrack();
+        reel.innerHTML = "";
+        reel.appendChild(track);
+
+        // animate
+        track.style.transform = "translateY(0)";
+        setTimeout(() => {
+            track.style.transform = "translateY(-600px)";
+        }, 50);
+
+        // stop and show final symbol
+        setTimeout(() => {
+            const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            reel.innerHTML = `<img src="${finalSymbol}" class="symbol">`;
+        }, 1000);
     });
 
     // Backend bet
@@ -181,7 +266,7 @@ function spin() {
             "Content-Type": "application/json",
             "Authorization": token
         },
-        body: JSON.stringify({ amount: 50 }) // fixed bet for now
+        body: JSON.stringify({ amount: 50 })
     })
     .then(res => res.json())
     .then(data => {
