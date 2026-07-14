@@ -208,7 +208,26 @@ app.get("/api/admin/stats", adminAuth, async (req, res) => {
     res.json({
         users: users[0].count,
         totalBalance: totalBalance[0].sum
-    });
+app.get("/api/admin/active-users", adminAuth, async (req, res) => {
+    const rows = await db("SELECT id, username, balance, current_game, wins, losses FROM users WHERE active = true");
+    res.json(rows);
+
+app.get("/api/admin/game-activity", adminAuth, async (req, res) => {
+    const rows = await db("SELECT username, game, won, lost FROM game_logs ORDER BY id DESC LIMIT 100");
+    res.json(rows);
+app.post("/api/admin/ban/:id", adminAuth, async (req, res) => {
+    const { minutes } = req.body;
+    const until = new Date(Date.now() + minutes * 60000);
+
+    await db("UPDATE users SET banned_until = $1 WHERE id = $2", [until, req.params.id]);
+    res.json({ message: "User banned" });
+
+app.post("/api/admin/unban/:id", adminAuth, async (req, res) => {
+    await db("UPDATE users SET banned_until = NULL WHERE id = $1", [req.params.id]);
+    res.json({ message: "User unbanned" });
+});
+
+
 });
 
 // ---------------------------------------------
