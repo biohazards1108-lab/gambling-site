@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lucky 13 – Blackjack</title>
+<title>Lucky 13 – Multiplayer Blackjack</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
     body {
         margin: 0;
@@ -17,7 +18,7 @@
     .overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0,0,0,0.55);
         z-index: -1;
     }
 
@@ -100,11 +101,11 @@
     }
 
     /* Seat positions around the table */
-    .seat-0 { top: 320px; left: 50%; transform: translateX(-50%); }      /* bottom center (you) */
-    .seat-1 { top: 280px; left: 200px; }                                 /* bottom-left */
-    .seat-2 { top: 280px; right: 200px; }                                /* bottom-right */
-    .seat-3 { top: 180px; left: 120px; }                                 /* mid-left */
-    .seat-4 { top: 180px; right: 120px; }                                /* mid-right */
+    .seat-0 { top: 320px; left: 50%; transform: translateX(-50%); }
+    .seat-1 { top: 280px; left: 200px; }
+    .seat-2 { top: 280px; right: 200px; }
+    .seat-3 { top: 180px; left: 120px; }
+    .seat-4 { top: 180px; right: 120px; }
 
     .controls {
         text-align: center;
@@ -133,11 +134,100 @@
         text-align: center;
         text-shadow: 0 0 10px #f2d57c;
     }
+
+    /* Chat */
+    .chat-box {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 260px;
+        background: rgba(0,0,0,0.75);
+        border: 2px solid #f2d57c;
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 0 20px rgba(242,213,124,0.4);
+    }
+
+    .chat-messages {
+        height: 180px;
+        overflow-y: auto;
+        background: rgba(20,20,20,0.8);
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .chat-input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 8px;
+        border: none;
+        background: #111;
+        color: #f2d57c;
+    }
 </style>
-
-
 </head>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<body>
+<div class="overlay"></div>
+
+<h1>Lucky 13 Multiplayer Blackjack</h1>
+<div id="balance">Balance: loading...</div>
+
+<div class="table-wrapper">
+    <div class="table">
+
+        <div class="dealer-area">
+            <div>Dealer</div>
+            <div class="hand" id="dealerHand"></div>
+        </div>
+
+        <!-- Seats -->
+        <div class="seat seat-0">
+            <div class="name" id="seat-0-name">You</div>
+            <div class="hand" id="seat-0-hand"></div>
+        </div>
+
+        <div class="seat seat-1">
+            <div class="name" id="seat-1-name"></div>
+            <div class="hand" id="seat-1-hand"></div>
+        </div>
+
+        <div class="seat seat-2">
+            <div class="name" id="seat-2-name"></div>
+            <div class="hand" id="seat-2-hand"></div>
+        </div>
+
+        <div class="seat seat-3">
+            <div class="name" id="seat-3-name"></div>
+            <div class="hand" id="seat-3-hand"></div>
+        </div>
+
+        <div class="seat seat-4">
+            <div class="name" id="seat-4-name"></div>
+            <div class="hand" id="seat-4-hand"></div>
+        </div>
+
+    </div>
+</div>
+
+<div class="controls">
+    <button onclick="startGame()">New Game</button>
+    <button onclick="playerHit()">Hit</button>
+    <button onclick="playerStand()">Stand</button>
+</div>
+
+<div id="message"></div>
+
+<!-- Chat -->
+<div class="chat-box">
+    <div class="chat-messages" id="chatMessages"></div>
+    <input class="chat-input" id="chatInput" placeholder="Type message..." onkeydown="sendChat(event)">
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
 <script>
 const API = "https://gambling-site-production.up.railway.app";
@@ -146,60 +236,68 @@ const socket = io(API, { transports: ["websocket"] });
 const roomId = "main-table";
 const username = localStorage.getItem("username") || "Player" + Math.floor(Math.random()*999);
 
-// Join multiplayer room
+// Join room
 socket.emit("joinRoom", { roomId, username });
 
-// Receive room updates
+// Update room
 socket.on("roomUpdate", room => {
     renderRoom(room);
 });
 
-// Receive chat messages
+// Chat
 socket.on("chatMessage", ({ username, message }) => {
     const box = document.getElementById("chatMessages");
     box.innerHTML += `<div><strong>${username}:</strong> ${message}</div>`;
     box.scrollTop = box.scrollHeight;
 });
 
-// Send chat
 function sendChat(e) {
     if (e.key !== "Enter") return;
     const input = document.getElementById("chatInput");
     const msg = input.value.trim();
     if (!msg) return;
-
     socket.emit("chat", { roomId, message: msg, username });
     input.value = "";
 }
 
-// Render dealer + player hands
-function renderRoom(room) {
-    const dealerDiv = document.getElementById("dealerHand");
-    const playerDiv = document.getElementById("playerHand");
-
-    dealerDiv.innerHTML = "";
-    playerDiv.innerHTML = "";
-
-    // Dealer cards
-    room.dealer.forEach(card => {
-        dealerDiv.innerHTML += `<div class="card" style="background-image:url('https://deckofcardsapi.com/static/img/${card.value}${card.suit}.png')"></div>`;
-    });
-
-    // Your cards
-    const me = room.players.find(p => p.id === socket.id);
-    if (!me) return;
-
-    me.hand.forEach(card => {
-        playerDiv.innerHTML += `<div class="card" style="background-image:url('https://deckofcardsapi.com/static/img/${card.value}${card.suit}.png')"></div>`;
-    });
-
-    // Game state message
-    if (room.state === "finished") {
-        document.getElementById("message").innerText = "Round finished";
-    }
+// Render table
+function cardImage(card) {
+    return `https://deckofcardsapi.com/static/img/${card.value}${card.suit}.png`;
 }
 
-// Buttons → multiplayer actions
+function renderRoom(room) {
+    // Dealer
+    const dealerDiv = document.getElementById("dealerHand");
+    dealerDiv.innerHTML = "";
+    room.dealer.forEach(card => {
+        dealerDiv.innerHTML += `<div class="card" style="background-image:url('${cardImage(card)}')"></div>`;
+    });
+
+    // Clear seats
+    for (let i = 0; i < 5; i++) {
+        document.getElementById(`seat-${i}-name`).innerText = "";
+        document.getElementById(`seat-${i}-hand`).innerHTML = "";
+    }
+
+    // Render players
+    room.players.forEach(p => {
+        const nameEl = document.getElementById(`seat-${p.seat}-name`);
+        const handEl = document.getElementById(`seat-${p.seat}-hand`);
+        if (!nameEl || !handEl) return;
+
+        nameEl.innerText = p.username;
+        handEl.innerHTML = "";
+        p.hand.forEach(card => {
+            handEl.innerHTML += `<div class="card" style="background-image:url('${cardImage(card)}')"></div>`;
+        });
+    });
+
+    // State message
+    document.getElementById("message").innerText =
+        room.state === "finished" ? "Round finished" : "";
+}
+
+// Buttons
 function startGame() {
     socket.emit("startGame", roomId);
 }
@@ -210,183 +308,6 @@ function playerHit() {
 
 function playerStand() {
     socket.emit("stand", roomId);
-}
-</script>
-
-<body>
-
-<h1>Lucky 13 Blackjack</h1>
-<div id="balance">Balance: loading...</div>
-
-<div class="board">
-    <h2>Dealer</h2>
-    <div class="hand" id="dealerHand"></div>
-
-    <h2>You</h2>
-    <div class="hand" id="playerHand"></div>
-</div>
-
-<div class="controls">
-    <button id="hitBtn" onclick="playerHit()">Hit</button>
-    <button id="standBtn" onclick="playerStand()">Stand</button>
-    <button onclick="startGame()">New Game</button>
-</div>
-
-<div id="message"></div>
-
-<script>
-const API = "https://gambling-site-production.up.railway.app";
-let deck = [];
-let player = [];
-let dealer = [];
-let gameOver = false;
-
-// Load balance
-(async () => {
-    const token = localStorage.getItem("token");
-    const el = document.getElementById("balance");
-
-    if (!token) {
-        el.textContent = "Balance: login required";
-        return;
-    }
-
-    try {
-        const res = await fetch(API + "/api/balance", {
-            headers: { "Authorization": token }
-        });
-        const data = await res.json();
-        el.textContent = "Balance: " + data.balance;
-    } catch {
-        el.textContent = "Balance: error";
-    }
-})();
-
-// Create deck
-function createDeck() {
-    const suits = ["♠", "♥", "♦", "♣"];
-    const values = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
-    deck = [];
-
-    for (let s of suits) {
-        for (let v of values) {
-            deck.push({ value: v, suit: s });
-        }
-    }
-
-    deck.sort(() => Math.random() - 0.5);
-}
-
-// Draw card
-function drawCard() {
-    return deck.pop();
-}
-
-// Calculate hand value
-function handValue(hand) {
-    let total = 0;
-    let aces = 0;
-
-    hand.forEach(card => {
-        if (card.value === "A") {
-            aces++;
-            total += 11;
-        } else if (["K","Q","J"].includes(card.value)) {
-            total += 10;
-        } else {
-            total += parseInt(card.value);
-        }
-    });
-
-    while (total > 21 && aces > 0) {
-        total -= 10;
-        aces--;
-    }
-
-    return total;
-}
-
-// Render hands
-function renderHands() {
-    const dealerDiv = document.getElementById("dealerHand");
-    const playerDiv = document.getElementById("playerHand");
-
-    dealerDiv.innerHTML = "";
-    playerDiv.innerHTML = "";
-
-    dealer.forEach(card => {
-        dealerDiv.innerHTML += `<div class="card">${card.value}${card.suit}</div>`;
-    });
-
-    player.forEach(card => {
-        playerDiv.innerHTML += `<div class="card">${card.value}${card.suit}</div>`;
-    });
-}
-
-// Start game
-function startGame() {
-    gameOver = false;
-    document.getElementById("message").innerText = "";
-    document.getElementById("hitBtn").disabled = false;
-    document.getElementById("standBtn").disabled = false;
-
-    createDeck();
-
-    player = [drawCard(), drawCard()];
-    dealer = [drawCard(), drawCard()];
-
-    renderHands();
-
-    if (handValue(player) === 21) {
-        endGame("Blackjack! You win!");
-    }
-}
-
-// Hit
-function playerHit() {
-    if (gameOver) return;
-
-    player.push(drawCard());
-    renderHands();
-
-    const total = handValue(player);
-
-    if (total > 21) {
-        endGame("Bust! You lose.");
-    } else if (total === 21) {
-        playerStand();
-    }
-}
-
-// Stand
-function playerStand() {
-    if (gameOver) return;
-
-    while (handValue(dealer) < 17) {
-        dealer.push(drawCard());
-    }
-
-    renderHands();
-    determineWinner();
-}
-
-// Determine winner
-function determineWinner() {
-    const p = handValue(player);
-    const d = handValue(dealer);
-
-    if (d > 21) endGame("Dealer busts! You win!");
-    else if (p > d) endGame("You win!");
-    else if (p < d) endGame("Dealer wins!");
-    else endGame("Push!");
-}
-
-// End game
-function endGame(msg) {
-    gameOver = true;
-    document.getElementById("message").innerText = msg;
-    document.getElementById("hitBtn").disabled = true;
-    document.getElementById("standBtn").disabled = true;
 }
 </script>
 
