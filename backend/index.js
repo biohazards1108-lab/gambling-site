@@ -290,29 +290,35 @@ function handValue(hand) {
     return total;
 }
 
-io.on("connection", socket => {
-    console.log("Socket connected:", socket.id);
+socket.on("joinRoom", ({ roomId, username }) => {
+    if (!rooms[roomId]) {
+        rooms[roomId] = {
+            deck: createDeck(),
+            dealer: [],
+            players: [],
+            state: "waiting"
+        };
+    }
 
-    socket.on("joinRoom", ({ roomId, username }) => {
-        if (!rooms[roomId]) {
-            rooms[roomId] = {
-                deck: createDeck(),
-                dealer: [],
-                players: [],
-                state: "waiting"
-            };
-        }
+    const room = rooms[roomId];
 
-        rooms[roomId].players.push({
-            id: socket.id,
-            username,
-            hand: [],
-            done: false
-        });
+    // find first free seat 0–4
+    const usedSeats = room.players.map(p => p.seat);
+    let seat = 0;
+    while (usedSeats.includes(seat) && seat < 5) seat++;
 
-        socket.join(roomId);
-        io.to(roomId).emit("roomUpdate", rooms[roomId]);
+    room.players.push({
+        id: socket.id,
+        username,
+        hand: [],
+        done: false,
+        seat
     });
+
+    socket.join(roomId);
+    io.to(roomId).emit("roomUpdate", room);
+});
+
 
     socket.on("startGame", roomId => {
         const room = rooms[roomId];
