@@ -14,7 +14,7 @@ async function adminLogin() {
 
     if (data.message === "Admin authenticated") {
         localStorage.setItem("adminKey", key);
-        window.location.href = "dashboard.html";
+        window.location.href = "admin-dashboard.html";
     } else {
         alert("Invalid admin key");
     }
