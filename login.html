@@ -2,14 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lucky 13 Login</title>
-</head>
-<body>
-    <h1>Login to Lucky 13 Casino</h1>
+    <title>Lucky 13 Casino – Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <input id="user" type="text" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --panel: #111;
+            --accent: #d4af37;
+            --text: #fff;
+            --muted: #bbb;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%);
+            font-family: system-ui, sans-serif;
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Logo top-right */
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        /* Login panel */
+        .login-box {
+            background: var(--panel);
+            padding: 40px;
+            width: 350px;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+            text-align: center;
+        }
+
+        .login-box h1 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--accent);
+            background: #000;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #000;
+            transition: 0.25s;
+        }
+
+        .login-box button:hover {
+            background: #f7d76a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo">
+        <img src="assets/images/casino-13.png" alt="Lucky 13 Logo">
+    </div>
+
+    <div class="login-box">
+        <h1>Lucky 13 Login</h1>
+
+        <input id="user" type="text" placeholder="Username">
+        <input id="pass" type="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+    </div>
 
     <script src="login.js"></script>
 </body>
