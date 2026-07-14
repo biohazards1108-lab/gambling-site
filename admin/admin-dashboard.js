@@ -13,26 +13,34 @@ async function loadStats() {
 
     const data = await res.json();
 
-    document.getElementById("stats").innerHTML = `
-        <h2>Stats</h2>
-        <p>Total Users: ${data.users}</p>
-        <p>Total Balance: ${data.totalBalance}</p>
-    `;
+    document.getElementById("totalUsers").innerText = data.users;
+    document.getElementById("totalBalance").innerText = data.totalBalance;
+
+    // Placeholder until backend tracks wins/losses
+    document.getElementById("totalWon").innerText = "Coming Soon";
+    document.getElementById("totalLost").innerText = "Coming Soon";
 }
 
 // ----------------------
-// Load Users
+// Load Active Users
 // ----------------------
-async function loadUsers() {
+async function loadActiveUsers() {
     const res = await fetch(`${API}/api/admin/users`, {
         headers: { "x-admin-key": key }
     });
 
     const users = await res.json();
 
-    let html = `<h2>Users</h2><table border="1"><tr>
-        <th>ID</th><th>Username</th><th>Balance</th><th>Actions</th>
-    </tr>`;
+    let html = `
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Balance</th>
+            <th>Game</th>
+            <th>Ban</th>
+            <th>Actions</th>
+        </tr>
+    `;
 
     users.forEach(u => {
         html += `
@@ -40,17 +48,55 @@ async function loadUsers() {
                 <td>${u.id}</td>
                 <td>${u.username}</td>
                 <td>${u.balance}</td>
+                <td>${u.current_game || "None"}</td>
                 <td>
-                    <button onclick="updateBalance(${u.id})">Update Balance</button>
+                    <select onchange="banUser(${u.id}, this.value)">
+                        <option value="">Select</option>
+                        <option value="5">5 mins</option>
+                        <option value="10">10 mins</option>
+                        <option value="20">20 mins</option>
+                        <option value="40">40 mins</option>
+                        <option value="60">1 hour</option>
+                        <option value="9999">Permanent</option>
+                    </select>
+                </td>
+                <td>
+                    <button onclick="updateBalance(${u.id})">Balance</button>
                     <button onclick="unban(${u.id})">Unban</button>
                 </td>
             </tr>
         `;
     });
 
-    html += "</table>";
+    document.getElementById("activeTable").innerHTML = html;
+}
 
-    document.getElementById("users").innerHTML = html;
+// ----------------------
+// Ban User
+// ----------------------
+async function banUser(id, minutes) {
+    await fetch(`${API}/api/admin/ban/${id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": key
+        },
+        body: JSON.stringify({ minutes })
+    });
+
+    loadActiveUsers();
+}
+
+// ----------------------
+// Unban User
+// ----------------------
+async function unban(id) {
+    await fetch(`${API}/api/admin/unban/${id}`, {
+        method: "POST",
+        headers: { "x-admin-key": key }
+    });
+
+    loadActiveUsers();
 }
 
 // ----------------------
@@ -68,19 +114,7 @@ async function updateBalance(id) {
         body: JSON.stringify({ balance: newBalance })
     });
 
-    loadUsers();
-}
-
-// ----------------------
-// Unban User
-// ----------------------
-async function unban(id) {
-    await fetch(`${API}/api/admin/unban/${id}`, {
-        method: "POST",
-        headers: { "x-admin-key": key }
-    });
-
-    loadUsers();
+    loadActiveUsers();
 }
 
 // ----------------------
@@ -93,9 +127,13 @@ async function loadGames() {
 
     const games = await res.json();
 
-    let html = `<h2>Games</h2><table border="1"><tr>
-        <th>Name</th><th>Enabled</th><th>Toggle</th>
-    </tr>`;
+    let html = `
+        <tr>
+            <th>Name</th>
+            <th>Enabled</th>
+            <th>Toggle</th>
+        </tr>
+    `;
 
     games.forEach(g => {
         html += `
@@ -111,9 +149,7 @@ async function loadGames() {
         `;
     });
 
-    html += "</table>";
-
-    document.getElementById("games").innerHTML = html;
+    document.getElementById("gameTable").innerHTML = html;
 }
 
 // ----------------------
@@ -136,5 +172,5 @@ async function toggleGame(name, enabled) {
 // Load Everything
 // ----------------------
 loadStats();
-loadUsers();
+loadActiveUsers();
 loadGames();
