@@ -309,6 +309,67 @@ function playerHit() {
 function playerStand() {
     socket.emit("stand", roomId);
 }
+    <script>
+const API_BASE = "https://gambling-site-production.up.railway.app";
+
+async function loadBalance() {
+    const token = localStorage.getItem("token");
+    const el = document.getElementById("balance");
+
+    if (!el) return;
+
+    if (!token) {
+        el.textContent = "Balance: login required";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/api/balance`, {
+            headers: { "Authorization": token }
+        });
+        const data = await res.json();
+        if (data.balance !== undefined) {
+            el.textContent = "Balance: " + data.balance;
+        } else {
+            el.textContent = "Balance: error";
+        }
+    } catch (e) {
+        el.textContent = "Balance: error";
+    }
+}
+
+async function refill() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Login required");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/api/refill`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            }
+        });
+        const data = await res.json();
+        if (data.balance !== undefined) {
+            document.getElementById("balance").textContent = "Balance: " + data.balance;
+        }
+        if (data.message) {
+            const result = document.getElementById("result");
+            if (result) result.textContent = data.message;
+        }
+    } catch {
+        const result = document.getElementById("result");
+        if (result) result.textContent = "Refill error";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadBalance);
+</script>
+
 </script>
 
 </body>
