@@ -252,14 +252,13 @@ function handValue(hand) {
     while (total > 21 && aces > 0) { total -= 10; aces--; }
     return total;
 }
-
 io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
 
     socket.on("joinRoom", ({ roomId, username }) => {
         if (!rooms[roomId]) {
             rooms[roomId] = {
-                deck: createDeck(),
+                deck: [],
                 dealer: [],
                 players: [],
                 state: "waiting"
@@ -267,6 +266,8 @@ io.on("connection", (socket) => {
         }
 
         const room = rooms[roomId];
+
+        // assign seat
         const usedSeats = room.players.map(p => p.seat);
         let seat = 0;
         while (usedSeats.includes(seat)) seat++;
@@ -275,6 +276,8 @@ io.on("connection", (socket) => {
             id: socket.id,
             username,
             hand: [],
+            bet: 0,
+            ready: false,
             done: false,
             seat
         });
@@ -283,44 +286,67 @@ io.on("connection", (socket) => {
         io.to(roomId).emit("roomUpdate", room);
     });
 
-    socket.on("startGame", (roomId) => {
-        const room = rooms[roomId];
-        if (!room) return;
-
-        room.deck = createDeck();
-        room.dealer = [room.deck.pop(), room.deck.pop()];
-        room.players.forEach(p => {
-            p.hand = [room.deck.pop(), room.deck.pop()];
-            p.done = false;
-        });
-        room.state = "playing";
-
-        io.to(roomId).emit("roomUpdate", room);
-    });
-
-    socket.on("hit", (roomId) => {
-        const room = rooms[roomId];
-        if (!room) return;
-
-        const player = room.players.find(p => p.id === socket.id);
-        if (!player || player.done) return;
-
-        player.hand.push(room.deck.pop());
-
-        if (handValue(player.hand) > 21) player.done = true;
-
-        io.to(roomId).emit("roomUpdate", room);
-    });
-
-    socket.on("stand", (roomId) => {
+    // Player places bet
+    socket.on("placeBet", ({ roomId, amount }) => {
         const room = rooms[roomId];
         if (!room) return;
 
         const player = room.players.find(p => p.id === socket.id);
         if (!player) return;
 
+        player.bet = amount;
+        player.ready = true;
+
+        // Check if all players are ready
+        if (room.players.length > 0 && room.players.every(p => p.ready)) {
+            startBlackjack(roomId);
+        }
+
+        io.to(roomId).emit("roomUpdate", room);
+    });
+
+    function startBlackjack(roomId) {
+        const room = rooms[roomId];
+        if (!room) return;
+
+        room.deck = createDeck();
+        room.dealer = [room.deck.pop(), room.deck.pop()];
+        room.state = "playing";
+
+        room.players.forEach(p => {
+            p.hand = [room.deck.pop(), room.deck.pop()];
+            p.done = false;
+        });
+
+        io.to(roomId).emit("roomUpdate", room);
+    }
+
+    socket.on("hit", (roomId) => {
+        const room = rooms[roomId];
+        if (!room || room.state !== "playing") return;
+
+        const player = room.players.find(p => p.id === socket.id);
+        if (!player || player.done) return;
+
+        player.hand.push(room.deck.pop());
+
+        if (handValue(player.hand) > 21) {
+            player.done = true;
+        }
+
+        io.to(roomId).emit("roomUpdate", room);
+    });
+
+    socket.on("stand", (roomId) => {
+        const room = rooms[roomId];
+        if (!room || room.state !== "playing") return;
+
+        const player = room.players.find(p => p.id === socket.id);
+        if (!player) return;
+
         player.done = true;
 
+        // Dealer plays when all players are done
         if (room.players.every(p => p.done)) {
             while (handValue(room.dealer) < 17) {
                 room.dealer.push(room.deck.pop());
@@ -331,10 +357,6 @@ io.on("connection", (socket) => {
         io.to(roomId).emit("roomUpdate", room);
     });
 
-    socket.on("chat", ({ roomId, message, username }) => {
-        io.to(roomId).emit("chatMessage", { username, message });
-    });
-
     socket.on("disconnect", () => {
         for (const roomId in rooms) {
             rooms[roomId].players = rooms[roomId].players.filter(p => p.id !== socket.id);
@@ -343,6 +365,7 @@ io.on("connection", (socket) => {
         console.log("Socket disconnected:", socket.id);
     });
 });
+
 
 // ---------------------------------------------
 // START SERVER
