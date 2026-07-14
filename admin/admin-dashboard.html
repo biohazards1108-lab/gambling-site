@@ -1,16 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Lucky 13 – Admin Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --bg: #000;
+            --panel: #0d0d0d;
+            --accent: #d4af37;
+            --accent-glow: rgba(212, 175, 55, 0.45);
+            --text: #fff;
+            --muted: #888;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%);
+            font-family: system-ui, sans-serif;
+            color: var(--text);
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .logo img {
+            width: 180px;
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .panel {
+            flex: 1;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+
+        .panel h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            border: 1px solid var(--accent);
+            padding: 8px;
+            text-align: center;
+        }
+
+        button {
+            padding: 6px 12px;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #000;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #f7d76a;
+        }
+
+        select {
+            padding: 6px;
+            background: #000;
+            color: var(--text);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Admin Dashboard</h1>
+    <div class="logo">
+        <img src="../assets/images/casino-13.png" alt="Lucky 13 Logo">
+    </div>
 
-    <div id="stats"></div>
-    <div id="users"></div>
-    <div id="games"></div>
+    <div class="container">
+
+        <!-- Stats -->
+        <div class="panel" id="statsPanel">
+            <h2>Casino Stats</h2>
+            <p>Total Users: <span id="totalUsers">Loading...</span></p>
+            <p>Total Balance: <span id="totalBalance">Loading...</span></p>
+            <p>Total Won: <span id="totalWon">Loading...</span></p>
+            <p>Total Lost: <span id="totalLost">Loading...</span></p>
+        </div>
+
+        <!-- Active Users -->
+        <div class="panel" id="activePanel">
+            <h2>Active Users</h2>
+            <table id="activeTable"></table>
+        </div>
+
+        <!-- Games -->
+        <div class="panel" id="gamesPanel">
+            <h2>Games</h2>
+            <table id="gameTable"></table>
+        </div>
+
+    </div>
 
     <script src="admin-dashboard.js"></script>
 </body>
