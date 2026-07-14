@@ -170,7 +170,8 @@
 
 <script>
 const API_BASE = "https://gambling-site-production.up.railway.app";
-const token = localStorage.getItem("token");
+const token = localStorage.setItem("token", data.token);
+
 
 /* Falling coins */
 function spawnCoin() {
@@ -194,21 +195,30 @@ const symbols = [
 
 /* Load balance */
 async function loadBalance() {
+    const token = getToken();
     const el = document.getElementById("balance");
+
     if (!token) {
         el.textContent = "Balance: login required";
         return;
     }
+
     try {
         const res = await fetch(`${API_BASE}/api/balance`, {
             headers: { "Authorization": token }
         });
         const data = await res.json();
-        el.textContent = "Balance: " + (data.balance ?? "error");
+
+        if (data.balance !== undefined) {
+            el.textContent = "Balance: " + data.balance;
+        } else {
+            el.textContent = "Balance: error";
+        }
     } catch {
         el.textContent = "Balance: error";
     }
 }
+
 document.addEventListener("DOMContentLoaded", loadBalance);
 
 /* Refill */
