@@ -14,7 +14,7 @@ async function login() {
 
     if (data.token) {
         localStorage.setItem("userToken", data.token);
-        window.location.href = "games.html";   // <--- FIXED REDIRECT
+        window.location.href = "game/index.html";   // <--- FIXED REDIRECT
     } else {
         alert(data.error || "Login failed");
     }
