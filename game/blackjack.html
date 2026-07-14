@@ -84,6 +84,82 @@
     }
 </style>
 </head>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script>
+const API = "https://gambling-site-production.up.railway.app";
+const socket = io(API, { transports: ["websocket"] });
+
+const roomId = "main-table";
+const username = localStorage.getItem("username") || "Player" + Math.floor(Math.random()*999);
+
+// Join multiplayer room
+socket.emit("joinRoom", { roomId, username });
+
+// Receive room updates
+socket.on("roomUpdate", room => {
+    renderRoom(room);
+});
+
+// Receive chat messages
+socket.on("chatMessage", ({ username, message }) => {
+    const box = document.getElementById("chatMessages");
+    box.innerHTML += `<div><strong>${username}:</strong> ${message}</div>`;
+    box.scrollTop = box.scrollHeight;
+});
+
+// Send chat
+function sendChat(e) {
+    if (e.key !== "Enter") return;
+    const input = document.getElementById("chatInput");
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    socket.emit("chat", { roomId, message: msg, username });
+    input.value = "";
+}
+
+// Render dealer + player hands
+function renderRoom(room) {
+    const dealerDiv = document.getElementById("dealerHand");
+    const playerDiv = document.getElementById("playerHand");
+
+    dealerDiv.innerHTML = "";
+    playerDiv.innerHTML = "";
+
+    // Dealer cards
+    room.dealer.forEach(card => {
+        dealerDiv.innerHTML += `<div class="card" style="background-image:url('https://deckofcardsapi.com/static/img/${card.value}${card.suit}.png')"></div>`;
+    });
+
+    // Your cards
+    const me = room.players.find(p => p.id === socket.id);
+    if (!me) return;
+
+    me.hand.forEach(card => {
+        playerDiv.innerHTML += `<div class="card" style="background-image:url('https://deckofcardsapi.com/static/img/${card.value}${card.suit}.png')"></div>`;
+    });
+
+    // Game state message
+    if (room.state === "finished") {
+        document.getElementById("message").innerText = "Round finished";
+    }
+}
+
+// Buttons → multiplayer actions
+function startGame() {
+    socket.emit("startGame", roomId);
+}
+
+function playerHit() {
+    socket.emit("hit", roomId);
+}
+
+function playerStand() {
+    socket.emit("stand", roomId);
+}
+</script>
+
 <body>
 
 <h1>Lucky 13 Blackjack</h1>
