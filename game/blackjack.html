@@ -1,252 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Lucky 13 Casino – Blackjack</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Lucky 13 – Blackjack</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --panel: #111;
-            --accent: #d4af37;
-            --text: #fff;
-            --muted: #bbb;
-        }
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%);
+        font-family: Arial, sans-serif;
+        color: #f2d57c;
+        text-align: center;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at top, #1a1a1a 0%, #000 70%);
-            font-family: system-ui, sans-serif;
-            color: var(--text);
-            text-align: center;
-        }
+    h1 {
+        margin-top: 25px;
+        font-size: 42px;
+        text-shadow: 0 0 20px #f2d57c;
+    }
 
-        /* Logo */
-        .logo {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
+    #balance {
+        margin-top: 10px;
+        font-size: 20px;
+        background: rgba(20,20,20,0.9);
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid #f2d57c;
+    }
 
-        .logo img {
-            width: 120px;
-        }
+    .board {
+        margin-top: 40px;
+    }
 
-        /* Balance + Back */
-        .top-bar {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
+    .hand {
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
 
-        .back {
-            margin-left: 20px;
-            color: var(--muted);
-            cursor: pointer;
-        }
+    .card {
+        width: 90px;
+        height: 130px;
+        background: #fff;
+        border-radius: 10px;
+        border: 2px solid #f2d57c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        font-weight: bold;
+        color: #000;
+        box-shadow: 0 0 15px rgba(242,213,124,0.4);
+    }
 
-        /* Game Table */
-        .table {
-            margin-top: 120px;
-        }
+    .controls {
+        margin-top: 25px;
+    }
 
-        .hand {
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    button {
+        padding: 12px 30px;
+        font-size: 20px;
+        background: #f2d57c;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
+        color: #000;
+    }
 
-        .hand img {
-            width: 100px;
-            border-radius: 6px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
+    button:hover {
+        background: #c9b15f;
+    }
 
-        /* Buttons */
-        .controls {
-            margin-top: 30px;
-        }
-
-        .controls button {
-            padding: 12px 28px;
-            margin: 10px;
-            background: var(--accent);
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: #000;
-            transition: 0.25s;
-        }
-
-        .controls button:hover {
-            background: #f7d76a;
-        }
-
-        /* Result */
-        #result {
-            margin-top: 20px;
-            font-size: 1.4rem;
-            color: var(--accent);
-        }
-    </style>
+    #message {
+        margin-top: 20px;
+        font-size: 26px;
+        text-shadow: 0 0 10px #f2d57c;
+    }
+</style>
 </head>
-
 <body>
 
-    <div class="logo">
-        <img src="../assets/images/casino-13.png" alt="Lucky 13 Logo">
-    </div>
+<h1>Lucky 13 Blackjack</h1>
+<div id="balance">Balance: loading...</div>
 
-    <div class="top-bar">
-        Balance: <span id="balance">Loading...</span>
-        <span class="back" onclick="window.location.href='index.html'">Back</span>
-    </div>
+<div class="board">
+    <h2>Dealer</h2>
+    <div class="hand" id="dealerHand"></div>
 
-    <div class="table">
-        <h1>Blackjack</h1>
+    <h2>You</h2>
+    <div class="hand" id="playerHand"></div>
+</div>
 
-        <h2>Dealer</h2>
-        <div id="dealer-hand" class="hand"></div>
+<div class="controls">
+    <button id="hitBtn" onclick="playerHit()">Hit</button>
+    <button id="standBtn" onclick="playerStand()">Stand</button>
+    <button onclick="startGame()">New Game</button>
+</div>
 
-        <h2>You</h2>
-        <div id="player-hand" class="hand"></div>
+<div id="message"></div>
 
-        <div class="controls">
-            <button onclick="hit()">Hit</button>
-            <button onclick="stand()">Stand</button>
-            <button onclick="startGame()">Restart</button>
-        </div>
+<script>
+const API = "https://gambling-site-production.up.railway.app";
+let deck = [];
+let player = [];
+let dealer = [];
+let gameOver = false;
 
-        <div id="result"></div>
-    </div>
+// Load balance
+(async () => {
+    const token = localStorage.getItem("token");
+    const el = document.getElementById("balance");
 
-    <script>
-        const API = "https://gambling-site-production.up.railway.app";
+    if (!token) {
+        el.textContent = "Balance: login required";
+        return;
+    }
 
-        // -------------------------------
-        // AUTH + BALANCE
-        // -------------------------------
-        async function loadBalance() {
-            const token = localStorage.getItem("userToken");
-            if (!token) return window.location.href = "../login.html";
+    try {
+        const res = await fetch(API + "/api/balance", {
+            headers: { "Authorization": token }
+        });
+        const data = await res.json();
+        el.textContent = "Balance: " + data.balance;
+    } catch {
+        el.textContent = "Balance: error";
+    }
+})();
 
-            const res = await fetch(`${API}/api/balance`, {
-                headers: { "Authorization": token }
-            });
+// Create deck
+function createDeck() {
+    const suits = ["♠", "♥", "♦", "♣"];
+    const values = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+    deck = [];
 
-            const data = await res.json();
-            document.getElementById("balance").innerText = data.balance ?? "error";
+    for (let s of suits) {
+        for (let v of values) {
+            deck.push({ value: v, suit: s });
         }
+    }
 
-        loadBalance();
+    deck.sort(() => Math.random() - 0.5);
+}
 
-        // -------------------------------
-        // CARD SYSTEM (CDN images)
-        // -------------------------------
-        const suits = ["S", "H", "D", "C"];
-        const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "Q", "K"];
+// Draw card
+function drawCard() {
+    return deck.pop();
+}
 
-        function drawCard() {
-            const suit = suits[Math.floor(Math.random() * suits.length)];
-            const rank = ranks[Math.floor(Math.random() * ranks.length)];
-            return rank + suit;
+// Calculate hand value
+function handValue(hand) {
+    let total = 0;
+    let aces = 0;
+
+    hand.forEach(card => {
+        if (card.value === "A") {
+            aces++;
+            total += 11;
+        } else if (["K","Q","J"].includes(card.value)) {
+            total += 10;
+        } else {
+            total += parseInt(card.value);
         }
+    });
 
-        function getCardImage(code) {
-            return `https://deckofcardsapi.com/static/img/${code}.png`;
-        }
+    while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
+    }
 
-        function cardValue(code) {
-            const rank = code[0];
-            if (rank === "A") return 11;
-            if (rank === "K" || rank === "Q" || rank === "J" || rank === "0") return 10;
-            return parseInt(rank);
-        }
+    return total;
+}
 
-        // -------------------------------
-        // GAME LOGIC
-        // -------------------------------
-        let dealer = [];
-        let player = [];
+// Render hands
+function renderHands() {
+    const dealerDiv = document.getElementById("dealerHand");
+    const playerDiv = document.getElementById("playerHand");
 
-        function startGame() {
-            dealer = [drawCard(), drawCard()];
-            player = [drawCard(), drawCard()];
+    dealerDiv.innerHTML = "";
+    playerDiv.innerHTML = "";
 
-            renderHands();
-            document.getElementById("result").innerText = "";
-        }
+    dealer.forEach(card => {
+        dealerDiv.innerHTML += `<div class="card">${card.value}${card.suit}</div>`;
+    });
 
-        function renderHands() {
-            const dealerDiv = document.getElementById("dealer-hand");
-            const playerDiv = document.getElementById("player-hand");
+    player.forEach(card => {
+        playerDiv.innerHTML += `<div class="card">${card.value}${card.suit}</div>`;
+    });
+}
 
-            dealerDiv.innerHTML = "";
-            playerDiv.innerHTML = "";
+// Start game
+function startGame() {
+    gameOver = false;
+    document.getElementById("message").innerText = "";
+    document.getElementById("hitBtn").disabled = false;
+    document.getElementById("standBtn").disabled = false;
 
-            dealer.forEach(card => {
-                dealerDiv.innerHTML += `<img src="${getCardImage(card)}">`;
-            });
+    createDeck();
 
-            player.forEach(card => {
-                playerDiv.innerHTML += `<img src="${getCardImage(card)}">`;
-            });
-        }
+    player = [drawCard(), drawCard()];
+    dealer = [drawCard(), drawCard()];
 
-        function handValue(hand) {
-            let total = 0;
-            let aces = 0;
+    renderHands();
 
-            hand.forEach(card => {
-                total += cardValue(card);
-                if (card[0] === "A") aces++;
-            });
+    if (handValue(player) === 21) {
+        endGame("Blackjack! You win!");
+    }
+}
 
-            while (total > 21 && aces > 0) {
-                total -= 10;
-                aces--;
-            }
+// Hit
+function playerHit() {
+    if (gameOver) return;
 
-            return total;
-        }
+    player.push(drawCard());
+    renderHands();
 
-        function hit() {
-            player.push(drawCard());
-            renderHands();
+    const total = handValue(player);
 
-            if (handValue(player) > 21) {
-                document.getElementById("result").innerText = "Bust! You lose.";
-            }
-        }
+    if (total > 21) {
+        endGame("Bust! You lose.");
+    } else if (total === 21) {
+        playerStand();
+    }
+}
 
-        function stand() {
-            while (handValue(dealer) < 17) {
-                dealer.push(drawCard());
-            }
+// Stand
+function playerStand() {
+    if (gameOver) return;
 
-            renderHands();
+    while (handValue(dealer) < 17) {
+        dealer.push(drawCard());
+    }
 
-            const p = handValue(player);
-            const d = handValue(dealer);
+    renderHands();
+    determineWinner();
+}
 
-            if (d > 21 || p > d) {
-                document.getElementById("result").innerText = "You win!";
-            } else if (p === d) {
-                document.getElementById("result").innerText = "Push!";
-            } else {
-                document.getElementById("result").innerText = "Dealer wins.";
-            }
-        }
+// Determine winner
+function determineWinner() {
+    const p = handValue(player);
+    const d = handValue(dealer);
 
-        startGame();
-    </script>
+    if (d > 21) endGame("Dealer busts! You win!");
+    else if (p > d) endGame("You win!");
+    else if (p < d) endGame("Dealer wins!");
+    else endGame("Push!");
+}
+
+// End game
+function endGame(msg) {
+    gameOver = true;
+    document.getElementById("message").innerText = msg;
+    document.getElementById("hitBtn").disabled = true;
+    document.getElementById("standBtn").disabled = true;
+}
+</script>
 
 </body>
 </html>
