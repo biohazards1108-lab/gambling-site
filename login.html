@@ -26,7 +26,6 @@
             align-items: center;
         }
 
-        /* Logo top-right */
         .logo {
             position: absolute;
             top: 20px;
@@ -35,10 +34,8 @@
 
         .logo img {
             width: 120px;
-            height: auto;
         }
 
-        /* Login panel */
         .login-box {
             background: var(--panel);
             padding: 40px;
@@ -84,6 +81,13 @@
         .login-box button:hover {
             background: #f7d76a;
         }
+
+        .error {
+            color: #ff4d4d;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
     </style>
 </head>
 
@@ -100,6 +104,8 @@
         <input id="pass" type="password" placeholder="Password">
 
         <button onclick="login()">Login</button>
+
+        <div class="error" id="error"></div>
     </div>
 
     <script src="login.js"></script>
