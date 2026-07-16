@@ -3,6 +3,13 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import pkg from "pg";
+import cors from "cors";
+
+app.use(cors({
+    origin: "https://biohazards1108-lab.github.io",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
+}));
 
 const { Pool } = pkg;
 
