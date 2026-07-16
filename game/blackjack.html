@@ -1,406 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Lucky 13 – Multiplayer Blackjack</title>
-    <link rel="stylesheet" href="../assets/css/game.css">
-    <style>
-        body {
-            background: radial-gradient(circle at top, #0b3b0b, #020202);
-            color: #fff;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .table-wrapper {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(0, 0, 0, 0.7);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .header-left h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-        .header-left p {
-            margin: 4px 0 0;
-            font-size: 14px;
-            color: #ccc;
-        }
-        .header-right {
-            text-align: right;
-        }
-        .header-right div {
-            margin-bottom: 4px;
-        }
-        .balance {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .seat-list {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .seat {
-            flex: 1 1 150px;
-            padding: 10px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            text-align: center;
-        }
-        .seat.occupied {
-            background: rgba(255, 255, 255, 0.12);
-            cursor: default;
-        }
-        .seat.you {
-            border-color: #ffd700;
-            box-shadow: 0 0 10px #ffd700;
-        }
-        .seat span {
-            display: block;
-            font-size: 13px;
-            color: #ccc;
-        }
-        .seat strong {
-            display: block;
-            margin-top: 4px;
-        }
-        .table-area {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-        }
-        .hand {
-            padding: 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 160px;
-        }
-        .hand h2 {
-            margin: 0 0 8px;
-            font-size: 18px;
-        }
-        .hand-info {
-            font-size: 13px;
-            color: #ccc;
-            margin-bottom: 8px;
-        }
-        .cards {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .card {
-            width: 70px;
-            height: 100px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-        }
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .controls {
-            padding: 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .controls h2 {
-            margin: 0 0 10px;
-            font-size: 18px;
-        }
-        .bet-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .bet-row input {
-            width: 100px;
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: none;
-            outline: none;
-        }
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .btn-primary {
-            background: #ffd700;
-            color: #000;
-        }
-        .btn-secondary {
-            background: #444;
-            color: #fff;
-        }
-        .btn-danger {
-            background: #c0392b;
-            color: #fff;
-        }
-        .status {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #ccc;
-            min-height: 18px;
-        }
-        .log {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #aaa;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-        .log div {
-            margin-bottom: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Lucky 13 – Blackjack</title>
+<link rel="stylesheet" href="../assets/css/game.css">
+
+<style>
+    body {
+        margin: 0;
+        background: #0b0f19;
+        font-family: 'Segoe UI', sans-serif;
+        color: #fff;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background: #111827;
+        border-bottom: 2px solid #1f2937;
+    }
+
+    .topbar h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    .player-info {
+        text-align: right;
+    }
+
+    .player-info div {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .balance {
+        font-size: 18px;
+        font-weight: bold;
+        color: #22c55e;
+    }
+
+    .table {
+        max-width: 1200px;
+        margin: 40px auto;
+        background: radial-gradient(circle at center, #1e293b, #0f172a);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+
+    .dealer-area, .player-area {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .cards {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 90px;
+        height: 130px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        transition: transform .2s ease;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .controls {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    button {
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+
+    .btn-primary {
+        background: #22c55e;
+        color: #000;
+    }
+
+    .btn-primary:hover {
+        background: #16a34a;
+    }
+
+    .btn-secondary {
+        background: #374151;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+
+    .btn-danger {
+        background: #dc2626;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background: #b91c1c;
+    }
+
+    .status {
+        margin-top: 20px;
+        font-size: 16px;
+        min-height: 24px;
+        color: #cbd5e1;
+    }
+
+    .seat-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .seat {
+        flex: 1;
+        padding: 12px;
+        background: #1f2937;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border .2s ease;
+    }
+
+    .seat:hover {
+        border-color: #22c55e;
+    }
+
+    .seat.occupied {
+        background: #374151;
+        cursor: default;
+    }
+
+    .seat.you {
+        border-color: #22c55e;
+        box-shadow: 0 0 10px #22c55e;
+    }
+
+</style>
 </head>
+
 <body>
-    <div class="table-wrapper">
-        <div class="header">
-            <div class="header-left">
-                <h1>Lucky 13 – Multiplayer Blackjack</h1>
-                <p>Join a seat, place your bet, and play against the dealer in real time.</p>
-            </div>
-            <div class="header-right">
-                <div>Player: <span id="usernameDisplay">...</span></div>
-                <div class="balance">Balance: <span id="balanceDisplay">0</span> tokens</div>
-            </div>
-        </div>
 
-        <!-- Seats -->
-        <div class="seat-list" id="seatList">
-            <!-- Filled dynamically: Seat 1–5 -->
-        </div>
+<div class="topbar">
+    <h1>Lucky 13 – Blackjack</h1>
+    <div class="player-info">
+        <div>Player: <span id="usernameDisplay">...</span></div>
+        <div class="balance">Balance: <span id="balanceDisplay">0</span></div>
+    </div>
+</div>
 
-        <div class="table-area">
-            <!-- Dealer hand -->
-            <div class="hand">
-                <h2>Dealer</h2>
-                <div class="hand-info">Total: <span id="dealerTotal">0</span></div>
-                <div class="cards" id="dealerCards"></div>
-            </div>
+<div class="table">
 
-            <!-- Your hand + controls -->
-            <div class="controls">
-                <h2>Your Actions</h2>
-                <div class="bet-row">
-                    <label for="betAmount">Bet:</label>
-                    <input type="number" id="betAmount" min="1" step="1" value="10">
-                    <button class="btn-primary" onclick="placeBet()">Place Bet</button>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-secondary" onclick="hit()">Hit</button>
-                    <button class="btn-secondary" onclick="stand()">Stand</button>
-                    <button class="btn-secondary" onclick="doubleDown()">Double</button>
-                    <button class="btn-danger" onclick="leaveSeat()">Leave Seat</button>
-                </div>
-                <div class="status" id="statusText"></div>
-                <div class="log" id="gameLog"></div>
-            </div>
-        </div>
+    <!-- Seats -->
+    <div class="seat-row" id="seatList"></div>
 
-        <!-- Your hand display -->
-        <div class="hand" style="margin-top: 20px;">
-            <h2>Your Hand</h2>
-            <div class="hand-info">Total: <span id="playerTotal">0</span></div>
-            <div class="cards" id="playerCards"></div>
-        </div>
+    <!-- Dealer -->
+    <div class="dealer-area">
+        <div class="section-title">Dealer</div>
+        <div>Total: <span id="dealerTotal">0</span></div>
+        <div class="cards" id="dealerCards"></div>
     </div>
 
-    <!-- Socket.IO client from your Railway backend -->
-    <script src="https://gambling-site-production.up.railway.app/socket.io/socket.io.js"></script>
-    <script>
-        const API = "https://gambling-site-production.up.railway.app";
-        const token = localStorage.getItem("token");
-        if (!token) {
-            window.location.href = "../login.html";
-        }
+    <!-- Player -->
+    <div class="player-area">
+        <div class="section-title">Your Hand</div>
+        <div>Total: <span id="playerTotal">0</span></div>
+        <div class="cards" id="playerCards"></div>
 
-        const socket = io(API, {
-            auth: { token }
-        });
+        <div class="controls">
+            <input type="number" id="betAmount" min="1" value="10" style="padding:10px;border-radius:8px;border:none;width:120px;">
+            <button class="btn-primary" onclick="placeBet()">Bet</button>
+            <button class="btn-secondary" onclick="hit()">Hit</button>
+            <button class="btn-secondary" onclick="stand()">Stand</button>
+            <button class="btn-secondary" onclick="doubleDown()">Double</button>
+            <button class="btn-danger" onclick="leaveSeat()">Leave</button>
+        </div>
 
-        let username = "";
-        let balance = 0;
-        let mySeat = null; // seat index (0–4)
-        let currentHand = null; // { cards: ['AS','5H',...], total: 16 }
+        <div class="status" id="statusText"></div>
+    </div>
 
-        // --- Utility: card image URL (placeholder) ---
-        // Using deckofcardsapi static images so you don't need to host 54 PNGs.
-        function cardUrl(code) {
-            // code example: 'AS' (Ace of Spades), '5H' (5 of Hearts)
-            return `https://deckofcardsapi.com/static/img/${code}.png`;
-        }
+</div>
 
-        function renderCards(containerId, cards) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = "";
-            cards.forEach(code => {
-                const div = document.createElement("div");
-                div.className = "card";
-                const img = document.createElement("img");
-                img.src = cardUrl(code);
-                img.alt = code;
-                div.appendChild(img);
-                container.appendChild(div);
-            });
-        }
+<script src="https://gambling-site-production.up.railway.app/socket.io/socket.io.js"></script>
+<script>
+const API = "https://gambling-site-production.up.railway.app";
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "../login.html";
 
-        function log(message) {
-            const logEl = document.getElementById("gameLog");
-            const line = document.createElement("div");
-            line.textContent = message;
-            logEl.appendChild(line);
-            logEl.scrollTop = logEl.scrollHeight;
-        }
+const socket = io(API, { auth: { token } });
 
-        // --- Load username + balance from backend ---
-        async function loadPlayerInfo() {
-            const userRes = await fetch(`${API}/api/me`, {
-                headers: { "Authorization": token }
-            });
-            const userData = await userRes.json();
-            username = userData.username || "Player";
-            document.getElementById("usernameDisplay").textContent = username;
+function cardUrl(code) {
+    return `https://deckofcardsapi.com/static/img/${code}.png`;
+}
 
-            const balRes = await fetch(`${API}/api/balance`, {
-                headers: { "Authorization": token }
-            });
-            const balData = await balRes.json();
-            balance = balData.balance || 0;
-            document.getElementById("balanceDisplay").textContent = balance;
-        }
+function renderCards(id, cards) {
+    const el = document.getElementById(id);
+    el.innerHTML = "";
+    cards.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<img src="${cardUrl(c)}">`;
+        el.appendChild(div);
+    });
+}
 
-        // --- Seats rendering ---
-        function renderSeats(state) {
-            // state.seats: [{ username, seatIndex }, ...]
-            const seatList = document.getElementById("seatList");
-            seatList.innerHTML = "";
-            const maxSeats = 5;
-            for (let i = 0; i < maxSeats; i++) {
-                const seatData = state.seats.find(s => s.seatIndex === i);
-                const div = document.createElement("div");
-                div.className = "seat";
-                if (seatData) {
-                    div.classList.add("occupied");
-                    if (seatData.username === username) {
-                        div.classList.add("you");
-                        mySeat = i;
-                    }
-                    div.innerHTML = `
-                        <span>Seat ${i + 1}</span>
-                        <strong>${seatData.username}</strong>
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <span>Seat ${i + 1}</span>
-                        <strong>Empty</strong>
-                    `;
-                    div.onclick = () => joinSeat(i);
-                }
-                seatList.appendChild(div);
+async function loadPlayerInfo() {
+    const u = await fetch(`${API}/api/me`, { headers: { Authorization: token } });
+    const ud = await u.json();
+    document.getElementById("usernameDisplay").textContent = ud.username;
+
+    const b = await fetch(`${API}/api/balance`, { headers: { Authorization: token } });
+    const bd = await b.json();
+    document.getElementById("balanceDisplay").textContent = bd.balance;
+}
+
+socket.on("tableState", state => {
+    renderCards("dealerCards", state.dealer.cards);
+    document.getElementById("dealerTotal").textContent = state.dealer.total;
+
+    const me = state.players.find(p => p.username === document.getElementById("usernameDisplay").textContent);
+    if (me) {
+        renderCards("playerCards", me.hand.cards);
+        document.getElementById("playerTotal").textContent = me.hand.total;
+        document.getElementById("balanceDisplay").textContent = me.balance;
+    }
+
+    renderSeats(state.seats);
+});
+
+function renderSeats(seats) {
+    const seatList = document.getElementById("seatList");
+    seatList.innerHTML = "";
+    for (let i = 0; i < 5; i++) {
+        const seat = seats.find(s => s.seatIndex === i);
+        const div = document.createElement("div");
+        div.className = "seat";
+        if (seat) {
+            div.classList.add("occupied");
+            if (seat.username === document.getElementById("usernameDisplay").textContent) {
+                div.classList.add("you");
             }
+            div.innerHTML = `<strong>${seat.username}</strong>`;
+        } else {
+            div.innerHTML = `<strong>Seat ${i+1}</strong>`;
+            div.onclick = () => socket.emit("joinSeat", { seatIndex: i });
         }
+        seatList.appendChild(div);
+    }
+}
 
-        // --- Socket events (you'll need matching server-side handlers) ---
-        socket.on("connect", () => {
-            log("Connected to table.");
-            socket.emit("joinBlackjackLobby");
-        });
+function placeBet() {
+    socket.emit("placeBet", { amount: parseInt(document.getElementById("betAmount").value) });
+}
 
-        socket.on("tableState", state => {
-            // state: { dealer: { cards, total }, players: [...], seats: [...] }
-            if (state.dealer) {
-                renderCards("dealerCards", state.dealer.cards || []);
-                document.getElementById("dealerTotal").textContent = state.dealer.total || 0;
-            }
-            const me = state.players.find(p => p.username === username);
-            if (me) {
-                currentHand = me.hand;
-                renderCards("playerCards", me.hand.cards || []);
-                document.getElementById("playerTotal").textContent = me.hand.total || 0;
-                balance = me.balance;
-                document.getElementById("balanceDisplay").textContent = balance;
-            }
-            renderSeats(state);
-        });
+function hit() { socket.emit("hit"); }
+function stand() { socket.emit("stand"); }
+function doubleDown() { socket.emit("double"); }
+function leaveSeat() { socket.emit("leaveSeat"); }
 
-        socket.on("message", msg => {
-            log(msg);
-            document.getElementById("statusText").textContent = msg;
-        });
+socket.on("message", msg => {
+    document.getElementById("statusText").textContent = msg;
+});
 
-        socket.on("errorMessage", msg => {
-            log("Error: " + msg);
-            document.getElementById("statusText").textContent = msg;
-        });
+loadPlayerInfo();
+</script>
 
-        // --- Actions ---
-        function joinSeat(index) {
-            socket.emit("joinSeat", { seatIndex: index });
-        }
-
-        function leaveSeat() {
-            socket.emit("leaveSeat");
-            mySeat = null;
-        }
-
-        function placeBet() {
-            const amount = parseInt(document.getElementById("betAmount").value, 10);
-            if (!mySeat && mySeat !== 0) {
-                document.getElementById("statusText").textContent = "Join a seat first.";
-                return;
-            }
-            if (!amount || amount <= 0) {
-                document.getElementById("statusText").textContent = "Enter a valid bet amount.";
-                return;
-            }
-            socket.emit("placeBet", { amount });
-        }
-
-        function hit() {
-            socket.emit("hit");
-        }
-
-        function stand() {
-            socket.emit("stand");
-        }
-
-        function doubleDown() {
-            socket.emit("double");
-        }
-
-        // --- Init ---
-        loadPlayerInfo().then(() => {
-            log("Welcome, " + username + ". Balance: " + balance);
-        });
-    </script>
 </body>
 </html>
