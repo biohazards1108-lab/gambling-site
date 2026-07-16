@@ -98,6 +98,10 @@
 
         <button onclick="register()">Create Account</button>
     </div>
+if (data.success) {
+    alert("Account created. Redirecting to dashboard...");
+    window.location.href = "dashboard.html";
+}
 
     <script src="register.js"></script>
 </body>
