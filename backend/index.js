@@ -7,9 +7,22 @@ import pkg from "pg";
 
 const { Pool } = pkg;
 
-const app = express();        // MUST come first
+// 1. Create Express app
+const app = express();
+
+// 2. Create HTTP server
 const server = http.createServer(app);
 
+// 3. Create Socket.IO server
+const io = new Server(server, {
+    cors: {
+        origin: "https://biohazards1108-lab.github.io",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
+    }
+});
+
+// 4. Middleware
 app.use(cors({
     origin: "https://biohazards1108-lab.github.io",
     methods: ["GET", "POST"],
@@ -18,6 +31,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.static("public"));
+
 
 // --- Database (Railway) ---
 const pool = new Pool({
