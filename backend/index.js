@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import pkg from "pg";
 
 const { Pool } = pkg;
+const blackjack = require("./blackjack");
 
 // 1. Create Express app
 const app = express();
@@ -21,6 +22,7 @@ const io = new Server(server, {
         allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
     }
 });
+blackjack(io, pool);
 
 // 4. Middleware
 app.use(cors({
