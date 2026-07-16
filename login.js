@@ -30,7 +30,8 @@ async function login() {
         localStorage.setItem("authToken", data.token);
 
         // Redirect to dashboard
-        window.location.href = "/dashboard.html";
+        window.location.href = "https://biohazards1108-lab.github.io/dashboard.html
+";
 
     } catch (err) {
         errorBox.textContent = "Server error. Try again.";
