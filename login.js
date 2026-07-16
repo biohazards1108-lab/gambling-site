@@ -11,7 +11,7 @@ async function login() {
     }
 
     try {
-        const res = await fetch("/api/login", {
+        const res = await fetch("https://gambling-site-production.up.railway.app/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
