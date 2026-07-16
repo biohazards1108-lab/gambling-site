@@ -90,6 +90,40 @@ async function emitAdminStats() {
         console.error("emitAdminStats error:", err);
     }
 }
+app.post("/api/register", async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: "Missing username or password" });
+    }
+
+    try {
+        // Check if username already exists
+        const exists = await pool.query(
+            "SELECT id FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (exists.rows.length > 0) {
+            return res.status(400).json({ error: "Username already taken" });
+        }
+
+        // Create token if missing
+        const tokenResult = await pool.query("SELECT gen_random_uuid() AS token");
+        const token = tokenResult.rows[0].token;
+
+        // Insert new user
+        await pool.query(
+            "INSERT INTO users (username, password, token, balance) VALUES ($1, $2, $3, $4)",
+            [username, password, token, 1000]
+        );
+
+        res.json({ message: "Account created", token });
+    } catch (err) {
+        console.error("Register error:", err);
+        res.status(500).json({ error: "Register error" });
+    }
+});
 
 // --- LOGIN ---
 app.post("/api/login", async (req, res) => {
