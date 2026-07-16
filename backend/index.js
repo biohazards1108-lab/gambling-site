@@ -62,6 +62,32 @@ async function emitAdminStats() {
         console.error("emitAdminStats error", e);
     }
 }
+// --- API: login (username + password) ---
+app.post("/api/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const { rows } = await pool.query(
+            "SELECT id, username, password, token FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (!rows.length) {
+            return res.status(400).json({ error: "Invalid username" });
+        }
+
+        const user = rows[0];
+
+        if (user.password !== password) {
+            return res.status(400).json({ error: "Invalid password" });
+        }
+
+        res.json({ token: user.token });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Login error" });
+    }
+});
 
 // --- API: balance ---
 app.get("/api/balance", auth, async (req, res) => {
