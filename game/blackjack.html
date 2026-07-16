@@ -1,351 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lucky 13 – Multiplayer Blackjack</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        color: #f2d57c;
-        background: radial-gradient(circle at top, #0b3b2e 0%, #02110c 60%, #000 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    h1 {
-        margin-top: 20px;
-        font-size: 40px;
-        text-shadow: 0 0 20px #f2d57c;
-    }
-
-    #top-bar {
-        margin-top: 10px;
-        display: flex;
-        gap: 15px;
-        align-items: center;
-        background: rgba(0,0,0,0.4);
-        padding: 10px 20px;
-        border-radius: 12px;
-        border: 1px solid #f2d57c;
-    }
-
-    #balance {
-        font-size: 18px;
-    }
-
-    #refill-btn {
-        padding: 6px 14px;
-        font-size: 14px;
-        background: #f2d57c;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #000;
-        transition: 0.3s;
-    }
-
-    #refill-btn:hover {
-        background: #c9b15f;
-    }
-
-    .table-wrapper {
-        margin-top: 30px;
-        width: 90%;
-        max-width: 900px;
-        height: 500px;
-        background: radial-gradient(circle at top, #145c3f 0%, #0b3b2e 40%, #052019 80%);
-        border-radius: 260px;
-        border: 4px solid #c9b15f;
-        box-shadow: 0 0 40px rgba(0,0,0,0.8);
-        position: relative;
-        padding-top: 60px;
-    }
-
-    .dealer-area {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        color: #fff;
-    }
-
-    .dealer-cards {
-        margin-top: 10px;
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .card {
-        width: 60px;
-        height: 90px;
-        border-radius: 8px;
-        background: #fff;
-        border: 1px solid #333;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    .seats {
-        position: absolute;
-        bottom: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .seat {
-        width: 120px;
-        text-align: center;
-        color: #fff;
-    }
-
-    .player-name {
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
-
-    .player-cards {
-        display: flex;
-        gap: 6px;
-        justify-content: center;
-        margin-bottom: 5px;
-    }
-
-    .player-bet {
-        font-size: 13px;
-        color: #f2d57c;
-    }
-
-    .controls {
-        margin-top: 20px;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .btn {
-        padding: 8px 18px;
-        font-size: 16px;
-        background: #f2d57c;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #000;
-        transition: 0.3s;
-    }
-
-    .btn:hover {
-        background: #c9b15f;
-    }
-
-    #chat {
-        margin-top: 20px;
-        width: 90%;
-        max-width: 600px;
-        background: rgba(0,0,0,0.5);
-        border-radius: 10px;
-        padding: 10px;
-        color: #fff;
-        font-size: 14px;
-    }
-
-    #messages {
-        max-height: 150px;
-        overflow-y: auto;
-        margin-bottom: 10px;
-    }
-
-    #result {
-        margin-top: 10px;
-        font-size: 18px;
-        text-shadow: 0 0 10px #f2d57c;
-        min-height: 24px;
-        text-align: center;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>Lucky 13 – Multiplayer Blackjack</title>
+    <link rel="stylesheet" href="../assets/css/game.css">
+    <style>
+        body {
+            background: radial-gradient(circle at top, #0b3b0b, #020202);
+            color: #fff;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .table-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header-left h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .header-left p {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .header-right div {
+            margin-bottom: 4px;
+        }
+        .balance {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .seat-list {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .seat {
+            flex: 1 1 150px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            text-align: center;
+        }
+        .seat.occupied {
+            background: rgba(255, 255, 255, 0.12);
+            cursor: default;
+        }
+        .seat.you {
+            border-color: #ffd700;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        .seat span {
+            display: block;
+            font-size: 13px;
+            color: #ccc;
+        }
+        .seat strong {
+            display: block;
+            margin-top: 4px;
+        }
+        .table-area {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+        }
+        .hand {
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 160px;
+        }
+        .hand h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+        .hand-info {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+        .cards {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .card {
+            width: 70px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .controls {
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .controls h2 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+        .bet-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .bet-row input {
+            width: 100px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #ffd700;
+            color: #000;
+        }
+        .btn-secondary {
+            background: #444;
+            color: #fff;
+        }
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #ccc;
+            min-height: 18px;
+        }
+        .log {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaa;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .log div {
+            margin-bottom: 4px;
+        }
+    </style>
 </head>
 <body>
+    <div class="table-wrapper">
+        <div class="header">
+            <div class="header-left">
+                <h1>Lucky 13 – Multiplayer Blackjack</h1>
+                <p>Join a seat, place your bet, and play against the dealer in real time.</p>
+            </div>
+            <div class="header-right">
+                <div>Player: <span id="usernameDisplay">...</span></div>
+                <div class="balance">Balance: <span id="balanceDisplay">0</span> tokens</div>
+            </div>
+        </div>
 
-<h1>Lucky 13 Blackjack</h1>
+        <!-- Seats -->
+        <div class="seat-list" id="seatList">
+            <!-- Filled dynamically: Seat 1–5 -->
+        </div>
 
-<div id="top-bar">
-    <div id="balance">Balance: loading...</div>
-    <button id="refill-btn" onclick="refill()">Refill (max 1000)</button>
-</div>
+        <div class="table-area">
+            <!-- Dealer hand -->
+            <div class="hand">
+                <h2>Dealer</h2>
+                <div class="hand-info">Total: <span id="dealerTotal">0</span></div>
+                <div class="cards" id="dealerCards"></div>
+            </div>
 
-<div class="table-wrapper">
-    <div class="dealer-area">
-        <div>Dealer</div>
-        <div class="dealer-cards" id="dealer-cards"></div>
+            <!-- Your hand + controls -->
+            <div class="controls">
+                <h2>Your Actions</h2>
+                <div class="bet-row">
+                    <label for="betAmount">Bet:</label>
+                    <input type="number" id="betAmount" min="1" step="1" value="10">
+                    <button class="btn-primary" onclick="placeBet()">Place Bet</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-secondary" onclick="hit()">Hit</button>
+                    <button class="btn-secondary" onclick="stand()">Stand</button>
+                    <button class="btn-secondary" onclick="doubleDown()">Double</button>
+                    <button class="btn-danger" onclick="leaveSeat()">Leave Seat</button>
+                </div>
+                <div class="status" id="statusText"></div>
+                <div class="log" id="gameLog"></div>
+            </div>
+        </div>
+
+        <!-- Your hand display -->
+        <div class="hand" style="margin-top: 20px;">
+            <h2>Your Hand</h2>
+            <div class="hand-info">Total: <span id="playerTotal">0</span></div>
+            <div class="cards" id="playerCards"></div>
+        </div>
     </div>
 
-    <div class="seats" id="seats"></div>
-</div>
+    <!-- Socket.IO client from your Railway backend -->
+    <script src="https://gambling-site-production.up.railway.app/socket.io/socket.io.js"></script>
+    <script>
+        const API = "https://gambling-site-production.up.railway.app";
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "../login.html";
+        }
 
-<div class="controls">
-    <input type="number" id="bet-amount" placeholder="Bet" min="10" max="1000" value="50">
-    <button class="btn" onclick="placeBet()">Place Bet</button>
-    <button class="btn" onclick="hit()">Hit</button>
-    <button class="btn" onclick="stand()">Stand</button>
-</div>
-
-<div id="result"></div>
-
-<div id="chat">
-    <div id="messages"></div>
-    <input type="text" id="chat-input" placeholder="Type message..." style="width:80%;">
-    <button class="btn" style="padding:4px 10px;font-size:14px;" onclick="sendChat()">Send</button>
-</div>
-
-<script src="https://gambling-site-production.up.railway.app/socket.io/socket.io.js"></script>
-<script>
-const API_BASE = "https://gambling-site-production.up.railway.app";
-const token = localStorage.getItem("token");
-const username = localStorage.getItem("username") || "Player";
-
-async function loadBalance() {
-    const el = document.getElementById("balance");
-    if (!token) {
-        el.textContent = "Balance: login required";
-        return;
-    }
-    try {
-        const res = await fetch(`${API_BASE}/api/balance`, {
-            headers: { "Authorization": token }
+        const socket = io(API, {
+            auth: { token }
         });
-        const data = await res.json();
-        el.textContent = "Balance: " + data.balance;
-    } catch {
-        el.textContent = "Balance: error";
-    }
-}
 
-async function refill() {
-    if (!token) {
-        alert("Login required");
-        return;
-    }
-    try {
-        const res = await fetch(`${API_BASE}/api/refill`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": token
+        let username = "";
+        let balance = 0;
+        let mySeat = null; // seat index (0–4)
+        let currentHand = null; // { cards: ['AS','5H',...], total: 16 }
+
+        // --- Utility: card image URL (placeholder) ---
+        // Using deckofcardsapi static images so you don't need to host 54 PNGs.
+        function cardUrl(code) {
+            // code example: 'AS' (Ace of Spades), '5H' (5 of Hearts)
+            return `https://deckofcardsapi.com/static/img/${code}.png`;
+        }
+
+        function renderCards(containerId, cards) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            cards.forEach(code => {
+                const div = document.createElement("div");
+                div.className = "card";
+                const img = document.createElement("img");
+                img.src = cardUrl(code);
+                img.alt = code;
+                div.appendChild(img);
+                container.appendChild(div);
+            });
+        }
+
+        function log(message) {
+            const logEl = document.getElementById("gameLog");
+            const line = document.createElement("div");
+            line.textContent = message;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        // --- Load username + balance from backend ---
+        async function loadPlayerInfo() {
+            const userRes = await fetch(`${API}/api/me`, {
+                headers: { "Authorization": token }
+            });
+            const userData = await userRes.json();
+            username = userData.username || "Player";
+            document.getElementById("usernameDisplay").textContent = username;
+
+            const balRes = await fetch(`${API}/api/balance`, {
+                headers: { "Authorization": token }
+            });
+            const balData = await balRes.json();
+            balance = balData.balance || 0;
+            document.getElementById("balanceDisplay").textContent = balance;
+        }
+
+        // --- Seats rendering ---
+        function renderSeats(state) {
+            // state.seats: [{ username, seatIndex }, ...]
+            const seatList = document.getElementById("seatList");
+            seatList.innerHTML = "";
+            const maxSeats = 5;
+            for (let i = 0; i < maxSeats; i++) {
+                const seatData = state.seats.find(s => s.seatIndex === i);
+                const div = document.createElement("div");
+                div.className = "seat";
+                if (seatData) {
+                    div.classList.add("occupied");
+                    if (seatData.username === username) {
+                        div.classList.add("you");
+                        mySeat = i;
+                    }
+                    div.innerHTML = `
+                        <span>Seat ${i + 1}</span>
+                        <strong>${seatData.username}</strong>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <span>Seat ${i + 1}</span>
+                        <strong>Empty</strong>
+                    `;
+                    div.onclick = () => joinSeat(i);
+                }
+                seatList.appendChild(div);
             }
-        });
-        const data = await res.json();
-        document.getElementById("balance").textContent = "Balance: " + data.balance;
-        document.getElementById("result").textContent = data.message || "";
-    } catch {
-        document.getElementById("result").textContent = "Refill error";
-    }
-}
+        }
 
-document.addEventListener("DOMContentLoaded", loadBalance);
-
-// Socket.IO
-const socket = io(API_BASE);
-const roomId = "main-table";
-
-socket.on("connect", () => {
-    socket.emit("joinRoom", { roomId, username });
-});
-
-socket.on("roomUpdate", (room) => {
-    renderRoom(room);
-});
-
-socket.on("chatMessage", ({ username, message }) => {
-    const messages = document.getElementById("messages");
-    const div = document.createElement("div");
-    div.textContent = username + ": " + message;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-});
-
-function renderRoom(room) {
-    // dealer
-    const dealerEl = document.getElementById("dealer-cards");
-    dealerEl.innerHTML = "";
-    room.dealer.forEach(card => {
-        const c = document.createElement("div");
-        c.className = "card";
-        c.textContent = card.value + card.suit;
-        dealerEl.appendChild(c);
-    });
-
-    // players
-    const seatsEl = document.getElementById("seats");
-    seatsEl.innerHTML = "";
-    room.players.forEach(p => {
-        const seat = document.createElement("div");
-        seat.className = "seat";
-
-        const name = document.createElement("div");
-        name.className = "player-name";
-        name.textContent = p.username;
-
-        const cards = document.createElement("div");
-        cards.className = "player-cards";
-        p.hand.forEach(card => {
-            const c = document.createElement("div");
-            c.className = "card";
-            c.textContent = card.value + card.suit;
-            cards.appendChild(c);
+        // --- Socket events (you'll need matching server-side handlers) ---
+        socket.on("connect", () => {
+            log("Connected to table.");
+            socket.emit("joinBlackjackLobby");
         });
 
-        const bet = document.createElement("div");
-        bet.className = "player-bet";
-        bet.textContent = "Bet: " + (p.bet || 0);
+        socket.on("tableState", state => {
+            // state: { dealer: { cards, total }, players: [...], seats: [...] }
+            if (state.dealer) {
+                renderCards("dealerCards", state.dealer.cards || []);
+                document.getElementById("dealerTotal").textContent = state.dealer.total || 0;
+            }
+            const me = state.players.find(p => p.username === username);
+            if (me) {
+                currentHand = me.hand;
+                renderCards("playerCards", me.hand.cards || []);
+                document.getElementById("playerTotal").textContent = me.hand.total || 0;
+                balance = me.balance;
+                document.getElementById("balanceDisplay").textContent = balance;
+            }
+            renderSeats(state);
+        });
 
-        seat.appendChild(name);
-        seat.appendChild(cards);
-        seat.appendChild(bet);
-        seatsEl.appendChild(seat);
-    });
+        socket.on("message", msg => {
+            log(msg);
+            document.getElementById("statusText").textContent = msg;
+        });
 
-    if (room.state === "finished") {
-        document.getElementById("result").textContent = "Round finished";
-    } else if (room.state === "playing") {
-        document.getElementById("result").textContent = "Round in progress";
-    } else {
-        document.getElementById("result").textContent = "Place your bets";
-    }
-}
+        socket.on("errorMessage", msg => {
+            log("Error: " + msg);
+            document.getElementById("statusText").textContent = msg;
+        });
 
-function placeBet() {
-    const amount = parseInt(document.getElementById("bet-amount").value, 10) || 0;
-    socket.emit("placeBet", { roomId, amount });
-}
+        // --- Actions ---
+        function joinSeat(index) {
+            socket.emit("joinSeat", { seatIndex: index });
+        }
 
-function hit() {
-    socket.emit("hit", roomId);
-}
+        function leaveSeat() {
+            socket.emit("leaveSeat");
+            mySeat = null;
+        }
 
-function stand() {
-    socket.emit("stand", roomId);
-}
+        function placeBet() {
+            const amount = parseInt(document.getElementById("betAmount").value, 10);
+            if (!mySeat && mySeat !== 0) {
+                document.getElementById("statusText").textContent = "Join a seat first.";
+                return;
+            }
+            if (!amount || amount <= 0) {
+                document.getElementById("statusText").textContent = "Enter a valid bet amount.";
+                return;
+            }
+            socket.emit("placeBet", { amount });
+        }
 
-function sendChat() {
-    const input = document.getElementById("chat-input");
-    const message = input.value.trim();
-    if (!message) return;
-    socket.emit("chat", { roomId, message, username });
-    input.value = "";
-}
-</script>
+        function hit() {
+            socket.emit("hit");
+        }
 
+        function stand() {
+            socket.emit("stand");
+        }
+
+        function doubleDown() {
+            socket.emit("double");
+        }
+
+        // --- Init ---
+        loadPlayerInfo().then(() => {
+            log("Welcome, " + username + ". Balance: " + balance);
+        });
+    </script>
 </body>
 </html>
