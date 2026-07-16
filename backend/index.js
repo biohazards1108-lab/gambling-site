@@ -1,27 +1,20 @@
 // backend/index.js
 import express from "express";
+import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import pkg from "pg";
-import cors from "cors";
+
+const { Pool } = pkg;
+
+const app = express();        // MUST come first
+const server = http.createServer(app);
 
 app.use(cors({
     origin: "https://biohazards1108-lab.github.io",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
 }));
-
-const { Pool } = pkg;
-
-// --- Express + Socket.IO ---
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
 
 app.use(express.json());
 app.use(express.static("public"));
