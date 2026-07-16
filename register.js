@@ -11,11 +11,10 @@ async function register() {
     });
 
     const data = await res.json();
+if (data.success) {
+    alert("Account created! Redirecting to dashboard...");
+    window.location.href = "dashboard.html";
+}
 
-    if (data.success) {
-        alert("Account created. You can now log in.");
-        window.location.href = "login.html";
-    } else {
-        alert(data.message || "Registration failed");
-    }
+    
 }
