@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Lucky 13 – Blackjack</title>
-<link rel="stylesheet" href="../assets/css/game.css">
 
 <style>
     body {
         margin: 0;
-        background: #0b0f19;
-        font-family: 'Segoe UI', sans-serif;
+        background: #0a0f14;
+        font-family: 'Poppins', sans-serif;
         color: #fff;
+        overflow-x: hidden;
     }
 
+    /* TOP BAR */
     .topbar {
         display: flex;
         justify-content: space-between;
@@ -25,60 +26,96 @@
         margin: 0;
         font-size: 26px;
         font-weight: 700;
+        color: #facc15;
     }
 
     .player-info {
         text-align: right;
-    }
-
-    .player-info div {
-        font-size: 15px;
-        margin-bottom: 4px;
+        font-size: 16px;
     }
 
     .balance {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         color: #22c55e;
     }
 
-    .table {
-        max-width: 1200px;
-        margin: 40px auto;
-        background: radial-gradient(circle at center, #1e293b, #0f172a);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    }
-
-    .dealer-area, .player-area {
-        margin-bottom: 40px;
-    }
-
-    .section-title {
-        font-size: 22px;
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
-
-    .cards {
+    /* TABLE */
+    .table-wrapper {
+        width: 100%;
         display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
     }
 
+    .table {
+        width: 1100px;
+        height: 600px;
+        background: radial-gradient(circle at center, #14532d, #064e3b);
+        border-radius: 50% / 30%;
+        box-shadow: 0 0 60px rgba(0,0,0,0.7);
+        position: relative;
+        padding-top: 40px;
+    }
+
+    /* DEALER AREA */
+    .dealer-area {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .dealer-area .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #facc15;
+    }
+
+    .dealer-cards {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    /* PLAYER AREA */
+    .player-area {
+        position: absolute;
+        bottom: 40px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .player-area .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #facc15;
+    }
+
+    .player-cards {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    /* CARD */
     .card {
-        width: 90px;
-        height: 130px;
+        width: 100px;
+        height: 140px;
         border-radius: 10px;
-        overflow: hidden;
         background: #fff;
-        box-shadow: 0 0 10px rgba(0,0,0,0.4);
-        transition: transform .2s ease;
+        box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        overflow: hidden;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: dealCard 0.4s forwards;
     }
 
-    .card:hover {
-        transform: scale(1.05);
+    @keyframes dealCard {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
     }
 
     .card img {
@@ -87,10 +124,45 @@
         object-fit: cover;
     }
 
-    .controls {
+    /* SEATS */
+    .seat-row {
         display: flex;
-        gap: 12px;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .seat {
+        padding: 12px;
+        background: #1f2937;
+        border-radius: 10px;
+        width: 120px;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: 0.2s;
+    }
+
+    .seat:hover {
+        border-color: #22c55e;
+    }
+
+    .seat.occupied {
+        background: #374151;
+        cursor: default;
+    }
+
+    .seat.you {
+        border-color: #22c55e;
+        box-shadow: 0 0 10px #22c55e;
+    }
+
+    /* CONTROLS */
+    .controls {
         margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
     }
 
     button {
@@ -100,7 +172,7 @@
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: background .2s ease;
+        transition: 0.2s;
     }
 
     .btn-primary {
@@ -131,43 +203,11 @@
     }
 
     .status {
-        margin-top: 20px;
-        font-size: 16px;
-        min-height: 24px;
-        color: #cbd5e1;
-    }
-
-    .seat-row {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 30px;
-    }
-
-    .seat {
-        flex: 1;
-        padding: 12px;
-        background: #1f2937;
-        border-radius: 10px;
+        margin-top: 15px;
+        font-size: 18px;
+        color: #e5e7eb;
         text-align: center;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: border .2s ease;
     }
-
-    .seat:hover {
-        border-color: #22c55e;
-    }
-
-    .seat.occupied {
-        background: #374151;
-        cursor: default;
-    }
-
-    .seat.you {
-        border-color: #22c55e;
-        box-shadow: 0 0 10px #22c55e;
-    }
-
 </style>
 </head>
 
@@ -181,36 +221,38 @@
     </div>
 </div>
 
-<div class="table">
+<div class="table-wrapper">
+    <div class="table">
 
-    <!-- Seats -->
-    <div class="seat-row" id="seatList"></div>
+        <!-- Seats -->
+        <div class="seat-row" id="seatList"></div>
 
-    <!-- Dealer -->
-    <div class="dealer-area">
-        <div class="section-title">Dealer</div>
-        <div>Total: <span id="dealerTotal">0</span></div>
-        <div class="cards" id="dealerCards"></div>
-    </div>
-
-    <!-- Player -->
-    <div class="player-area">
-        <div class="section-title">Your Hand</div>
-        <div>Total: <span id="playerTotal">0</span></div>
-        <div class="cards" id="playerCards"></div>
-
-        <div class="controls">
-            <input type="number" id="betAmount" min="1" value="10" style="padding:10px;border-radius:8px;border:none;width:120px;">
-            <button class="btn-primary" onclick="placeBet()">Bet</button>
-            <button class="btn-secondary" onclick="hit()">Hit</button>
-            <button class="btn-secondary" onclick="stand()">Stand</button>
-            <button class="btn-secondary" onclick="doubleDown()">Double</button>
-            <button class="btn-danger" onclick="leaveSeat()">Leave</button>
+        <!-- Dealer -->
+        <div class="dealer-area">
+            <div class="section-title">Dealer</div>
+            <div>Total: <span id="dealerTotal">0</span></div>
+            <div class="dealer-cards" id="dealerCards"></div>
         </div>
 
-        <div class="status" id="statusText"></div>
-    </div>
+        <!-- Player -->
+        <div class="player-area">
+            <div class="section-title">Your Hand</div>
+            <div>Total: <span id="playerTotal">0</span></div>
+            <div class="player-cards" id="playerCards"></div>
 
+            <div class="controls">
+                <input type="number" id="betAmount" min="1" value="10" style="padding:10px;border-radius:8px;border:none;width:120px;">
+                <button class="btn-primary" onclick="placeBet()">Bet</button>
+                <button class="btn-secondary" onclick="hit()">Hit</button>
+                <button class="btn-secondary" onclick="stand()">Stand</button>
+                <button class="btn-secondary" onclick="doubleDown()">Double</button>
+                <button class="btn-danger" onclick="leaveSeat()">Leave</button>
+            </div>
+
+            <div class="status" id="statusText"></div>
+        </div>
+
+    </div>
 </div>
 
 <script src="https://gambling-site-production.up.railway.app/socket.io/socket.io.js"></script>
