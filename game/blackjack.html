@@ -7,7 +7,7 @@
 <style>
     body {
         margin: 0;
-        background: #0a0f14;
+        background: #050810;
         font-family: 'Poppins', sans-serif;
         color: #fff;
         overflow-x: hidden;
@@ -17,7 +17,8 @@
     .topbar {
         display: flex;
         justify-content: space-between;
-        padding: 20px;
+        align-items: center;
+        padding: 18px 30px;
         background: #111827;
         border-bottom: 2px solid #1f2937;
     }
@@ -31,16 +32,20 @@
 
     .player-info {
         text-align: right;
-        font-size: 16px;
+        font-size: 15px;
+    }
+
+    .player-info div {
+        margin-bottom: 4px;
     }
 
     .balance {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
         color: #22c55e;
     }
 
-    /* TABLE */
+    /* TABLE WRAPPER */
     .table-wrapper {
         width: 100%;
         display: flex;
@@ -48,99 +53,38 @@
         margin-top: 30px;
     }
 
+    /* CASINO TABLE */
     .table {
         width: 1100px;
-        height: 600px;
-        background: radial-gradient(circle at center, #14532d, #064e3b);
+        height: 580px;
+        background: radial-gradient(circle at center, #166534, #064e3b);
         border-radius: 50% / 30%;
-        box-shadow: 0 0 60px rgba(0,0,0,0.7);
+        box-shadow: 0 0 60px rgba(0,0,0,0.8);
         position: relative;
         padding-top: 40px;
-    }
-
-    /* DEALER AREA */
-    .dealer-area {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .dealer-area .section-title {
-        font-size: 22px;
-        font-weight: 600;
-        color: #facc15;
-    }
-
-    .dealer-cards {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 10px;
-    }
-
-    /* PLAYER AREA */
-    .player-area {
-        position: absolute;
-        bottom: 40px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .player-area .section-title {
-        font-size: 22px;
-        font-weight: 600;
-        color: #facc15;
-    }
-
-    .player-cards {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 10px;
-    }
-
-    /* CARD */
-    .card {
-        width: 100px;
-        height: 140px;
-        border-radius: 10px;
-        background: #fff;
-        box-shadow: 0 0 15px rgba(0,0,0,0.5);
-        overflow: hidden;
-        transform: translateY(20px);
-        opacity: 0;
-        animation: dealCard 0.4s forwards;
-    }
-
-    @keyframes dealCard {
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        border: 6px solid #b45309;
     }
 
     /* SEATS */
     .seat-row {
+        position: absolute;
+        bottom: 140px;
+        width: 100%;
         display: flex;
         justify-content: center;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 12px;
     }
 
     .seat {
-        padding: 12px;
-        background: #1f2937;
+        padding: 10px;
+        background: rgba(15,23,42,0.9);
         border-radius: 10px;
-        width: 120px;
+        width: 110px;
         text-align: center;
         cursor: pointer;
         border: 2px solid transparent;
         transition: 0.2s;
+        font-size: 13px;
     }
 
     .seat:hover {
@@ -157,19 +101,96 @@
         box-shadow: 0 0 10px #22c55e;
     }
 
-    /* CONTROLS */
-    .controls {
-        margin-top: 20px;
+    /* DEALER AREA */
+    .dealer-area {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .dealer-area .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #facc15;
+    }
+
+    .dealer-total {
+        margin-top: 4px;
+        font-size: 16px;
+    }
+
+    .dealer-cards {
         display: flex;
         justify-content: center;
-        gap: 12px;
+        gap: 15px;
+        margin-top: 12px;
+    }
+
+    /* PLAYER AREA */
+    .player-area {
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .player-area .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #facc15;
+    }
+
+    .player-total {
+        margin-top: 4px;
+        font-size: 16px;
+    }
+
+    .player-cards {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 12px;
+    }
+
+    /* CARD */
+    .card {
+        width: 95px;
+        height: 135px;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.6);
+        overflow: hidden;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: dealCard 0.35s forwards;
+    }
+
+    @keyframes dealCard {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* CONTROLS */
+    .controls {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     button {
-        padding: 12px 20px;
+        padding: 10px 18px;
         border-radius: 8px;
         border: none;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         cursor: pointer;
         transition: 0.2s;
@@ -202,11 +223,21 @@
         background: #b91c1c;
     }
 
+    .bet-input {
+        padding: 9px;
+        border-radius: 8px;
+        border: none;
+        width: 110px;
+        text-align: center;
+        font-size: 15px;
+    }
+
     .status {
-        margin-top: 15px;
-        font-size: 18px;
+        margin-top: 12px;
+        font-size: 16px;
         color: #e5e7eb;
         text-align: center;
+        min-height: 22px;
     }
 </style>
 </head>
@@ -217,7 +248,7 @@
     <h1>Lucky 13 – Blackjack</h1>
     <div class="player-info">
         <div>Player: <span id="usernameDisplay">...</span></div>
-        <div class="balance">Balance: <span id="balanceDisplay">0</span></div>
+        <div class="balance">Balance: <span id="balanceDisplay">0</span> tokens</div>
     </div>
 </div>
 
@@ -230,23 +261,23 @@
         <!-- Dealer -->
         <div class="dealer-area">
             <div class="section-title">Dealer</div>
-            <div>Total: <span id="dealerTotal">0</span></div>
+            <div class="dealer-total">Total: <span id="dealerTotal">0</span></div>
             <div class="dealer-cards" id="dealerCards"></div>
         </div>
 
         <!-- Player -->
         <div class="player-area">
             <div class="section-title">Your Hand</div>
-            <div>Total: <span id="playerTotal">0</span></div>
+            <div class="player-total">Total: <span id="playerTotal">0</span></div>
             <div class="player-cards" id="playerCards"></div>
 
             <div class="controls">
-                <input type="number" id="betAmount" min="1" value="10" style="padding:10px;border-radius:8px;border:none;width:120px;">
+                <input type="number" id="betAmount" min="1" value="10" class="bet-input">
                 <button class="btn-primary" onclick="placeBet()">Bet</button>
                 <button class="btn-secondary" onclick="hit()">Hit</button>
                 <button class="btn-secondary" onclick="stand()">Stand</button>
                 <button class="btn-secondary" onclick="doubleDown()">Double</button>
-                <button class="btn-danger" onclick="leaveSeat()">Leave</button>
+                <button class="btn-danger" onclick="leaveSeat()">Leave Seat</button>
             </div>
 
             <div class="status" id="statusText"></div>
@@ -279,30 +310,44 @@ function renderCards(id, cards) {
 }
 
 async function loadPlayerInfo() {
-    const u = await fetch(`${API}/api/me`, { headers: { Authorization: token } });
-    const ud = await u.json();
-    document.getElementById("usernameDisplay").textContent = ud.username;
+    // username (optional /api/me)
+    let username = "Player";
+    try {
+        const u = await fetch(`${API}/api/me`, { headers: { Authorization: token } });
+        const ud = await u.json();
+        if (ud.username) username = ud.username;
+    } catch (e) {
+        console.warn("Missing /api/me or error fetching username.");
+    }
+    document.getElementById("usernameDisplay").textContent = username;
 
-    const b = await fetch(`${API}/api/balance`, { headers: { Authorization: token } });
-    const bd = await b.json();
-    document.getElementById("balanceDisplay").textContent = bd.balance;
+    // balance
+    try {
+        const b = await fetch(`${API}/api/balance`, { headers: { Authorization: token } });
+        const bd = await b.json();
+        document.getElementById("balanceDisplay").textContent = bd.balance;
+    } catch (e) {
+        console.error("Error fetching balance", e);
+    }
 }
 
 socket.on("tableState", state => {
     renderCards("dealerCards", state.dealer.cards);
     document.getElementById("dealerTotal").textContent = state.dealer.total;
 
-    const me = state.players.find(p => p.username === document.getElementById("usernameDisplay").textContent);
+    const username = document.getElementById("usernameDisplay").textContent;
+    const me = state.players.find(p => p.username === username);
+
     if (me) {
         renderCards("playerCards", me.hand.cards);
         document.getElementById("playerTotal").textContent = me.hand.total;
         document.getElementById("balanceDisplay").textContent = me.balance;
     }
 
-    renderSeats(state.seats);
+    renderSeats(state.seats, username);
 });
 
-function renderSeats(seats) {
+function renderSeats(seats, username) {
     const seatList = document.getElementById("seatList");
     seatList.innerHTML = "";
     for (let i = 0; i < 5; i++) {
@@ -311,12 +356,12 @@ function renderSeats(seats) {
         div.className = "seat";
         if (seat) {
             div.classList.add("occupied");
-            if (seat.username === document.getElementById("usernameDisplay").textContent) {
+            if (seat.username === username) {
                 div.classList.add("you");
             }
             div.innerHTML = `<strong>${seat.username}</strong>`;
         } else {
-            div.innerHTML = `<strong>Seat ${i+1}</strong>`;
+            div.innerHTML = `<strong>Seat ${i+1}</strong><br><span style="font-size:12px;">Click to sit</span>`;
             div.onclick = () => socket.emit("joinSeat", { seatIndex: i });
         }
         seatList.appendChild(div);
@@ -324,7 +369,12 @@ function renderSeats(seats) {
 }
 
 function placeBet() {
-    socket.emit("placeBet", { amount: parseInt(document.getElementById("betAmount").value) });
+    const amount = parseInt(document.getElementById("betAmount").value);
+    if (!amount || amount <= 0) {
+        document.getElementById("statusText").textContent = "Enter a valid bet amount.";
+        return;
+    }
+    socket.emit("placeBet", { amount });
 }
 
 function hit() { socket.emit("hit"); }
@@ -333,6 +383,10 @@ function doubleDown() { socket.emit("double"); }
 function leaveSeat() { socket.emit("leaveSeat"); }
 
 socket.on("message", msg => {
+    document.getElementById("statusText").textContent = msg;
+});
+
+socket.on("errorMessage", msg => {
     document.getElementById("statusText").textContent = msg;
 });
 
