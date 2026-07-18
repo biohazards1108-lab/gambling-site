@@ -1,4 +1,6 @@
-module.exports = function blackjack(io, pool) {
+// backend/blackjack.js
+
+export default function blackjack(io, pool) {
 
     // --- Helpers ---
     async function getUserByToken(token) {
@@ -119,7 +121,7 @@ module.exports = function blackjack(io, pool) {
             table.players.push(player);
         }
 
-        // ⭐ FIX: Refresh balance from DB
+        // refresh balance from DB
         const fresh = await pool.query("SELECT balance FROM users WHERE id = $1", [user.id]);
         player.balance = fresh.rows[0].balance;
 
@@ -239,4 +241,4 @@ module.exports = function blackjack(io, pool) {
         broadcast();
         resetRound();
     }
-};
+}
