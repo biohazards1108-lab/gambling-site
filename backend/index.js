@@ -4,9 +4,15 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import pkg from "pg";
+import blackjack from "./blackjack.js"; // <-- ESM import, note .js
 
 const { Pool } = pkg;
-const blackjack = require("./blackjack");
+
+// --- Database (Railway) ---
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
 // 1. Create Express app
 const app = express();
@@ -22,6 +28,8 @@ const io = new Server(server, {
         allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"]
     }
 });
+
+// wire blackjack AFTER pool exists
 blackjack(io, pool);
 
 // 4. Middleware
@@ -33,13 +41,6 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.static("public"));
-
-
-// --- Database (Railway) ---
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-});
 
 // --- Auth Middleware ---
 async function auth(req, res, next) {
@@ -92,6 +93,8 @@ async function emitAdminStats() {
         console.error("emitAdminStats error:", err);
     }
 }
+
+// --- REGISTER ---
 app.post("/api/register", async (req, res) => {
     const { username, password } = req.body;
 
@@ -100,7 +103,6 @@ app.post("/api/register", async (req, res) => {
     }
 
     try {
-        // Check if username already exists
         const exists = await pool.query(
             "SELECT id FROM users WHERE username = $1",
             [username]
@@ -110,11 +112,9 @@ app.post("/api/register", async (req, res) => {
             return res.status(400).json({ error: "Username already taken" });
         }
 
-        // Create token if missing
         const tokenResult = await pool.query("SELECT gen_random_uuid() AS token");
         const token = tokenResult.rows[0].token;
 
-        // Insert new user
         await pool.query(
             "INSERT INTO users (username, password, token, balance) VALUES ($1, $2, $3, $4)",
             [username, password, token, 1000]
