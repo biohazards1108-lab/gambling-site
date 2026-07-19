@@ -2,6 +2,7 @@
   "name": "lucky13-backend",
   "version": "1.0.0",
   "description": "Lucky 13 Casino Backend + Socket.IO",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
