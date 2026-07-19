@@ -4,23 +4,23 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import pkg from "pg";
-import blackjack from "./blackjack.js"; // <-- ESM import, note .js
+import blackjack from "./blackjack.js";
 
 const { Pool } = pkg;
 
-// --- Database (Railway) ---
+// EXPRESS APP
+const app = express();
+
+// HTTP SERVER
+const server = http.createServer(app);
+
+// DATABASE (Railway)
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// 1. Create Express app
-const app = express();
-
-// 2. Create HTTP server
-const server = http.createServer(app);
-
-// 3. Create Socket.IO server
+// SOCKET.IO
 const io = new Server(server, {
     cors: {
         origin: "https://biohazards1108-lab.github.io",
@@ -29,10 +29,10 @@ const io = new Server(server, {
     }
 });
 
-// wire blackjack AFTER pool exists
+// LOAD BLACKJACK GAME
 blackjack(io, pool);
 
-// 4. Middleware
+// MIDDLEWARE
 app.use(cors({
     origin: "https://biohazards1108-lab.github.io",
     methods: ["GET", "POST"],
@@ -42,12 +42,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static("public"));
 
-// --- Auth Middleware ---
+
+// AUTH MIDDLEWARE
 async function auth(req, res, next) {
     const token = req.headers.authorization;
-    if (!token) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     try {
         const result = await pool.query(
@@ -55,9 +54,8 @@ async function auth(req, res, next) {
             [token]
         );
 
-        if (result.rows.length === 0) {
+        if (result.rows.length === 0)
             return res.status(401).json({ error: "Invalid token" });
-        }
 
         req.user = result.rows[0];
         next();
@@ -67,40 +65,29 @@ async function auth(req, res, next) {
     }
 }
 
-// --- Admin Auth ---
+// ADMIN AUTH
 function adminAuth(req, res, next) {
     const key = req.headers["x-admin-key"];
-    if (key !== process.env.ADMIN_KEY) {
+    if (key !== process.env.ADMIN_KEY)
         return res.status(403).json({ error: "Admins only" });
-    }
     next();
 }
 
-// --- Emit Admin Stats ---
-async function emitAdminStats() {
-    try {
-        const users = await pool.query(
-            "SELECT id, username, balance FROM users ORDER BY id ASC"
-        );
+// /api/me (REQUIRED BY DASHBOARD + ALL GAMES)
+app.get("/api/me", auth, (req, res) => {
+    res.json({
+        id: req.user.id,
+        username: req.user.username,
+        role: req.user.role
+    });
+});
 
-        const stats = await pool.query(
-            "SELECT game, COALESCE(SUM(profit),0) AS total_profit FROM game_stats GROUP BY game"
-        );
-
-        io.to("admin-room").emit("adminUsersUpdate", users.rows);
-        io.to("admin-room").emit("adminGameStats", stats.rows);
-    } catch (err) {
-        console.error("emitAdminStats error:", err);
-    }
-}
-
-// --- REGISTER ---
+// REGISTER
 app.post("/api/register", async (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
+    if (!username || !password)
         return res.status(400).json({ error: "Missing username or password" });
-    }
 
     try {
         const exists = await pool.query(
@@ -108,9 +95,8 @@ app.post("/api/register", async (req, res) => {
             [username]
         );
 
-        if (exists.rows.length > 0) {
+        if (exists.rows.length > 0)
             return res.status(400).json({ error: "Username already taken" });
-        }
 
         const tokenResult = await pool.query("SELECT gen_random_uuid() AS token");
         const token = tokenResult.rows[0].token;
@@ -127,13 +113,12 @@ app.post("/api/register", async (req, res) => {
     }
 });
 
-// --- LOGIN ---
+// LOGIN
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
+    if (!username || !password)
         return res.status(400).json({ error: "Missing username or password" });
-    }
 
     try {
         const result = await pool.query(
@@ -141,15 +126,13 @@ app.post("/api/login", async (req, res) => {
             [username]
         );
 
-        if (result.rows.length === 0) {
+        if (result.rows.length === 0)
             return res.status(400).json({ error: "Invalid username" });
-        }
 
         const user = result.rows[0];
 
-        if (user.password !== password) {
+        if (user.password !== password)
             return res.status(400).json({ error: "Invalid password" });
-        }
 
         res.json({ token: user.token });
     } catch (err) {
@@ -158,7 +141,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-// --- BALANCE ---
+// BALANCE
 app.get("/api/balance", auth, async (req, res) => {
     try {
         const result = await pool.query(
@@ -173,7 +156,7 @@ app.get("/api/balance", auth, async (req, res) => {
     }
 });
 
-// --- REFILL ---
+// REFILL
 app.post("/api/refill", auth, async (req, res) => {
     try {
         const result = await pool.query(
@@ -194,103 +177,9 @@ app.post("/api/refill", auth, async (req, res) => {
             ["refill", -(newBalance - current)]
         );
 
-        await emitAdminStats();
-
         res.json({
             balance: newBalance,
             message: "Refilled to 1000 tokens"
         });
     } catch (err) {
-        console.error("Refill error:", err);
-        res.status(500).json({ error: "Refill error" });
-    }
-});
-
-// --- BET ---
-app.post("/api/bet", auth, async (req, res) => {
-    const { amount } = req.body;
-
-    if (!amount || amount <= 0) {
-        return res.status(400).json({ error: "Invalid amount" });
-    }
-
-    try {
-        const result = await pool.query(
-            "SELECT balance FROM users WHERE id = $1",
-            [req.user.id]
-        );
-
-        let balance = result.rows[0].balance;
-
-        if (balance < amount) {
-            return res.status(400).json({ error: "Insufficient balance" });
-        }
-
-        balance -= amount;
-
-        const win = Math.random() < 0.4;
-        let payout = 0;
-        let profit = amount;
-
-        if (win) {
-            payout = amount * 2;
-            balance += payout;
-            profit = amount - payout;
-        }
-
-        await pool.query(
-            "UPDATE users SET balance = $1 WHERE id = $2",
-            [balance, req.user.id]
-        );
-
-        await pool.query(
-            "INSERT INTO game_stats (game, profit) VALUES ($1, $2)",
-            ["slots", profit]
-        );
-
-        await emitAdminStats();
-
-        res.json({
-            balance,
-            result: win ? "win" : "lose",
-            payout
-        });
-    } catch (err) {
-        console.error("Bet error:", err);
-        res.status(500).json({ error: "Bet error" });
-    }
-});
-
-// --- ADMIN: Change Balance ---
-app.post("/api/admin/balance/:id", adminAuth, async (req, res) => {
-    const { id } = req.params;
-    const { balance } = req.body;
-
-    try {
-        await pool.query(
-            "UPDATE users SET balance = $1 WHERE id = $2",
-            [balance, id]
-        );
-
-        await emitAdminStats();
-
-        res.json({ message: "Balance updated" });
-    } catch (err) {
-        console.error("Admin balance error:", err);
-        res.status(500).json({ error: "Admin balance error" });
-    }
-});
-
-// --- Socket.IO ---
-io.on("connection", socket => {
-    socket.on("joinAdmin", () => {
-        socket.join("admin-room");
-        emitAdminStats();
-    });
-});
-
-// --- Start Server ---
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log("Server running on port", PORT);
-});
+        console.error("
