@@ -1,8 +1,5 @@
-// backend/blackjack.js
-
 export default function blackjack(io, pool) {
 
-    // --- Helpers ---
     async function getUserByToken(token) {
         const res = await pool.query(
             "SELECT id, username, balance FROM users WHERE token = $1",
@@ -50,7 +47,6 @@ export default function blackjack(io, pool) {
         return total;
     }
 
-    // --- Table State ---
     const table = {
         deck: createDeck(),
         dealer: { cards: [], total: 0 },
@@ -91,7 +87,6 @@ export default function blackjack(io, pool) {
         await pool.query("UPDATE users SET balance = $1 WHERE id = $2", [bal, id]);
     }
 
-    // --- Socket Auth ---
     io.use(async (socket, next) => {
         const token = socket.handshake.auth?.token;
         if (!token) return next(new Error("No token"));
@@ -101,7 +96,6 @@ export default function blackjack(io, pool) {
         next();
     });
 
-    // --- Main Logic ---
     io.on("connection", async socket => {
         const user = socket.user;
 
@@ -121,7 +115,6 @@ export default function blackjack(io, pool) {
             table.players.push(player);
         }
 
-        // refresh balance from DB
         const fresh = await pool.query("SELECT balance FROM users WHERE id = $1", [user.id]);
         player.balance = fresh.rows[0].balance;
 
