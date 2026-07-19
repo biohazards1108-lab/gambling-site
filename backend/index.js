@@ -13,7 +13,7 @@ const app = express();
 // HTTP SERVER
 const server = http.createServer(app);
 
-// DATABASE (Railway)
+// DATABASE
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
@@ -72,7 +72,7 @@ function adminAuth(req, res, next) {
     next();
 }
 
-// /api/me (REQUIRED BY DASHBOARD + ALL GAMES)
+// /api/me
 app.get("/api/me", auth, (req, res) => {
     res.json({
         id: req.user.id,
@@ -181,4 +181,89 @@ app.post("/api/refill", auth, async (req, res) => {
             message: "Refilled to 1000 tokens"
         });
     } catch (err) {
-        console.error("
+        console.error("Refill error:", err);
+        res.status(500).json({ error: "Refill error" });
+    }
+});
+
+// SIMPLE SLOTS BET ENDPOINT (example)
+app.post("/api/bet", auth, async (req, res) => {
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0)
+        return res.status(400).json({ error: "Invalid amount" });
+
+    try {
+        const result = await pool.query(
+            "SELECT balance FROM users WHERE id = $1",
+            [req.user.id]
+        );
+
+        let balance = result.rows[0].balance;
+
+        if (balance < amount)
+            return res.status(400).json({ error: "Insufficient balance" });
+
+        balance -= amount;
+
+        const win = Math.random() < 0.4;
+        let payout = 0;
+        let profit = amount;
+
+        if (win) {
+            payout = amount * 2;
+            balance += payout;
+            profit = amount - payout;
+        }
+
+        await pool.query(
+            "UPDATE users SET balance = $1 WHERE id = $2",
+            [balance, req.user.id]
+        );
+
+        await pool.query(
+            "INSERT INTO game_stats (game, profit) VALUES ($1, $2)",
+            ["slots", profit]
+        );
+
+        res.json({
+            balance,
+            result: win ? "win" : "lose",
+            payout
+        });
+    } catch (err) {
+        console.error("Bet error:", err);
+        res.status(500).json({ error: "Bet error" });
+    }
+});
+
+// ADMIN BALANCE
+app.post("/api/admin/balance/:id", adminAuth, async (req, res) => {
+    const { id } = req.params;
+    const { balance } = req.body;
+
+    try {
+        await pool.query(
+            "UPDATE users SET balance = $1 WHERE id = $2",
+            [balance, id]
+        );
+
+        res.json({ message: "Balance updated" });
+    } catch (err) {
+        console.error("Admin balance error:", err);
+        res.status(500).json({ error: "Admin balance error" });
+    }
+});
+
+// SOCKET.IO ADMIN ROOM (optional)
+io.on("connection", socket => {
+    socket.on("joinAdmin", () => {
+        socket.join("admin-room");
+    });
+});
+
+// START SERVER
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log("Server running on port", PORT);
+});
