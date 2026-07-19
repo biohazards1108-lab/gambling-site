@@ -5,170 +5,197 @@
 <title>Lucky 13 – Blackjack</title>
 
 <style>
-    body {
-        margin: 0;
-        background: #041b11;
-        font-family: 'Poppins', sans-serif;
-        color: #fff;
-    }
+/* GLOBAL */
+body {
+    margin: 0;
+    background: #0a0f14;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+}
 
-    .topbar {
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-        background: #0d1117;
-        border-bottom: 2px solid #1f2937;
-    }
+/* TOP BAR */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+    background: #111827;
+    border-bottom: 2px solid #1f2937;
+}
+.topbar h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #facc15;
+}
+.player-info {
+    text-align: right;
+    font-size: 16px;
+}
+.balance {
+    font-size: 20px;
+    font-weight: bold;
+    color: #22c55e;
+}
 
-    .topbar h1 {
-        margin: 0;
-        font-size: 26px;
-        color: #facc15;
-    }
+/* TABLE WRAPPER */
+.table-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
 
-    .player-info {
-        text-align: right;
-        font-size: 16px;
-    }
+/* VEGAS TABLE */
+.table {
+    width: 1200px;
+    height: 650px;
+    background: radial-gradient(circle at center, #0f4d2c, #06341f);
+    border-radius: 50% / 30%;
+    border: 10px solid #b8860b;
+    box-shadow: 0 0 80px rgba(0,0,0,0.8);
+    position: relative;
+    padding-top: 40px;
+}
 
-    .balance {
-        font-size: 18px;
-        font-weight: bold;
-        color: #22c55e;
-    }
+/* TABLE MARKINGS */
+.table::before {
+    content: "BLACKJACK PAYS 3 TO 2";
+    position: absolute;
+    top: 120px;
+    width: 100%;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: gold;
+    opacity: 0.9;
+}
+.table::after {
+    content: "Dealer must draw to 16 and stand on all 17s";
+    position: absolute;
+    top: 160px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #fef3c7;
+    opacity: 0.8;
+}
 
-    .table-wrapper {
-        display: flex;
-        justify-content: center;
-        margin-top: 30px;
-    }
+/* SEATS */
+.seat-row {
+    position: absolute;
+    bottom: 160px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.seat {
+    padding: 12px;
+    background: rgba(15,23,42,0.9);
+    border-radius: 12px;
+    width: 130px;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: 0.2s;
+    font-size: 14px;
+}
+.seat:hover {
+    border-color: #facc15;
+}
+.seat.occupied {
+    background: #374151;
+    cursor: default;
+}
+.seat.you {
+    border-color: #22c55e;
+    box-shadow: 0 0 12px #22c55e;
+}
 
-    .table {
-        width: 1100px;
-        height: 600px;
-        background: radial-gradient(circle at center, #0f5132, #06351f);
-        border-radius: 50% / 30%;
-        border: 6px solid #b45309;
-        box-shadow: 0 0 60px rgba(0,0,0,0.7);
-        position: relative;
-        padding-top: 40px;
-    }
+/* DEALER AREA */
+.dealer-area {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #facc15;
+}
+.dealer-cards {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 12px;
+}
 
-    /* Seats */
-    .seat-row {
-        position: absolute;
-        bottom: 150px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-    }
+/* PLAYER AREA */
+.player-area {
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    text-align: center;
+}
+.player-cards {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 12px;
+}
 
-    .seat {
-        padding: 10px;
-        background: rgba(15,23,42,0.9);
-        border-radius: 10px;
-        width: 110px;
-        text-align: center;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: 0.2s;
-    }
+/* CARD */
+.card {
+    width: 100px;
+    height: 145px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    overflow: hidden;
+    animation: deal 0.35s ease-out;
+}
+@keyframes deal {
+    from { transform: translateY(25px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    .seat:hover {
-        border-color: #22c55e;
-    }
+/* CONTROLS */
+.controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-primary { background: #22c55e; color: #000; }
+.btn-secondary { background: #374151; color: #fff; }
+.btn-danger { background: #dc2626; color: #fff; }
+.bet-input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 120px;
+    text-align: center;
+    font-size: 16px;
+}
 
-    .seat.occupied {
-        background: #374151;
-        cursor: default;
-    }
-
-    .seat.you {
-        border-color: #22c55e;
-        box-shadow: 0 0 10px #22c55e;
-    }
-
-    /* Dealer */
-    .dealer-area {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .dealer-area .section-title {
-        font-size: 22px;
-        color: #facc15;
-    }
-
-    .dealer-cards {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 10px;
-    }
-
-    /* Player */
-    .player-area {
-        position: absolute;
-        bottom: 30px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .player-area .section-title {
-        font-size: 22px;
-        color: #facc15;
-    }
-
-    .player-cards {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 10px;
-    }
-
-    /* Cards */
-    .card {
-        width: 95px;
-        height: 135px;
-        border-radius: 10px;
-        background: #fff;
-        box-shadow: 0 0 15px rgba(0,0,0,0.6);
-        overflow: hidden;
-        animation: deal 0.3s ease-out;
-    }
-
-    @keyframes deal {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    /* Controls */
-    .controls {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-    }
-
-    button {
-        padding: 10px 18px;
-        border-radius: 8px;
-        border: none;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .btn-primary { background: #22c55e; color: #000; }
-    .btn-secondary { background: #374151; color: #fff; }
-    .btn-danger { background: #dc2626; color: #fff; }
-
-    .status {
-        margin-top: 12px;
-        font-size: 16px;
-        min-height: 22px;
-    }
+/* STATUS */
+.status {
+    margin-top: 15px;
+    font-size: 18px;
+    min-height: 24px;
+    color: #e5e7eb;
+}
 </style>
 </head>
 
@@ -199,12 +226,12 @@
             <div class="player-cards" id="playerCards"></div>
 
             <div class="controls">
-                <input type="number" id="betAmount" min="1" value="10" style="padding:10px;border-radius:8px;border:none;width:110px;">
+                <input type="number" id="betAmount" min="1" value="10" class="bet-input">
                 <button class="btn-primary" onclick="placeBet()">Bet</button>
                 <button class="btn-secondary" onclick="hit()">Hit</button>
                 <button class="btn-secondary" onclick="stand()">Stand</button>
                 <button class="btn-secondary" onclick="doubleDown()">Double</button>
-                <button class="btn-danger" onclick="leaveSeat()">Leave</button>
+                <button class="btn-danger" onclick="leaveSeat()">Leave Seat</button>
             </div>
 
             <div class="status" id="statusText"></div>
@@ -306,7 +333,6 @@ function leaveSeat() { socket.emit("leaveSeat"); }
 socket.on("message", msg => {
     document.getElementById("statusText").textContent = msg;
 });
-
 socket.on("errorMessage", msg => {
     document.getElementById("statusText").textContent = msg;
 });
