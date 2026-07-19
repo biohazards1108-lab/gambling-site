@@ -230,8 +230,6 @@ export default function blackjack(io, pool) {
             p.standing = false;
             p.busted = false;
         }
-
         broadcast();
         resetRound();
-    }
-}
+    }  
