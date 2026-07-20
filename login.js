@@ -14,17 +14,12 @@ async function login() {
             headers: {
                 "Content-Type": "application/json"
             },
-            credentials: "include",   // REQUIRED for cookies
+            credentials: "include",  // REQUIRED for cookies
             body: JSON.stringify({
                 username: user,
                 password: pass
             })
         });
-
-        if (!response.ok) {
-            errorBox.innerText = "Server error. Try again.";
-            return;
-        }
 
         const data = await response.json();
 
