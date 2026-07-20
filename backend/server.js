@@ -19,6 +19,16 @@ app.options("*", cors({
     credentials: true,
 }));
 
+
+app.use(express.json());
+app.use(cookieParser());
+
+// Handle preflight OPTIONS requests
+app.options("*", cors({
+    origin: "https://biohazards1108-lab.github.io",
+    credentials: true,
+}));
+
 // LOGIN ROUTE
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
