@@ -1,6 +1,6 @@
 async function checkSession() {
     try {
-        const response = await fetch("gambling-site-production.up.railway.app.app/session", {
+        const response = await fetch("https://gambling-site-production.up.railway.app.app/session", {
             method: "GET",
             credentials: "include"
         });
