@@ -1,17 +1,15 @@
 {
-  "name": "lucky13-backend",
+  "name": "gambling-site-backend",
   "version": "1.0.0",
-  "description": "Lucky 13 Casino Backend + Socket.IO",
+  "main": "server.js",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "pg": "^8.11.1",
-    "socket.io": "^4.8.3"
+    "cors": "^2.8.5",
+    "cookie-parser": "^1.4.6",
+    "pg": "^8.11.1"
   }
 }
