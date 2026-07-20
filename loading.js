@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Delay so loading screen actually shows
     setTimeout(() => {
         if (!token) {
-            window.location.href = "login.html";
-        } else {
             window.location.href = "game/index.html";
+        } else {
+            window.location.href = "/index.htm;l";
         }
     }, 4500); // 4.5 seconds
 });
