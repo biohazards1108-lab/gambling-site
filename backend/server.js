@@ -1,95 +1,53 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { Pool } = require("pg");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// CORS config for your GitHub Pages frontend
+app.use(cors({
+    origin: "https://biohazards1108-lab.github.io",
+    credentials: true,
+}));
+
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
 
-const JWT_SECRET = "SUPER_SECRET_KEY_CHANGE_THIS";
+// --- LOGIN ROUTE ---
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+    // demo creds – change to real auth later
+    if (username === "biohazards1109" && password === "1234") {
+        res.cookie("session", "valid", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        });
+
+        return res.json({ success: true });
+    }
+
+    res.json({ success: false });
 });
 
-// Middleware: verify JWT
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Missing token" });
+// --- SESSION CHECK ROUTE ---
+app.get("/session", (req, res) => {
+    const session = req.cookies.session;
 
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch {
-    res.status(403).json({ error: "Invalid token" });
-  }
-}
+    if (session === "valid") {
+        return res.json({ valid: true });
+    }
 
-// REGISTER
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-
-  const hashed = await bcrypt.hash(password, 10);
-
-  try {
-    await pool.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2)",
-      [username, hashed]
-    );
-    res.json({ success: true });
-  } catch (err) {
-    res.status(400).json({ error: "Username already exists" });
-  }
+    res.json({ valid: false });
 });
 
-// LOGIN
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  const result = await pool.query(
-    "SELECT * FROM users WHERE username = $1",
-    [username]
-  );
-
-  if (result.rows.length === 0)
-    return res.status(400).json({ error: "Invalid username" });
-
-  const user = result.rows[0];
-
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ error: "Invalid password" });
-
-  const token = jwt.sign(
-    { id: user.id, username: user.username },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  res.json({ token });
+// --- ROOT TEST ---
+app.get("/", (req, res) => {
+    res.send("Casino backend running");
 });
 
-// GET BALANCE
-app.get("/balance", auth, async (req, res) => {
-  const result = await pool.query(
-    "SELECT balance FROM users WHERE id = $1",
-    [req.user.id]
-  );
-  res.json({ balance: result.rows[0].balance });
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
-
-// BET (update balance)
-app.post("/bet", auth, async (req, res) => {
-  const { amount } = req.body;
-
-  const result = await pool.query(
-    "UPDATE users SET balance = balance + $1 WHERE id = $2 RETURNING balance",
-    [amount, req.user.id]
-  );
-
-  res.json({ balance: result.rows[0].balance });
-});
-
-app.listen(3000, () => console.log("Server running"));
