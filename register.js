@@ -13,7 +13,7 @@ async function register() {
     const data = await res.json();
 if (data.success) {
     alert("Account created! Redirecting to dashboard...");
-    window.location.href = "dashboard.html";
+    window.location.href = "/dashboard.html";
 }
 
     
