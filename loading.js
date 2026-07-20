@@ -1,27 +1,36 @@
-async function checkSession() {
-    try {
-        const response = await fetch("https://gambling-site-production.up.railway.app/session", {
-            method: "GET",
-            credentials: "include"
-        });
+async function login() {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+    const errorBox = document.getElementById("error");
 
-        if (!response.ok) {
-            window.location.href = "login.html";
-            return;
-        }
+    if (!user || !pass) {
+        errorBox.innerText = "Please enter both username and password";
+        return;
+    }
+
+    try {
+        const response = await fetch("https://gambling-site-production.up.railway.app/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",  // REQUIRED for cookies
+            body: JSON.stringify({
+                username: user,
+                password: pass
+            })
+        });
 
         const data = await response.json();
 
-        if (data.valid === true) {
-            console.log("Session OK");
+        if (data.success === true) {
+            window.location.href = "./dashboard.html";
         } else {
-            window.location.href = "login.html";
+            errorBox.innerText = data.message || "Invalid username or password";
         }
 
     } catch (err) {
-        console.error("Session check failed:", err);
-        window.location.href = "login.html";
+        console.error("Login error:", err);
+        errorBox.innerText = "Connection failed";
     }
 }
-
-checkSession();
