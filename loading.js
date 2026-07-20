@@ -1,12 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
+async function checkSession() {
+    try {
+        const response = await fetch("gambling-site-production.up.railway.app.app/session", {
+            method: "GET",
+            credentials: "include"
+        });
 
-    // Delay so loading screen actually shows
-    setTimeout(() => {
-        if (!token) {
-            window.location.href = "game/index.html";
-        } else {
-            window.location.href = "/index.htm;l";
+        if (!response.ok) {
+            window.location.href = "login.html";
+            return;
         }
-    }, 4500); // 4.5 seconds
-});
+
+        const data = await response.json();
+
+        if (data.valid === true) {
+            // User is logged in
+            console.log("Session OK");
+        } else {
+            window.location.href = "login.html";
+        }
+
+    } catch (err) {
+        console.error("Session check failed:", err);
+        window.location.href = "login.html";
+    }
+}
+
+checkSession();
