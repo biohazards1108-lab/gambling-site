@@ -3,7 +3,6 @@ function login() {
     const pass = document.getElementById("pass").value.trim();
     const errorBox = document.getElementById("error");
 
-    // Simple demo credentials
     const correctUser = "admin";
     const correctPass = "1234";
 
