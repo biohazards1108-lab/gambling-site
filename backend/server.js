@@ -23,13 +23,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Preflight handler
+// Preflight
 app.options("*", cors({
     origin: "https://biohazards1108-lab.github.io",
     credentials: true
 }));
 
-// LOGIN ROUTE
+// LOGIN — THIS IS THE PART THAT WORKED BEFORE
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -40,6 +40,7 @@ app.post("/api/login", async (req, res) => {
         );
 
         if (result.rows.length === 1) {
+            // Set login cookie
             res.cookie("session", result.rows[0].id, {
                 httpOnly: true,
                 secure: true,
@@ -52,12 +53,12 @@ app.post("/api/login", async (req, res) => {
         res.json({ success: false, message: "Invalid login" });
 
     } catch (err) {
-        console.error("DB error:", err);
-        res.status(500).json({ success: false, message: "Database error" });
+        console.error(err);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
-// SESSION CHECK
+// SESSION CHECK — REQUIRED FOR DASHBOARD
 app.get("/api/session", (req, res) => {
     const session = req.cookies.session;
 
@@ -66,6 +67,40 @@ app.get("/api/session", (req, res) => {
     }
 
     res.json({ valid: false });
+});
+
+// USER INFO — FIX BALANCE LATER
+app.get("/api/me", async (req, res) => {
+    const session = req.cookies.session;
+
+    if (!session) return res.json({ error: "Not logged in" });
+
+    const result = await pool.query(
+        "SELECT username FROM users WHERE id=$1",
+        [session]
+    );
+
+    res.json({ username: result.rows[0].username });
+});
+
+// BALANCE — WE WILL FIX THIS AFTER LOGIN WORKS
+app.get("/api/balance", async (req, res) => {
+    const session = req.cookies.session;
+
+    if (!session) return res.json({ error: "Not logged in" });
+
+    const result = await pool.query(
+        "SELECT balance FROM users WHERE id=$1",
+        [session]
+    );
+
+    res.json({ balance: result.rows[0].balance });
+});
+
+// LOGOUT
+app.post("/api/logout", (req, res) => {
+    res.clearCookie("session");
+    res.json({ success: true });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
