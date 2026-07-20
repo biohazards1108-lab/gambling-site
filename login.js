@@ -1,37 +1,15 @@
-async function login() {
-    const username = document.getElementById("user").value.trim();
-    const password = document.getElementById("pass").value.trim();
+function login() {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
     const errorBox = document.getElementById("error");
 
-    errorBox.textContent = "";
+    // Simple demo credentials
+    const correctUser = "admin";
+    const correctPass = "1234";
 
-    if (!username || !password) {
-        errorBox.textContent = "Please enter both username and password.";
-        return;
-    }
-
-    try {
-        const res = await fetch("https://gambling-site-production.up.railway.app/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            errorBox.textContent = data.error || "Login failed.";
-            return;
-        }
-
-        localStorage.setItem("authToken", data.token);
-
-        // Correct GitHub Pages redirect
-        window.location.href = "https://biohazards1108-lab.github.io/gambling-site/dashboard.html";
-
-    } catch (err) {
-        errorBox.textContent = "Server error. Try again.";
+    if (user === correctUser && pass === correctPass) {
+        window.location.href = "./dashboard.html";
+    } else {
+        errorBox.innerText = "Invalid username or password";
     }
 }
