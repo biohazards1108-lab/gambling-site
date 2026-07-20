@@ -157,44 +157,60 @@
     <script>
         const API = "https://gambling-site-production.up.railway.app";
 
-        async function loadDashboard() {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                window.location.href = "login.html";
-                return;
-            }
-
-            // Fetch balance
-            const balanceRes = await fetch(`${API}/api/balance`, {
-                headers: { "Authorization": token }
+        // 🔒 SESSION CHECK (cookie-based)
+        async function checkSession() {
+            const res = await fetch(`${API}/api/session`, {
+                credentials: "include"
             });
-            const balanceData = await balanceRes.json();
+
+            const data = await res.json();
+
+            if (!data.valid) {
+                window.location.href = "login.html";
+            }
+        }
+
+        // 📌 LOAD USER DATA
+        async function loadDashboard() {
+            await checkSession();
 
             // Fetch username
             const userRes = await fetch(`${API}/api/me`, {
-                headers: { "Authorization": token }
+                credentials: "include"
             });
             const userData = await userRes.json();
+
+            // Fetch balance
+            const balanceRes = await fetch(`${API}/api/balance`, {
+                credentials: "include"
+            });
+            const balanceData = await balanceRes.json();
 
             // Update UI
             document.getElementById("usernameDisplay").textContent = userData.username;
             document.getElementById("balanceDisplay").textContent = balanceData.balance;
         }
 
+        // 🎁 DAILY REWARD
         async function claimReward() {
-            const token = localStorage.getItem("token");
             const res = await fetch(`${API}/api/refill`, {
                 method: "POST",
-                headers: { "Authorization": token }
+                credentials: "include"
             });
+
             const data = await res.json();
 
             document.getElementById("rewardStatus").textContent = data.message;
             document.getElementById("balanceDisplay").textContent = data.balance;
         }
 
-        function logout() {
-            localStorage.removeItem("token");
+        // 🚪 LOGOUT
+        async function logout() {
+            await fetch(`${API}/api/logout`, {
+                method: "POST",
+                credentials: "include"
+            });
+
             window.location.href = "login.html";
         }
 
