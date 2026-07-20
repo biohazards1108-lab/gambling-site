@@ -3,24 +3,39 @@ async function login() {
     const pass = document.getElementById("pass").value.trim();
     const errorBox = document.getElementById("error");
 
+    if (!user || !pass) {
+        errorBox.innerText = "Please enter both username and password";
+        return;
+    }
+
     try {
-        const response = await fetch("https://gambling-site-production.up.railway.app/login", {
+        const response = await fetch("https://gambling-site-production.up.railway.app/api/login", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ username: user, password: pass })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",   // REQUIRED for cookies
+            body: JSON.stringify({
+                username: user,
+                password: pass
+            })
         });
+
+        if (!response.ok) {
+            errorBox.innerText = "Server error. Try again.";
+            return;
+        }
 
         const data = await response.json();
 
         if (data.success === true) {
             window.location.href = "./dashboard.html";
         } else {
-            errorBox.innerText = "Invalid username or password";
+            errorBox.innerText = data.message || "Invalid username or password";
         }
 
     } catch (err) {
-        errorBox.innerText = "Login failed";
-        console.error(err);
+        console.error("Login error:", err);
+        errorBox.innerText = "Connection failed";
     }
 }
