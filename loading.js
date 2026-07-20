@@ -13,7 +13,6 @@ async function checkSession() {
         const data = await response.json();
 
         if (data.valid === true) {
-            // User is logged in
             console.log("Session OK");
         } else {
             window.location.href = "login.html";
